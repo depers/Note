@@ -10,7 +10,7 @@ typora-root-url: E:\markdown笔记\笔记图片
 
 主要讲了OIS七层模型的作用
 
-![7-1](E:\markdown笔记\笔记图片\7-1.png)
+![7-1](.\笔记图片\7-1.png)
 
 ### 2.TCP/IP四层模型
 

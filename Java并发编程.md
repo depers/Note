@@ -10,11 +10,11 @@ typora-root-url: 笔记图片
 
 * 线程安全性的定义
 
-  ![8-1](E:/markdown笔记/笔记图片/8-1.png)
+  ![8-1](./笔记图片/8-1.png)
 
 * 线程安全性的组成
 
-  ![8-2](E:/markdown笔记/笔记图片/8-2.png)
+  ![8-2](./笔记图片/8-2.png)
 
 * AtomicXXX：CAS、Unsafe.compareAndSwapInt（atomic包下的方法具有原子性）
 
@@ -99,11 +99,11 @@ typora-root-url: 笔记图片
 
 ### 2.原子性——锁（JDK中提供原子性的除了atomic之外还有锁——下面的两个锁）
 
-![8-3](E:/markdown笔记/笔记图片/8-3.png)
+![8-3](./笔记图片/8-3.png)
 
 * **synchronized**它是一种同步锁
 
-  ![8-4](E:/markdown笔记/笔记图片/8-4.png)
+  ![8-4](./笔记图片/8-4.png)
 
   
 
@@ -175,26 +175,26 @@ typora-root-url: 笔记图片
 
 * 原子性对比
 
-  ![8-5](E:/markdown笔记/笔记图片/8-5.png)
+  ![8-5](./笔记图片/8-5.png)
 
 ### 3.可见性
 
 **可见性**则更为微妙，它必须确保释放锁之前对共享数据做出的更改对于随后获得该锁的另一个线程是可见的。 —— 如果没有同步机制提供的这种可见性保证，线程看到的共享变量可能是修改前的值或不一致的值，这将引发许多严重问题。
 
-![8-6](E:/markdown笔记/笔记图片/8-6.png)
+![8-6](./笔记图片/8-6.png)
 
 * 可见性——synchronized
 
-  ![8-7](E:/markdown笔记/笔记图片/8-7.png)
+  ![8-7](./笔记图片/8-7.png)
 
 * 可见性——volatile
 
-  ![8-8](E:/markdown笔记/笔记图片/8-8.png)
+  ![8-8](./笔记图片/8-8.png)
 
 * volatile读写操作加入内存屏障和禁止重排序的CPU指令示意图
-    ![8-10](E:/markdown笔记/笔记图片/8-10.png)
+    ![8-10](./笔记图片/8-10.png)
 
-    ![8-9](E:/markdown笔记/笔记图片/8-9.png)
+    ![8-9](./笔记图片/8-9.png)
 
   参见：com.bravedawn.concurrency.example.count.CountExample4，在这个计数的程序中：
 
@@ -243,7 +243,7 @@ typora-root-url: 笔记图片
 
 ### 4.有序性
 
-![8-11](E:/markdown笔记/笔记图片/8-11.png)
+![8-11](./笔记图片/8-11.png)
 
 * 可以通过volatile、synchronized、Lock保证程序的有序性
 
@@ -494,7 +494,7 @@ typora-root-url: 笔记图片
 
 ### 1.不可变对象
 
-![8-12](E:/markdown笔记/笔记图片/8-12.png)
+![8-12](./笔记图片/8-12.png)
 
 * 创建补课变对象
 
@@ -536,14 +536,14 @@ typora-root-url: 笔记图片
 
 * 将对象修改为不可变对象
 
-  ![8-13](E:/markdown笔记/笔记图片/8-13.png)
+  ![8-13](./笔记图片/8-13.png)
 
   * Java提供的Collections类，值得注意的是Collections修改的对象不能是final的。使用参见com.bravedawn.concurrency.example.immutable.ImmutableExample2
   * Guava提供的ImmutableXXX，值得注意的是Collections修改的对象可以是final的。使用参见com.bravedawn.concurrency.example.immutable.ImmutableExample3
 
 ### 2.线程封闭
 
-![8-14](E:/markdown笔记/笔记图片/8-14.png)
+![8-14](./笔记图片/8-14.png)
 
 * 堆栈封闭解释：
 
