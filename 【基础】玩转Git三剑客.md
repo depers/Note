@@ -2,31 +2,31 @@
 typora-root-url: E:\markdown笔记\笔记图片
 ---
 
-# Git
+# 玩转Git三剑客——极客时间
 
 ## Git基础
 
 ### 1.Git安装
 
-![9-4](/9-4.png)
+![9-4](E:\markdown笔记\笔记图片\9\9-4.png)
 
-![9-3](/9-3.png)
+![9-3](E:\markdown笔记\笔记图片\9\9-3.png)
 
-![9-2](/9-2.png)
+![9-2](E:\markdown笔记\笔记图片\9\9-2.png)
 
-![9-1](/9-1.png)
+![9-1](E:\markdown笔记\笔记图片\9\9-1.png)
 
 安装教程：https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%AE%89%E8%A3%85-Git
 
 ### 2.最小配置
 
-![9-5](/9-5.png)
+![9-5](E:\markdown笔记\笔记图片\9\9-5.png)
 
-![9-6](/9-6.png)
+![9-6](E:\markdown笔记\笔记图片\9\9-6.png)
 
 ### 3.创建第一个仓库并配置local用户信息
 
-![9-7](/9-7.png)
+![9-7](E:\markdown笔记\笔记图片\9\9-7.png)
 
 * 添加local信息
 
@@ -42,7 +42,7 @@ typora-root-url: E:\markdown笔记\笔记图片
 
 ### 4.通过几次commit来认识工作区和暂存区
 
-![9-8](/9-8.png)
+![9-8](E:\markdown笔记\笔记图片\9\9-8.png)
 
 这几次提交使用的命令依次是：
 
@@ -154,7 +154,7 @@ typora-root-url: E:\markdown笔记\笔记图片
 
 ### 9.commit、tree和blob三个对象之间的关系
 
-![9-9](/9-9.png)
+![9-9](E:\markdown笔记\笔记图片\9\9-9.png)
 
 在上面这幅图中，我们通过`git cat-file -p 415c5c`可以看到这个commit下面的内容，这里面有一棵树tree 912fa6，然后我们`git cat-file -p 912fa6`。我们可以看到图中黄色的部分的第一个区域，里面有两个tree和两个blob。接着我们通过`git cat-file -p 6ad4c6`查看这个blob，发现他是一个我们曾经提交的html文件。
 
@@ -166,7 +166,7 @@ typora-root-url: E:\markdown笔记\笔记图片
 
 在使用git的时候，我们的文件夹下面必须有文件，如果只有文件夹而没有文件，git是不会理会我们的。
 
-![9-10](/9-10.png)
+![9-10](E:\markdown笔记\笔记图片\9\9-10.png)
 
 当我们提交commit之前，在暂存区内只有blob对象，在我们提交commit之后，在暂存区内就会出现commit和tree对象。他们的关系就如上图所示。
 
@@ -341,3 +341,59 @@ $ git cat-file -p b21693805
 * 然后输入`git branch -d branch_name`
 * 此时如果遇到`The branch xxxx is not fully merged`，我们应该输入`git branch -D branch_name`
 
+### 14.怎么修改最新commit的message？
+
+* 首先查看最新的commit：`git commit -1`
+
+* 输入修改最新commit命令：`git commit --amend`，然后会出现这样的界面：
+
+  ![11](/../../../笔记图片/9/11.PNG)
+
+  然后根据Linux操作vim的方式修改commit信息就行，最后输入`wq!`即可。
+
+* 最后在输入`git log -1`就可以看到最新的commit信息已经修改了。
+
+* 如果要想将此修改信息推送的github，应使用命令`git push --force`
+
+### 15.怎么修改老旧commit的message[变基操作]？
+
+* 这次我们修改最后第二次的commit信息，首先查看一下最近三次的commit信息：
+
+  ![12](/../../../笔记图片/9/12.PNG)
+
+* 使用命令`git rebase -i 上一次commit的id号（切记，不是最后第二次的id，而是他父级也就是上一级的id） `，这里应该填写的命令是：`git rebase -i `
+
+* 在下面这幅图中可以看到，`pick`和`reword`两个命令参数。这里我们需要使用的是reword，这个命令参数的意思是：**我们仍然保留commit的变更的文件，但是我只修改commit信息**。
+
+  ![13](/../../../笔记图片/9/13.png)
+
+* 所以我们应该修改上面的命令参数位reword，因为我们只改最后第二条的commit信息，所以只reword他。最后`wq!`：
+
+  ![14](/../../../笔记图片/9/14.png)
+  
+* 然后可以看到下图，在这里我们就可以修改我们的commit信息了，修改完之后`wq!`即可。
+
+  ![16](/../../../笔记图片/9/16.png)
+* 如果要想将此修改信息推送的github，应使用命令`git push --force`
+
+### 16.怎么修改老旧commit的message？
+
+* 使用git log查看提交日志，我们想将下面红线圈住的多次提交合为一次提交：
+
+  ![17](/../../../笔记图片/9/17.png)
+
+* 这里我们输入`git rebase -i f09122cf`，这里的id是这四次提交的父id：
+
+  ![18](/../../../笔记图片/9/18.png)
+
+* 这里我们将需要合并提交的前三次前面的命令参数改为`squash`简写s，然后`wq!`：
+
+  ![19](/../../../笔记图片/9/19.png)
+
+* 注意，这里需要在`# Thisis combination of 4 commits`下输入本次合并提交的commit信息，然后`wq!`：
+
+  ![20](/../../../笔记图片/9/20.png)
+
+* 然后使用git log查看，发现已经刚才的4项提交已经合为一项了。
+
+  ![21](/../../../笔记图片/9/21.png)
