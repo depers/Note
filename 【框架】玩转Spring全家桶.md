@@ -114,7 +114,145 @@
     	</build>
     ```
 
-    
+## 第二部分：Spring中的数据操作
+
+## 第二章 JDBC必知必会
+
+### 5.如何配置单数据源
+
+* Spring Boot的配置演示，项目地址：<https://github.com/depers/geektime-spring-code/tree/master/5-1/datasource-demo-1>
+
+  ![9](E:\markdown笔记\笔记图片\13\9.png)
+
+  ![8](E:\markdown笔记\笔记图片\13\8.png)
+
+  在Spring Initializr中初始化构建后，直接下载。在DatasourceDemoApplication中编写如下代码：
+
+  ```java
+  @SpringBootApplication
+  @Slf4j
+  public class DatasourceDemoApplication implements CommandLineRunner {
+  
+  	@Autowired
+  	private DataSource dataSource;
+  
+  	public static void main(String[] args) {
+  		SpringApplication.run(DatasourceDemoApplication.class, args);
+  	}
+  
+  
+  	@Override
+  	public void run(String... args) throws Exception {
+  		showConnection();
+  	}
+  
+  	private void showConnection() throws SQLException{
+          // 打印数据库源信息
+  		log.info(dataSource.toString());
+  		Connection conn = dataSource.getConnection();
+          // 打印数据库连接信息
+  		log.info(conn.toString());
+  		conn.close();
+  	}
+  
+  }
+  ```
+
+  运行结果如下图：
+
+  ![14](E:\markdown笔记\笔记图片\13\14.png)
+
+* 手动直接配置所需的Bean。不使用Spring Boot的自动配置数据源，自己手动配置。项目地址：<https://github.com/depers/geektime-spring-code/tree/master/5-1/pure-spring-datasource-demo>
+
+  ![10](E:\markdown笔记\笔记图片\13\10.png)
+
+  ![11](E:\markdown笔记\笔记图片\13\15.png)
 
   
+
+如上图所示，这个项目不使用Spring Boot，引入了运行时的h2驱动、dbcp2的数据库连接池、Spring jdbc。然后编写了如下程序：
+
+![11](E:\markdown笔记\笔记图片\13\11.png)
+
+除了通过代码配置，还可以在applicationContext.xml中进行配置：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="geektime.spring.data" />
+   
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:mem:testdb"/>
+        <property name="username" value="SA"/>
+        <property name="password" value=""/>
+    </bean>
+    
+</beans>
+```
+
+![12](E:\markdown笔记\笔记图片\13\12.png)
+
+* 数据源相关的配置，项目地址：<https://github.com/depers/geektime-spring-code/tree/master/5-1/datasource-demo-2>
+
+  ![13](E:\markdown笔记\笔记图片\13\13.png)
+
+  在这个项目中，我们在application.properties中配置了数据源的相关信息，新建了数据库并对数据库进行了相关的操作。
+
+### 6.如何配置多数据源
+
+![16](E:\markdown笔记\笔记图片\13\16.png)
+
+![17](E:\markdown笔记\笔记图片\13\17.png)
+
+从上图中可以看到多数据源的配置有两种办法：1)手工配置两组DataSource及相关内容（不使用Spring Boot），2)与Spring Boot协同工作。
+
+而在使用Spring Boot配置多数据源中又有两种办法：1)配置@Primary类型的Bean，2)排除Spring Boot的自动配置，在接下来内容中介绍了第2中排除Spring Boot的自动配置的方案。项目地址：<https://github.com/depers/geektime-spring-code/tree/master/6/multi-datasource-demo>
+
+![18](E:\markdown笔记\笔记图片\13\18.png)
+
+### 7.那些好用的连接池们
+
+![19](E:\markdown笔记\笔记图片\13\19.png)
+
+![20](E:\markdown笔记\笔记图片\13\20.png)
+
+![21](E:\markdown笔记\笔记图片\13\21.png)
+
+![22](E:\markdown笔记\笔记图片\13\22.png)
+
+HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
+
+其中Spring Boot2中默认使用HikariCP，我们可以在DataSourceConfiguration.java中看到相关配置：
+
+```java
+/**
+	 * Hikari DataSource configuration.
+	 */
+	@ConditionalOnClass(HikariDataSource.class)
+	@ConditionalOnMissingBean(DataSource.class)
+	@ConditionalOnProperty(name = "spring.datasource.type", havingValue = "com.zaxxer.hikari.HikariDataSource", matchIfMissing = true)
+	static class Hikari {
+
+		@Bean
+		@ConfigurationProperties(prefix = "spring.datasource.hikari")
+		public HikariDataSource dataSource(DataSourceProperties properties) {
+			HikariDataSource dataSource = createDataSource(properties,
+					HikariDataSource.class);
+			if (StringUtils.hasText(properties.getName())) {
+				dataSource.setPoolName(properties.getName());
+			}
+			return dataSource;
+		}
+
+	}
+```
 
