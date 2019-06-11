@@ -219,7 +219,7 @@
 
 ![18](E:\markdown笔记\笔记图片\13\18.png)
 
-### 7.那些好用的连接池们
+### 7.那些好用的连接池们：HikariCP
 
 ![19](E:\markdown笔记\笔记图片\13\19.png)
 
@@ -255,4 +255,87 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
 	}
 ```
+### 8.那些好用的连接池们：Alibaba Druid
+
+![23](E:\markdown笔记\笔记图片\13\23.png)
+
+![24](E:\markdown笔记\笔记图片\13\24.png)
+
+![25](E:\markdown笔记\笔记图片\13\25.png)
+
+使用druid的两种方法：
+
+![26](E:\markdown笔记\笔记图片\13\26.png)
+
+![27](E:\markdown笔记\笔记图片\13\27.png)
+
+![28](E:\markdown笔记\笔记图片\13\28.png)
+
+![29](E:\markdown笔记\笔记图片\13\29.png)
+
+* 在Spring Boot中使用Druid时应该注意的点
+
+  在pom文件之中，我们应在spring-boot-starter-jdbc中去除HikariCP，引入druid-spring-boot-starter。
+
+  ```xml
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-jdbc</artifactId>
+          <exclusions>
+              <exclusion>
+                  <artifactId>HikariCP</artifactId>
+                  <groupId>com.zaxxer</groupId>
+          	</exclusion>
+      	</exclusions>
+  </dependency>
+  <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid-spring-boot-starter</artifactId>
+      <version>1.1.10</version>
+  </dependency>
+  ```
+
+* 详情访问<https://github.com/depers/geektime-spring-code/tree/master/8/druid-demo>，在这个例子中我们在每次连接数据库的前后都会做相应的操作。
+
+![30](E:\markdown笔记\笔记图片\13\30.png)
+
+### 9.如何通过Spring JDBC访问数据库
+
+![31](E:\markdown笔记\笔记图片\13\31.png)
+
+![32](E:\markdown笔记\笔记图片\13\32.png)
+
+![33](E:\markdown笔记\笔记图片\13\33.png)
+
+![34](E:\markdown笔记\笔记图片\13\34.png)
+
+![35](E:\markdown笔记\笔记图片\13\35.png)
+
+该部分的代码详情请参考：<https://github.com/depers/geektime-spring-code/tree/master/9/simple-jdbc-demo>
+
+### 10.什么是Spring的事务抽象（上）
+
+![36](E:\markdown笔记\笔记图片\13\36.png)
+
+![37](E:\markdown笔记\笔记图片\13\37.png)
+
+![38](E:\markdown笔记\笔记图片\13\38.png)
+
+![39](E:\markdown笔记\笔记图片\13\39.png)
+
+![40](E:\markdown笔记\笔记图片\13\40.png)
+### 11.什么是Spring的事务抽象（下）
+![41](E:\markdown笔记\笔记图片\13\41.png)
+
+编程式事务的两种办法，本视频中着重演示了第一个方法Transaction Tempate，具体参见：<https://github.com/depers/geektime-spring-code/tree/master/11/programmatic-transaction-demo>
+
+![42](E:\markdown笔记\笔记图片\13\42.png)
+
+![43](E:\markdown笔记\笔记图片\13\43.png)
+
+声明式事务中主要演示了三个方法：
+
+![44](E:\markdown笔记\笔记图片\13\44.png)
+
+可以看到第一个和第二个方法都加入@Transactional注解，都是支持事务的。而第三个方法他调用了第二个带有事务的方法。但是通过调用这三个方法发现第三个方法他是不支持事务的。这是因为Spring其实为你的类做了一个代理，你必须去调用代理类才能执行那些被代理曾强的方法。如果方法是在类的内部调用的话，并没有走到那些代理方法，虽然invikeInsertThenRollback调用了带有@Transactional注解的方法，但是因为它本身是没有事务注解的，所以他调用insertThenRollback也不会有事务的支持。
 
