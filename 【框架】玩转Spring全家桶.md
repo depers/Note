@@ -339,3 +339,187 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
 可以看到第一个和第二个方法都加入@Transactional注解，都是支持事务的。而第三个方法他调用了第二个带有事务的方法。但是通过调用这三个方法发现第三个方法他是不支持事务的。这是因为Spring其实为你的类做了一个代理，你必须去调用代理类才能执行那些被代理曾强的方法。如果方法是在类的内部调用的话，并没有走到那些代理方法，虽然invikeInsertThenRollback调用了带有@Transactional注解的方法，但是因为它本身是没有事务注解的，所以他调用insertThenRollback也不会有事务的支持。
 
+### 12.了解Spring的JDBC异常抽象
+
+![45](E:\markdown笔记\笔记图片\13\45.png)
+
+其中错误码的定义有两个地方：一个是Spring的ErrorCode，其次我们还可以自己定义ErrorCode在Classpath下的sql-error-codes.xml中，我们通过定制可以覆盖官方的一些配置。
+
+![46](E:\markdown笔记\笔记图片\13\46.png)
+
+![47](E:\markdown笔记\笔记图片\13\47.png)
+
+上述代码的演示项目请参见：<https://github.com/depers/geektime-spring-code/tree/master/12/errorcode-demo>
+
+### 13.课程答疑（上）
+
+![48](E:\markdown笔记\笔记图片\13\48.png)
+
+* 开发环境
+
+  ![49](E:\markdown笔记\笔记图片\13\49.png)
+
+* 一些注解
+
+  ![49](E:\markdown笔记\笔记图片\13\50.png)
+
+  * @Configuration：标明当前的这个类是一个配置类。
+
+  * @ImportResource：Spring Boot里面没有Spring的配置文件，我们自己编写的配置文件，也不能自动识别；想让Spring的配置文件生效，加载进来；@ImportResource标注在一个配置类上。
+
+  * @ComponentScan 组件扫描，可自动发现和装配一些Bean。
+
+  * @Bean： 注解在方法上，声明当前方法返回一个Bean。
+
+  * @ConfigurationProperties：通过 @ConfigurationProperties 来获取配置文件的信息。
+
+  ![51](E:\markdown笔记\笔记图片\13\51.png)
+  
+  * @Component：注解主要用于标记一个类作为spring的组件，spring扫描的时候扫描的是这个注解。所有Java的Bean都可以通过@Component来定义。
+  * @Repository：标识该类是一个数据库访问层的Repository
+  * @Service：服务层的一个Bean
+  * @Controller：Web层的Bean
+  * @RestController：Web层的RESTful Bean
+  * @RequestMapping：url映射
+  * @ Autowired：在上下文当中按照类型查Bean找并注入进来
+  * @Qualifier：如果我在上下中有多个同类型的Bean只使用@Autowired可能会有些歧义，我们可以使用@注解配合类的名字进行注入
+  * @Resource：根据名字进行注入
+  * @Value：通过 @value 将 配置文件中的信息对应的赋值给需要的属性
+  
+* 关于Actuator Endpoint访问不到的说明
+
+  ![52](E:\markdown笔记\笔记图片\13\52.png)
+
+  ![53](E:\markdown笔记\笔记图片\13\53.png)
+  
+* 读数据源、分库分表、读写分离的关系
+
+  ![54](E:\markdown笔记\笔记图片\13\54.png)
+
+  * 系统需要访问几个完全不同的数据库，就像上图中的左图
+  * 系统访问同一个库的主库和备库：主库用来做读写操作，备库用来做读操作。
+
+  ![55](E:\markdown笔记\笔记图片\13\55.png)
+
+  * 系统需要访问一组做了分库分表的数据库可以使用数据库中间件进行操作。
+
+### 14.课程答疑（下）
+
+* 内部方法调用与事务的课后问题
+
+  ![56](E:\markdown笔记\笔记图片\13\56.png)
+
+  这里回答了第11节的课后问题：即该节最后一幅图中第三个方法为什么没有做事务处理？根据上图问题的解法，我们修改源代码，这样第三个方法就得到了事务的支持：
+
+  ![57](E:\markdown笔记\笔记图片\13\57.png)
+
+* REQUIRES_NEW与NESTED事务传播特性的说明
+
+  ![57](E:\markdown笔记\笔记图片\13\58.png)
+
+  这一部分没有听懂，而且代码运行也与视频中不一样。这个项目的代码是：<https://github.com/depers/geektime-spring-code/tree/master/14/transaction-propagation-demo>
+
+* Alibaba Druid的一些展开说明
+
+  ![57](E:\markdown笔记\笔记图片\13\59.png)
+
+  代码详情参考<https://github.com/depers/geektime-spring-code/tree/master/14/druid-demo>，设置以上慢SQL的设置后，我们启动项目可以在控制台看到如下的显示：
+
+  ![61](E:\markdown笔记\笔记图片\13\61.png)
+
+  ![60](E:\markdown笔记\笔记图片\13\60.png)
+## 第三章：O R Mapping实践
+
+ ### 15.认识Spring Data JPA
+
+![62](E:\markdown笔记\笔记图片\13\62.png)
+
+![63](E:\markdown笔记\笔记图片\13\63.png)
+
+![64](E:\markdown笔记\笔记图片\13\64.png)
+
+![65](E:\markdown笔记\笔记图片\13\65.png)
+
+![66](E:\markdown笔记\笔记图片\13\66.png)
+
+### 16.定义JPA的实体对象
+
+![67](E:\markdown笔记\笔记图片\13\67.png)
+
+@Entity：
+
+@MappedSuperclass：
+
+@Table：
+
+@Id：
+
+@GeneratedVaule：
+
+@SequenceGenerator：
+
+![68](E:\markdown笔记\笔记图片\13\68.png)
+
+![69](E:\markdown笔记\笔记图片\13\69.png)
+
+@Column：
+
+@JoinTable：
+
+@OneToOne：
+
+@OneToMany：
+
+@ManyToOne：
+
+@MangToMany：
+
+@OrderBy：
+
+![70](E:\markdown笔记\笔记图片\13\70.png)
+
+@Getter：
+
+@Setter：
+
+@ToString：
+
+@NoArgsConstructor：
+
+@RequireArgsConstructor：
+
+@AllArgsConstructor：
+
+@Data：
+
+@Builder：
+
+@Slf4j：
+
+@CommonSLog：
+
+@Log4j2：
+
+### 17.开始我们的线上咖啡馆实战项目：SpringBucks
+
+![71](E:\markdown笔记\笔记图片\13\71.png)
+
+![72](E:\markdown笔记\笔记图片\13\72.png)
+
+![73](E:\markdown笔记\笔记图片\13\73.png)
+
+![74](E:\markdown笔记\笔记图片\13\74.png)
+
+![75](E:\markdown笔记\笔记图片\13\75.png)
+
+![76](E:\markdown笔记\笔记图片\13\76.png)
+
+以上实体的定义请参照：<https://github.com/depers/geektime-spring-code/tree/master/17/jpa-demo>
+
+![77](E:\markdown笔记\笔记图片\13\77.png)
+
+![78](E:\markdown笔记\笔记图片\13\78.png)
+
+![79](E:\markdown笔记\笔记图片\13\79.png)
+
+以上实体的定义请参照：<https://github.com/depers/geektime-spring-code/tree/master/17/jpa-complex-demo>
