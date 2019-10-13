@@ -1,6 +1,6 @@
 ------------------------创建表----------------------
 
-# 创建一个数据库
+#### 创建一个数据库
 ```
 CREATE DATABASE IF NOT EXISTS db_test_1 DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 ```
@@ -8,7 +8,7 @@ CREATE DATABASE IF NOT EXISTS db_test_1 DEFAULT CHARSET utf8 COLLATE utf8_genera
 SHOW CREATE DATABASE db_test_1;
 ```
 
-# 创建一个数据表
+#### 创建一个数据表
 ```
 CREATE TABLE `mytable1` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -24,92 +24,92 @@ SHOW CREATE TABLE mytable;
 
 ------------------------插入------------------------
 
-# 插入一条数据
+#### 插入一条数据
 ```
 INSERT INTO mytable(col1, col2) VALUES(1811942438, 'FENGXIAO'); --其中col1的长度定为11，其中一位为符号位，所以只能插入10位数字。
 ```
 
-# 插入检索出的数据
+#### 插入检索出的数据
 ```
 INSERT INTO mytable1(col1, col2)
 SELECT col1, col2
 FROM mytable2;
 ```
 
-# 将一个表的内容复制到一个新表
+#### 将一个表的内容复制到一个新表
 ```
 CREATE TABLE newtable AS
 SELECT * FROM mytable;
 ```
 
-# 更新
+#### 更新
 ```
 UPDATE mytable SET col2 = 'xiaoming' WHERE id = 1;
 ```
 
-# 删除
+#### 删除
 ```
 DELETE FROM mytable1 WHERE id = 1;
 ```
 
-# 清空表
+#### 清空表
 ```
 TRUNCATE TABLE newtable;
 ```
 
 ----------------------修改表-------------------------
 
-# 添加列
+#### 添加列
 ```
 ALTER TABLE mytable ADD col4 CHAR(20);
 ```
 
-# 修改列
+#### 修改列
 ```
 ALTER TABLE test MODIFY col1 col_1 CHAR(20);
 ALTER TABLE test CHANGE col1 col_1 CHAR(20);
 ```
 
-# 删除列
+#### 删除列
 ```
 ALTER TABLE mytable DROP COLUMN col3;
 ```
 
-# 删除表
+#### 删除表
 ```
 DROP TABLE newtable;
 ```
 
 
 -----------------------查询--------------------------
-# DISTINCT 去重查询关键字
+#### DISTINCT 去重查询关键字
 ```
  SELECT DISTINCT col1 FROM mytable;
 ```
 
-# LIMIT 限制返回的行数。两个参数，第一个起始行，从0开始；第二个参数为返回的总函数；
-# 返回前五行：
+#### LIMIT 限制返回的行数。两个参数，第一个起始行，从0开始；第二个参数为返回的总函数；
+#### 返回前五行：
 ```
 SELECT * FROM mytable LIMIT 5;
 
 SELECT * FROM mytable LIMIT 0, 5;
 ```
-# 返回3~5行：
+#### 返回3~5行：
 ```
 SELECT * FROM mytable LIMIT 2, 5;
 ```
 
 --------------------排序----------------------------
-# ASC：升序（默认）
-# DESC：降序
-# 可以按多个列进行排序，并且为每个列指定不同的排序方式：
+#### ASC：升序（默认）
+#### DESC：降序
+#### 可以按多个列进行排序，并且为每个列指定不同的排序方式：
 ```
 SELECT * FROM mytable
 ORDER BY col DESC, col2 ASC;
 ```
 
 ----------------------过滤----------------------------
-# 过滤条件就是在WHERE 后面要写的查询条件，主要有以下几类：
+#### 过滤条件就是在WHERE 后面要写的查询条件，主要有以下几类：
 
 1) =、 <、 >、 等于 小于 大于
 
@@ -153,15 +153,15 @@ WHERE col LIKE '[^AB]%' -- 不以 A 和 B开头的任意文本
 
 
 --------------------计算字段--------------------------
-# 在数据库服务器上完成数据的转换和格式化的工作往往比客户端上快得多，并且转换和格式化后的数据量更少的话可以减少网络通信量
+#### 在数据库服务器上完成数据的转换和格式化的工作往往比客户端上快得多，并且转换和格式化后的数据量更少的话可以减少网络通信量
 
-# 计算字段通常需要使用 AS 来取别名，否则输出的时候字段名为计算表达式。
+#### 计算字段通常需要使用 AS 来取别名，否则输出的时候字段名为计算表达式。
 ```
 SELECT col * col2 AS alias
 FROM mytable;
 ```
 
-# Concat() 用于连接多个字段。许多数据库会使用空格把一个值填充为列宽，因此连接的结果会出现一些不必要的空格，使用 TRIM() 可以去除首尾空格。
+#### Concat() 用于连接多个字段。许多数据库会使用空格把一个值填充为列宽，因此连接的结果会出现一些不必要的空格，使用 TRIM() 可以去除首尾空格。
 ```
 SELECT Concat(TRIM(col1), '(', TRIM(col2), ')')
 FROM mytable;
@@ -169,7 +169,7 @@ FROM mytable;
 
 --------------------函数---------------------------
 
-# 各个 DBMS 的函数都是不相同的，因此不可移植。
+#### 各个 DBMS 的函数都是不相同的，因此不可移植。
 
 ```
 /*------------1、文本处理函数-----------*/
@@ -180,12 +180,12 @@ LENGTH()	    长度
 SUNDEX()	    转换为语音值
 ```
 
-# LEFT()函数有两个参数，第一个是数据库字段，第二个是要截取的字段长度：
+#### LEFT()函数有两个参数，第一个是数据库字段，第二个是要截取的字段长度：
 ```
 SELECT LEFT(col2, 5) FROM mytable;
 ```
 
-# 其中， SOUNDEX() 是将一个字符串转换为描述其语音表示的字母数字模式的算法，它是根据发音而不是字母比较。
+#### 其中， SOUNDEX() 是将一个字符串转换为描述其语音表示的字母数字模式的算法，它是根据发音而不是字母比较。
 ```
 SELECT * 
 FROM mytable
@@ -193,8 +193,8 @@ WHERE SOUNDEX(col1) = SOUNDEX("apple");
 ```
 
 /*------------2、日期和时间处理-----------*/
-# 日期格式：YYYY-MM-DD
-# 时间格式：HH:MM:SS
+#### 日期格式：YYYY-MM-DD
+#### 时间格式：HH:MM:SS
 
 函 数|说 明
 --|--
@@ -241,16 +241,16 @@ MIN()|返回某列的最小值
 SUM()|返回某列值之和
 AVG() |会忽略 NULL 行。
 
-# 使用 DISTINCT 可以汇总函数值汇总不同的值。
+#### 使用 DISTINCT 可以汇总函数值汇总不同的值。
 ```
 SELECT AVG(DISTINCT col1) AS avg_col
 FROM mytable
 ```
 
-#在 SQL 中增加 HAVING 子句原因是，WHERE 关键字无法与合计函数一起使用。
+####在 SQL 中增加 HAVING 子句原因是，WHERE 关键字无法与合计函数一起使用。
 
 /*-------------------------------分组-------------------------*/
-# 当前的数据表数据
+#### 当前的数据表数据
 SELECT * FROM mytable；;
 
 | id | col1       | col2       | col4 | col5 |
@@ -258,14 +258,14 @@ SELECT * FROM mytable；;
 |  1 | 1811942438 | kanglirong | NULL |   99 |
 |  2 | 1811942438 | fengxiao   | aaa  |   66 |
 
-# （如上表信息）根据col1进行分组查询，切记GROUP BY后面的字段名必须和SELECT 查询语句后面的字段值相同。
+#### （如上表信息）根据col1进行分组查询，切记GROUP BY后面的字段名必须和SELECT 查询语句后面的字段值相同。
 ```
 SELECT col1, COUNT(*) AS num
 FROM mytable
 GROUP BY col1;
 ```
 
-# WHERE 过滤行，HAVING 过滤分组。行过滤应当先与分组过滤；
+#### WHERE 过滤行，HAVING 过滤分组。行过滤应当先与分组过滤；
 ```
 SELECT col, COUNT(*) AS num
 FROM mytable
@@ -274,7 +274,7 @@ GROUP BY col
 HAVING COUNT(*) >= 2;
 ```
 
-# GROUP BY 的排序结果为分组字段，而 ORDER BY 也可以以聚集字段来进行排序。
+#### GROUP BY 的排序结果为分组字段，而 ORDER BY 也可以以聚集字段来进行排序。
 ```
 SELECT col, COUNT(*) AS num
 FROM mytable
@@ -282,12 +282,12 @@ GROUP BY col
 ORDER BY num;
 ```
 
-# （如上表信息） 可以通过GROUP BY分组使用函数计算平均值。
+#### （如上表信息） 可以通过GROUP BY分组使用函数计算平均值。
 ```
 SELECT col1, AVG(col5) AS num FROM mytable GROUP BY col1;
 ```
 
-# 分组规定
+#### 分组规定
 
 1. GROUP BY 子句出现在 WHERE 子句之后，ORDER BY 子句之前；
 
@@ -299,8 +299,8 @@ SELECT col1, AVG(col5) AS num FROM mytable GROUP BY col1;
 
 
 /*--------------------子查询----------------------*/
-# 子查询中只能返回一个字段的数据。
-# 可以将子查询的结果作为 WHRER 语句的过滤条件：
+#### 子查询中只能返回一个字段的数据。
+#### 可以将子查询的结果作为 WHRER 语句的过滤条件：
 ```
 SELECT *
 FROM mytable1
@@ -308,7 +308,7 @@ WHERE col1 IN (SELECT col2
 ​                 FROM mytable2);
 ```
 
-# 下面的语句可以检索出客户的订单数量，子查询语句会对第一个查询检索出的每个客户执行一次：
+#### 下面的语句可以检索出客户的订单数量，子查询语句会对第一个查询检索出的每个客户执行一次：
 ```
 SELECT cust_name, (SELECT COUNT(*)
 ​                   FROM Orders
@@ -328,32 +328,32 @@ ORDER BY cust_name;
 
 可以用 AS 给列名、计算字段和表名取别名，给表名取别名是为了简化 SQL 语句以及连接相同表。
 
-# 内连接
-# 内连接又称等值连接(比如有两张表，一张表是学生学号表，一张是选课表，通过内连接查询可以将两张表中学号相同的信息拼在一起)，也可以不使用 INNER JOIN 关键字。
+#### 内连接
+#### 内连接又称等值连接(比如有两张表，一张表是学生学号表，一张是选课表，通过内连接查询可以将两张表中学号相同的信息拼在一起)，也可以不使用 INNER JOIN 关键字。
 ```
 SELECT a.col1, a.col2, a.col5, b.col3 FROM mytable AS a, mytable1 AS b WHERE a.id = b.id;
 ```
 
-# 使用 INNER JOIN 关键字
+#### 使用 INNER JOIN 关键字
 ```
 SELECT a.col1, a.col2, a.col5, b.col3 FROM mytable AS a inner join  mytable1 AS b ON a.id = b.id;
 ```
 
-# 自连接
-# 自连接可以看成内连接的一种，只是连接的表是自身而已。
+#### 自连接
+#### 自连接可以看成内连接的一种，只是连接的表是自身而已。
 ```
 SELECT * FROM mytable WHERE col1 = col1 AND col2 = 'fengxiao';
 ```
 
-# 自然连接
-# 自然连接是把两个表中同名列通过等值测试连接起来的，同名列可以有多个。
-# 内连接和自然连接的区别：内连接提供连接的列，而自然连接自动连接所有同名列，他比内连接更智能。
+#### 自然连接
+#### 自然连接是把两个表中同名列通过等值测试连接起来的，同名列可以有多个。
+#### 内连接和自然连接的区别：内连接提供连接的列，而自然连接自动连接所有同名列，他比内连接更智能。
 ```
 SELECT * FROM mytable natural join mytable1;
 ```
 
-# 外连接保留了没有关联的那些行。分为左外连接，右外连接以及全外连接.
-# 左外连接，左外连接就是保留左表没有关联的行。
+#### 外连接保留了没有关联的那些行。分为左外连接，右外连接以及全外连接.
+#### 左外连接，左外连接就是保留左表没有关联的行。
 mysql> select * from mytable;
 
 | id | col1       | col2       | col4 | col5 |
@@ -381,7 +381,7 @@ SELECT a.col2, a.col4, a.col5, b.col1, b.col2, b.col3 mytable AS a LEFT OUTER JO
 
 
 
-# 右外连接
+#### 右外连接
 mysql> SELECT a.col2, a.col4, a.col5, b.col1, b.col2, b.col3 as a RIGHT OUTER JOIN mytable1 AS b ON a.col2 = b.col2;
 
 | col2     | col4 | col5 | col1       | col2     | col3       |
@@ -392,10 +392,10 @@ mysql> SELECT a.col2, a.col4, a.col5, b.col1, b.col2, b.col3 as a RIGHT OUTER JO
 2 rows in set (0.00 sec)
 
 /*--------------------组合查询--------------------------------*/
-# 使用 UNION 来组合两个查询，如果第一个查询返回 M 行，第二个查询返回 N 行，那么组合查询的结果为 M+N 行。
-# 每个查询必须包含相同的列、表达式或者聚集函数。
-# 默认会去除相同行，如果需要保留相同行，使用 UNION ALL。
-# 只能包含一个 ORDER BY 子句，并且必须位于语句的最后。
+#### 使用 UNION 来组合两个查询，如果第一个查询返回 M 行，第二个查询返回 N 行，那么组合查询的结果为 M+N 行。
+#### 每个查询必须包含相同的列、表达式或者聚集函数。
+#### 默认会去除相同行，如果需要保留相同行，使用 UNION ALL。
+#### 只能包含一个 ORDER BY 子句，并且必须位于语句的最后。
 ```
 SELECT col
 FROM mytable

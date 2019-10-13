@@ -704,7 +704,7 @@ server {
   * `redis-server --port ${port}` `redis-server --port 6380` 指定端口
 * redis单实例客户端的启动
   * `redis-cli`
-  * `redis-cli -p ${port}` 指定端口，默认是3679
+  * `redis-cli -p ${port}` 指定端口，默认是6379
   * `redis-cli -h ${ip}` 指定ip
   * `redis-cli -a ${password}` 指定auth认证密码
   * `redis-cli -p ${port} -h ${ip} -a ${password}`组合使用
