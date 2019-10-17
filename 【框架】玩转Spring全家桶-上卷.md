@@ -1,4 +1,4 @@
-玩转Spring全家桶——极客时间
+# 玩转Spring全家桶-上卷——极客时间
 
 ## 第一章：初识Spring (4讲)
 
@@ -217,7 +217,7 @@
 
 1)手工配置两组DataSource及相关内容（不使用Spring Boot），2)与Spring Boot协同工作。
 
-而在使用Spring Boot配置多数据源中又有两种办法：1)配置@Primary类型的Bean，2)排除Spring Boot的自动配置，在接下来内容中介绍了第2中排除Spring Boot的自动配置的方案。项目地址：<https://github.com/depers/geektime-spring-code/tree/master/6/multi-datasource-demo>
+而在使用Spring Boot配置多数据源中又有两种办法：1)配置@Primary类型的Bean，2)排除Spring Boot的自动配置，在接下来内容中介绍了第2种排除Spring Boot的自动配置的方案。项目地址：<https://github.com/depers/geektime-spring-code/tree/master/6/multi-datasource-demo>
 
 ![18](E:\markdown笔记\笔记图片\13\18.png)
 
@@ -1687,7 +1687,7 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
 项目代码：
 
-* 地址：
+* 地址： [https://github.com/depers/geektime-spring-code/tree/master/Chapter%207/webclient-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 7/webclient-demo) 
 
 * 注意点：
 
@@ -1950,3 +1950,430 @@ Spring session其实就是集中式会话的一个实现；
   * 编写了geektime.spring.springbucks.waiter.repository.CoffeeRepository
 
   * 其他的基本上与前面项目中写法的差不多
+
+### 66.SpringBucks 实战项目进度小结
+
+![233](E:\markdown笔记\笔记图片\13\233.png)
+
+![234](E:\markdown笔记\笔记图片\13\234.png)
+
+## 第九章：重新认识Spring Boot
+
+![235](E:\markdown笔记\笔记图片\13\235.png)
+
+![236](E:\markdown笔记\笔记图片\13\236.png)
+
+![237](E:\markdown笔记\笔记图片\13\237.png)
+
+![238](E:\markdown笔记\笔记图片\13\238.png)
+
+Spring Boot的文档：<https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/reference/html/>
+
+### 68.了解自动配置的实现原理
+
+![239](E:\markdown笔记\笔记图片\13\239.png)
+
+其中在注解@SpringBootApplication中包含了@EnableAutoConfiguration。
+
+![240](E:\markdown笔记\笔记图片\13\240.png)
+
+![241](E:\markdown笔记\笔记图片\13\241.png)
+
+* @Conditional：它的作用是按照一定的条件进行判断，满足条件给容器注册bean。
+* @ConditionalOnClass：判断当前classpath下是否存在指定类，若存在则将当前的配置装载入spring容器。
+* @ConditionalOnBean：就是在Spring容器里面存在某个特定名称的bean的时候该怎么做。
+* @ConditionalOnMissingBean：就是我没有某个bean的时候该怎么做。
+* @ConditionalOnProperty：当配置了特定属性会怎么样。
+* @Import注解可以普通类导入到 IoC容器中。
+* @Configuration标注在类上，相当于把该类作为spring的xml配置文件中的`<beans>`，作用为：配置spring容器(应用上下文)
+* @EnableConfigurationProperties：在配置类上使用@EnableConfigurationProperties注解去指定这个类，这个时候就会让该类上的@ConfigurationProperties生效，然后作为bean添加进spring容器中
+
+![242](E:\markdown笔记\笔记图片\13\242.png)
+
+在项目启动参数中添加`--debug`，然后再启动项目。就可以看到Spring自动配置的类有哪些，计算报告的生成是由org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener来做的。
+
+* org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportMessage
+
+![243](E:\markdown笔记\笔记图片\13\243.png)
+
+项目代码：
+
+* 地址： [https://github.com/depers/geektime-spring-code/tree/master/Chapter%209/autoconfigure-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 9/autoconfigure-demo) 
+
+* 注意点：
+
+  * 源码分析
+
+    * @EnbaleAutoConfiguration
+
+      * org.springframework.boot.autoconfigure.SpringBootApplication#exclude
+      * org.springframework.boot.autoconfigure.AutoConfigurationImportSelector
+        * org.springframework.boot.autoconfigure.AutoConfigurationImportSelector#selectImports
+        * org.springframework.boot.autoconfigure.AutoConfigurationImportSelector#getAutoConfigurationEntry
+        * org.springframework.boot.autoconfigure.AutoConfigurationImportSelector#getCandidateConfigurations
+      * spring-boot-autoconfigure-2.1.3.RELEASE.jar!/META-INF/spring.factories：org.springframework.boot.autoconfigure.EnableAutoConfiguration
+
+    * 条件注解
+
+      * org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+        ```java 
+        @Configuration
+        // 当满足EmbeddedDatabaseCondition的条件时
+        @Conditional(EmbeddedDatabaseCondition.class)
+        // 当Spring容器中不包含DataSource.class, XADataSource.class
+        @ConditionalOnMissingBean({ DataSource.class, XADataSource.class })
+        // 将EmbeddedDataSourceConfiguration注入到IOC容器中
+        @Import(EmbeddedDataSourceConfiguration.class)
+        protected static class EmbeddedDatabaseConfiguration {
+        
+        }
+        ```
+### 69.动手实现自己的自动配置
+
+![244](E:\markdown笔记\笔记图片\13\244.png)
+
+![245](E:\markdown笔记\笔记图片\13\245.png)
+
+![246](E:\markdown笔记\笔记图片\13\246.png)
+
+![247](E:\markdown笔记\笔记图片\13\247.png)
+
+![248](E:\markdown笔记\笔记图片\13\248.png)
+
+在IDEA中先通过File>import导入autoconfigure-demo，然后通过File>New>Module from existing source...分别导入geektime-spring-boot-autoconfig，greeting项目。
+
+下面我将介绍三个小项目来说明本节的知识点：
+
+* greeting
+
+  1. 编写了geektime.spring.hello.greeting.GreetingApplicationRunner
+
+* geektime-spring-boot-autoconfig
+
+  1. pom文件
+
+     ```xml
+     <dependencies>
+     		<dependency>
+     			<groupId>org.springframework.boot</groupId>
+     			<artifactId>spring-boot-autoconfigure</artifactId>
+     		</dependency>
+     
+     		<dependency>
+     			<groupId>geektime.spring.hello</groupId>
+     			<artifactId>greeting</artifactId>
+     			<version>0.0.1-SNAPSHOT</version>
+     			<scope>provided</scope>
+     		</dependency>
+     </dependencies>
+     ```
+
+  2. 编写了geektime.spring.hello.greeting.GreetingAutoConfiguration
+
+     ```java
+     @Configuration
+     // classPath存在GreetingApplicationRunner时才会生效
+     @ConditionalOnClass(GreetingApplicationRunner.class)
+     public class GreetingAutoConfiguration {
+         @Bean
+         // 只有在Spring上下文中不存在这个bean的时候才会生效
+         @ConditionalOnMissingBean(GreetingApplicationRunner.class)
+         // 只有greeting.enabled属性为true时才会生效，如果没有该属性默认为true
+         @ConditionalOnProperty(name = "greeting.enabled", havingValue = "true", matchIfMissing = true)
+         public GreetingApplicationRunner greetingApplicationRunner() {
+             return new GreetingApplicationRunner();
+         }
+     }
+     ```
+
+  3. 编写了META-INF/spring.factories
+
+     ```properties
+     org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+     geektime.spring.hello.greeting.GreetingAutoConfiguration
+     ```
+
+* autoconfigure-demo
+
+  1. pom文件
+
+     ```xml
+     <!-- 以下是基于Spring Boot的自动配置 -->
+     <dependency>
+        <groupId>geektime.spring.hello</groupId>
+        <artifactId>geektime-spring-boot-autoconfigure</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+     </dependency>
+     
+     <dependency>
+        <groupId>geektime.spring.hello</groupId>
+        <artifactId>greeting</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+     </dependency>
+     ```
+
+  2. 启动项目
+  
+     1. 在application.properties中配置**greeting.enabled=true**：
+  
+        日志：
+  
+        2019-10-14 15:45:38.487  INFO 17952 --- [           main] g.s.h.g.GreetingApplicationRunner        : Initializing GreetingApplicationRunner for **GeekTime**.
+        2019-10-14 15:45:38.602  INFO 17952 --- [           main] g.s.hello.AutoconfigureDemoApplication   : Started AutoconfigureDemoApplication in 1.735 seconds (JVM running for 3.66)
+        2019-10-14 15:45:38.602  INFO 17952 --- [           main] g.s.h.g.GreetingApplicationRunner        : Hello everyone! We all like **Spring**！
+  
+     2. 在geektime.spring.hello.AutoconfigureDemoApplication添加
+  
+        ```java
+        @Bean
+        public GreetingApplicationRunner greetingApplicationRunner(){
+           return new GreetingApplicationRunner("Spring");
+        }
+        ```
+  
+        日志：
+  
+        2019-10-14 15:51:46.724  INFO 10176 --- [           main] g.s.h.g.GreetingApplicationRunner        : Initializing GreetingApplicationRunner for **Spring**.
+        2019-10-14 15:51:46.811  INFO 10176 --- [           main] g.s.hello.AutoconfigureDemoApplication   : Started AutoconfigureDemoApplication in 0.86 seconds (JVM running for 2.024)
+        2019-10-14 15:51:46.811  INFO 10176 --- [           main] g.s.h.g.GreetingApplicationRunner        : Hello everyone! We all like **Spring**! 
+  
+     3. 在application.properties将greeting.enabled修改为**false**:
+  
+        日志：
+        2019-10-14 16:24:11.813  INFO 7316 --- [           main] g.s.hello.AutoconfigureDemoApplication   : Started AutoconfigureDemoApplication in 0.747 seconds (JVM running for 1.883)
+
+下面介绍一下本节的第二个知识点：Spring Boot中错误的分析机制：
+
+* 包：org.springframework.boot.diagnostics.analyzer
+* 源码分析：
+  * org.springframework.boot.diagnostics.FailureAnalysis
+  * org.springframework.boot.diagnostics.AbstractFailureAnalyzer
+  * org.springframework.boot.autoconfigure.jdbc.DataSourceBeanCreationFailureAnalyzer
+
+### 70.如何在低版本 Spring 中快速实现类似自动配置的功能
+
+![249](E:\markdown笔记\笔记图片\13\249.png)
+
+![250](E:\markdown笔记\笔记图片\13\250.png)
+
+![251](E:\markdown笔记\笔记图片\13\251.png)
+
+![252](E:\markdown笔记\笔记图片\13\252.png)
+
+![253](E:\markdown笔记\笔记图片\13\253.png)
+
+* 源码解析
+  * org.springframework.beans.factory.support.AbstractBeanFactory#getBean
+  * org.springframework.beans.factory.support.AbstractBeanFactory#doGetBean
+  * org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBean
+  * org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#doCreateBean
+  * org.springframework.beans.factory.support.AbstractBeanFactory#registerDisposableBeanIfNecessary
+  * org.springframework.beans.factory.support.AbstractBeanFactory#requiresDestruction
+  * org.springframework.beans.factory.support.DisposableBeanAdapter#hasDestroyMethod
+  
+* 自己实现类似自动装配的功能
+
+  在这个功能实现中，我们和上一节一样也有三个项目通过Module from existing source...添加，这三个项目跟分别是autoconfigure-demo，geektime-spring-boot-backport，greeting。
+
+  * geektime-spring-boot-backport
+
+    1. 编辑pom文件(可与上一节中geektime-spring-boot-autoconfig的pom比较一下)
+
+       ```xml
+       <dependencies>
+          <dependency>
+             <groupId>org.springframework</groupId>
+             <artifactId>spring-context</artifactId>
+          </dependency>
+       
+          <dependency>
+             <groupId>org.projectlombok</groupId>
+             <artifactId>lombok</artifactId>
+          </dependency>
+       
+          <dependency>
+             <groupId>geektime.spring.hello</groupId>
+             <artifactId>greeting</artifactId>
+             <version>0.0.1-SNAPSHOT</version>
+             <scope>provided</scope>
+          </dependency>
+       </dependencies>
+       ```
+
+    2. 编写了geektime.spring.hello.greeting.GreetingAutoConfiguration
+
+    3. 编写了geektime.spring.hello.greeting.GreetingBeanFactoryPostProcessor
+
+  * autoconfigure-demo
+
+    1. 修改pom文件
+
+       ```xml
+       <!-- 以下是手工实现的自动配置 -->
+       <dependency>
+       <groupId>geektime.spring.hello</groupId>
+       <artifactId>geektime-autoconfigure-backport</artifactId>
+       <version>0.0.1-SNAPSHOT</version>
+       </dependency>
+       
+       <!-- 以下是基于Spring Boot的自动配置 -->
+       <!--<dependency>-->
+          <!--<groupId>geektime.spring.hello</groupId>-->
+          <!--<artifactId>geektime-spring-boot-autoconfigure</artifactId>-->
+          <!--<version>0.0.1-SNAPSHOT</version>-->
+       <!--</dependency>-->
+       ```
+
+    2. pom文件右键单击>maven>reImport
+
+    3. 正常启动geektime.spring.hello.AutoconfigureDemoApplication，就可以实现自动配置的功能了
+
+  * greeting
+
+    不做修改
+
+  * 在autoconfigure-demo中为什么没有显示的引入配置类(通过component-scan或xml)
+
+    这是因为在项目autoconfigure-demo中AutoconfigureDemoApplication的package是**geektime.spring.hello**，而在项目geektime-spring-boot-backport中GreetingAutoConfiguration的package是**geektime.spring.hello.greeting**。
+
+    对于Spring Boot而言他会寻找带有@SpringBootApplication注解类的packeage以下这些package中的所有的配置。
+
+### 71.了解起步依赖及其实现原理
+
+起步依赖的作用就是简化maven的依赖配置。
+
+![](E:\markdown笔记\笔记图片\13\254.png)
+
+![255](E:\markdown笔记\笔记图片\13\255.png)
+
+在Spring Boot项目中，我们查看了他的子module spring-boot-parent，该项目里面只有一个pom文件，在module spring-boot-dependencies中的pom文件中则声明了大量的版本控制信息。这样做的意思就是，我通过一个只包含pom文件的starter来声明项目中具体的依赖的版本控制信息。
+
+如果我们想在自己的项目中对Spring Boot的某个依赖的version要做修改，升级或降级版本。我们只需要在自己的pom文件中定义与spring-boot-dependencies pom中声明的相同的version号就可以覆盖spring boot的version号。例如：
+
+```
+<lettuce.version>5.2.0.RELEASE</lettuce.version>
+```
+
+![256](E:\markdown笔记\笔记图片\13\256.png)
+
+Spring Boot为我们提供了很多的starter，详情可以阅读相关的文档： https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/reference/html/using-boot-build-systems.html#using-boot-starter 
+
+在 https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-starters/spring-boot-starter-jdbc/pom.xml 这个pom文件中我们就可以看到，当我们引入 spring-boot-starter-jdbc 时，他还会为我们引入 spring-boot-starter 、 HikariCP 和 spring-jdbc 这三个依赖。
+
+### 72.定制自己的起步依赖
+
+![](E:\markdown笔记\笔记图片\13\257.png)
+
+![258](E:\markdown笔记\笔记图片\13\258.png)
+
+在本节的操作中我们引入了四个项目分别是autoconfigure-demo，geektime-spring-boot-starter，geektime-spring-boot-backport，greeting，如下图所示：
+
+![](E:\markdown笔记\笔记图片\13\260.png)
+
+其中geektime-spring-boot-backport，greeting这两个项目没有变化。这里我来分别介绍下另外两个项目的变化：
+
+* autoconfigure-demo项目
+
+  1. pom文件的修改，修改后的pom文件的骨架结构如下图所示：
+
+     ![](E:\markdown笔记\笔记图片\13\259.png)
+
+     添加了：
+
+     ```
+     <dependency>
+     	<groupId>geektime.spring.hello</groupId>
+     	<artifactId>geektime-spring-boot-starter</artifactId>
+     	<version>0.0.1-SNAPSHOT</version>
+     </dependency>
+     ```
+
+* geektime-spring-boot-starter项目
+
+  该项目的变化只是编辑了他的pom文件。项目地址： [https://github.com/depers/geektime-spring-code/tree/master/Chapter%209/geektime-spring-boot-starter](https://github.com/depers/geektime-spring-code/tree/master/Chapter 9/geektime-spring-boot-starter) 
+
+通过上面的设置，我们如果要在项目中使用geektime-spring-boot-backport，greeting这两个项目，只需引入geektime-spring-boot-starter项目即可。我们可以运行geektime.spring.hello.AutoconfigureDemoApplication，这个项目的运行结果应该和之前的运行效果是一致的。
+
+### 73.深挖 Spring Boot 的配置加载机制
+
+#### 1.外化配置的加载顺序
+
+![](E:\markdown笔记\笔记图片\13\261.png)
+
+* 其中标红的命令行参数，例如使用**--server.port=9000**这个配置就会覆盖默认的8080端口启动。
+
+![262](E:\markdown笔记\笔记图片\13\262.png)
+
+* System.getProperties()处理的就是java -D参数指定的属性。
+* 操作系统环境变量：比如linux系统中环境变量就可以加载进来的作为系统的配置。
+
+![](E:\markdown笔记\笔记图片\13\263.png)
+
+![264](E:\markdown笔记\笔记图片\13\264.png)
+
+#### 2.application.properties的存放位置
+
+![](E:\markdown笔记\笔记图片\13\265.png)
+
+![](E:\markdown笔记\笔记图片\13\266.png)
+
+#### 3.Relaxed Binding
+
+![](E:\markdown笔记\笔记图片\13\267.png)
+
+外置配置的相关参考文档： https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/reference/html/boot-features-external-config.html 
+
+### 74.理解配置背后的 PropertySource 抽象
+
+#### 1.基本知识
+
+![](E:\markdown笔记\笔记图片\13\268.png)
+
+![269](E:\markdown笔记\笔记图片\13\269.png)
+
+![270](E:\markdown笔记\笔记图片\13\270.png)
+
+#### 2.源码分析
+
+* org.springframework.boot.autoconfigure.jdbc.JdbcProperties
+
+  * @ConfigurationProperties(prefix = "spring.jdbc")
+
+    说明所有以*spring.jdbc*打头的属性都会绑定到JdbcProperties这个类上。
+
+* org.springframework.boot.env.RandomValuePropertySource
+
+#### 2.实操
+
+该项目实现了propertySource的添加
+
+* 地址： [https://github.com/depers/geektime-spring-code/tree/master/Chapter%209/property-source-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 9/property-source-demo) 
+* 实现步骤：
+  1. 编写yapf.properties；
+  2. 编写geektime.spring.hello.YapfEnvironmentPostProcessor；
+  3. 在META-INF/spring.factories添加该类的声明，在spring boot启动时会实例化spring.factories中声明的类；
+  4. 然后启动geektime.spring.hello.PropertySourceDemoApplication，读取yapf.properties中的属性；
+
+#### 4.扩展知识点
+
+我编写了一个simple-property-source-demo，地址：
+
+在该项目中我们实现了只用@PropertySource注解就可以实现非application.properties的.properties文件内容的读取。
+
+值得注意的是：application.properties中的内容是默认加载的，而且如果除application.properties的.properties也声明了相同的配置属性，则application.properties中声明的配置属性会覆盖其他配置的属性。
+
+* application.properties中配置
+
+  ```
+  geektime.greeting=hi
+  ```
+
+* yapf.properties中配置
+
+  ```
+  geektime.greeting=hello
+  ```
+
+则通过@Value("${geektime.greeting}")取到的属性是hi。
+
