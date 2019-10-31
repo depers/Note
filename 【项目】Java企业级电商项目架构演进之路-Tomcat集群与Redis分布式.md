@@ -29,11 +29,11 @@ Java的编译器对源代码进行分析，生成抽象语法树AST。然后Lomb
 * maven引入：
 
   ```xml
-    <dependency>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-              <version>1.16.18</version>
-          </dependency>
+  <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.18</version>
+  </dependency>
   ```
 
 ### 5.安装Lombox插件
