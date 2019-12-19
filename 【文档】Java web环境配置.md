@@ -59,7 +59,7 @@
 
 2. 若本机没有安装，需到官网下载rpm文件进行安装，安装命令`rpm -Uvh *.rpm --nodeps --force`
 
-3. 安装之后启动mysql，命令`service mysqld start`，接着使用`sudo grep 'temporpary password /var/log/mysqld.log'`查看临时密码
+3. 安装之后启动mysql，命令`service mysqld start`，接着使用`sudo grep 'temporpary password /var/log/mysqld.log`查看临时密码。然后使用`mysql -uroot -p[temporpary password]`登录，直接进行第7步的配置工作
 
 4. 若在/var/log/mysqld.log没有临时密码，则在/etc/my.conf添加skip-grant-tables，可以不用密码直接登录数据库。如下是my.conf文件：
 
@@ -81,9 +81,7 @@
 
 5. 启动MySQL：`service mysqld start`。但是这时报错了：Mysql报错Fatal error: Can't open and lock privilege tables: Table 'mysql.host' doesn't exist。
 
-   解决办法：命令`mysql_install_db`
-
-6. 再启动MySQL就正常了。
+   解决办法：命令`mysql_install_db`，再启动MySQL就正常了。
 
 7. 输入`sudo mysql uroot -p`直接进入开始操作数据库，设置管理员和权限。下面是sql：
 
