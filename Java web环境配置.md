@@ -53,11 +53,15 @@
 
 4. 分别进入两个tomcat的bin目录，启动tomcat，即进入${tomcat}/bin/，执行start.sh。访问[http://localhost:8080]()，[http://localhost:9080]()可以打开tomcat部署的webapps的ROOT项目首页
 
-## MySQL安装
+## MySQL安装（Centos6）
 
-1. 检查是否安装了MySQL：`rpm -qa|grep mysql-server`，检测到本机使用的是mysql5.1
+1. 检查是否安装了MySQL：`rpm -qa|grep mysql-server`
 
-2. 在/etc/my.conf添加skip-grant-tables，可以不用密码直接登录数据库。如下是my.conf文件：
+2. 若本机没有安装，需到官网下载rpm文件进行安装，安装命令`rpm -Uvh *.rpm --nodeps --force`
+
+3. 安装之后启动mysql，命令`service mysqld start`，接着使用`sudo grep 'temporpary password /var/log/mysqld.log'`查看临时密码
+
+4. 若在/var/log/mysqld.log没有临时密码，则在/etc/my.conf添加skip-grant-tables，可以不用密码直接登录数据库。如下是my.conf文件：
 
    ```
    [mysqld]
@@ -75,28 +79,40 @@
    skip-grant-tables
    ```
 
-3. 启动MySQL：`service mysqld start`。但是这时报错了：Mysql报错Fatal error: Can't open and lock privilege tables: Table 'mysql.host' doesn't exist。
+5. 启动MySQL：`service mysqld start`。但是这时报错了：Mysql报错Fatal error: Can't open and lock privilege tables: Table 'mysql.host' doesn't exist。
 
    解决办法：命令`mysql_install_db`
 
-4. 再启动MySQL就正常了。
+6. 再启动MySQL就正常了。
 
-5. 输入`mysql uroot -p`直接进入开始操作数据库，设置管理员和权限。下面是sql：
+7. 输入`sudo mysql uroot -p`直接进入开始操作数据库，设置管理员和权限。下面是sql：
 
    ```
    select user,host,password from mysql.user;
    delete from mysql.user where user='';
    
+   // 创建用户方法一：该方法创建的用户只有连接数据库权限
+   create user '[username]'@'%' identified by '[password]'; // %指任意ip
+   
+   // 创建用户方法二：insert user
+   insert into user (host,user,password) values (’%’,‘john’,password(‘123’));
+   
+   // 创建用户方法三：grant，若grant命令中的用户若不存在会新创建，若存在则直接授权
+   GRANT [权限] ON [数据库名.表名] to [username@hostname] [IDENTIFIED BY ‘PASSWORD’] [WITH GRANT OPTION];
+   * 权限：select,insert,update,delete,create,drop,index,alter,grant,references,reload,shutdown,process,file等权限，或者all privileges 为全部权限
+   
+   // 设置密码
    set password for root@localhost=password('fx1212')
    set password for root@127.0.0.1=password('fx1212')
    
+   // 赋权
    grant all privileges on *.* to 'root'@'%' identified by 'fx1212' with grant option;
    flush privileges;
    ```
 
-6. 重启服务器：`service mysqld restart`
+8. 重启服务器：`service mysqld restart`
 
-7. 配置防火墙：`vim /etc/sysconfig/iptables`
+9. 配置防火墙：`vim /etc/sysconfig/iptables`
 
    ```
    -A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
@@ -106,12 +122,11 @@
    -A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT
    -A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
    -A INPUT -m state --state NEW -m tcp -p tcp --dport 8081 -j ACCEPT
-   
    ```
 
-8. 重启防火墙：`service iptables restart`
+10. 重启防火墙：`service iptables restart`
 
-9. mysql自启动设置：1）执行`chkconfig mysqld on`，2）执行`chlconfig --list mysqld`查看，如果2-5位启用on状态即成功。
+11. mysql自启动设置：1）执行`chkconfig mysqld on`，2）执行`chlconfig --list mysqld`查看，如果2-5位启用on状态即成功。
 
 ## Nginx配置
 

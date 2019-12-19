@@ -10,27 +10,27 @@ typora-root-url: E:\markdown笔记\笔记图片
 
 主要讲了OIS七层模型的作用
 
-![7-1](.\笔记图片\7-1.png)
+![7-1](E:\markdown笔记\笔记图片\7\7-1.png)
 
 ### 2.TCP/IP四层模型
 
-![7-2](/7-2.png)
+![7-2](E:\markdown笔记\笔记图片\7\7-2.png)
 
-![7-3](/7-3.png)
+![7-3](E:\markdown笔记\笔记图片\7\7-3.png)
 
 ### 3.TCP的三次握手
 
-![7-4](/7-4.png)
+![7-4](E:\markdown笔记\笔记图片\7\7-4.png)
 
 TCP报文头字段的含义
 
-![7-5](/7-5.png)
+![7-5](E:\markdown笔记\笔记图片\7\7-5.png)
 
-![7-6](/7-6.png)
+![7-6](E:\markdown笔记\笔记图片\7\7-6.png)
 
-![7-7](/7-7.png)
+![7-7](E:\markdown笔记\笔记图片\7\7-7.png)
 
-![7-8](/7-8.png)
+![7-8](E:\markdown笔记\笔记图片\7\7-8.png)
 
 * 为什么需要三次握手才能建立起连接呢？
 
@@ -55,9 +55,9 @@ TCP报文头字段的含义
 
 ### 4.TCP的四次挥手
 
-![7-9](/7-9.png)
+![7-9](E:\markdown笔记\笔记图片\7\7-9.png)
 
-![7-10](/7-10.png)
+![7-10](E:\markdown笔记\笔记图片\7\7-10.png)
 
 * 上图中为什么Client会有TIME_WAIT状态？
 
@@ -95,7 +95,7 @@ TCP报文头字段的含义
 
 * 滑动窗口的计算
 
-  ![7-11](/7-11.png)
+  ![7-11](E:\markdown笔记\笔记图片\7\7-11.png)
 
   * LastByteAcked：已发送并收到确认的最后一个字节位置
   * LastByteSent：已发送未收到确认的最后一个字节位置
@@ -111,7 +111,7 @@ TCP报文头字段的含义
 
   * TCP会话发送方
 
-    ![7-12](/7-12.png)
+    ![7-12](E:\markdown笔记\笔记图片\7\7-12.png)
 
     数据分类：
 
@@ -125,13 +125,13 @@ TCP报文头字段的含义
 
   * 滑动窗口
 
-    ![7-13](/7-13.png)
+    ![7-13](E:\markdown笔记\笔记图片\7\7-13.png)
 
     原滑动窗口为32-51，现在接收到确认的是32-35，所以窗口滑动，使得52-55进入滑动窗口。
 
   * TCP会话接收方
 
-    ![7-14](/7-14.png)
+    ![7-14](E:\markdown笔记\笔记图片\7\7-14.png)
 
     在TCP的接收缓存内有三种状态：
 
@@ -144,11 +144,11 @@ TCP报文头字段的含义
 
 * UDP报文结构
 
-  ![7-15](/7-15.png)
+  ![7-15](E:\markdown笔记\笔记图片\7\7-15.png)
 
 * UDP特点
 
-  ![7-16](/7-16.png)
+  ![7-16](E:\markdown笔记\笔记图片\7\7-16.png)
 
 * TCP与UDP的区别
 
@@ -162,21 +162,21 @@ TCP报文头字段的含义
 
 * HTTP超文本传输协议的主要特点：
 
-  ![7-17](/7-17.png)
+  ![7-17](E:\markdown笔记\笔记图片\7\7-17.png)
 
-  ![7-18](/7-18.png)
+  ![7-18](E:\markdown笔记\笔记图片\7\7-18.png)
 
 * HTTP请求结构：请求行，请求头部，请求正文
 
-  ![7-19](/7-19.png)
+  ![7-19](E:\markdown笔记\笔记图片\7\7-19.png)
 
 * HTTP响应结构：状态行，响应头部，响应正文
 
-  ![7-20](/7-20.png)
+  ![7-20](E:\markdown笔记\笔记图片\7\7-20.png)
 
 * HTTP请求/响应的步骤
 
-  ![7-21](/7-21.png)
+  ![7-21](E:\markdown笔记\笔记图片\7\7-21.png)
 
 * 在浏览器地址栏键入URL，按下回车之后经历的流程
 
@@ -189,11 +189,11 @@ TCP报文头字段的含义
 
 * HTTP状态码
 
-  ![7-22](/7-22.png)
+  ![7-22](E:\markdown笔记\笔记图片\7\7-22.png)
 
 * 常见状态码
 
-  ![7-23](/7-23.png)
+  ![7-23](E:\markdown笔记\笔记图片\7\7-23.png)
 
 * GET请求和POST请求的区别
 
@@ -205,58 +205,58 @@ TCP报文头字段的含义
 
   * Cookie
 
-    ![7-24](/7-24.png)
+    ![7-24](E:\markdown笔记\笔记图片\7\7-24.png)
 
   * Cookie的设置以及发送过程
 
-    ![7-25](/7-25.png)
+    ![7-25](E:\markdown笔记\笔记图片\7\7-25.png)
 
   * Session
 
-    ![7-26](/7-26.png)
+    ![7-26](E:\markdown笔记\笔记图片\7\7-26.png)
 
   * Session的实现方式
 
-    ![7-27](/7-27.png)
+    ![7-27](E:\markdown笔记\笔记图片\7\7-27.png)
 
   * 区别
 
-    ![7-28](/7-28.png)
+    ![7-28](E:\markdown笔记\笔记图片\7\7-28.png)
 
 ### 8.HTTP和HTTPS的区别
 
 * HTTPS在HTTP下面加了一层SSL或TLS
 
-  ![7-29](/7-29.png)
+  ![7-29](E:\markdown笔记\笔记图片\7\7-29.png)
 
 * SSL
 
-  ![7-30](/7-30.png)
+  ![7-30](E:\markdown笔记\笔记图片\7\7-30.png)
 
 * 加密方式
 
-  ![7-31](/7-31.png)
+  ![7-31](E:\markdown笔记\笔记图片\7\7-31.png)
 
 * HTTPS数据传输流程
 
-  ![7-32](/7-32.png)
+  ![7-32](E:\markdown笔记\笔记图片\7\7-32.png)
 
 * 区别
 
-  ![7-33](/7-33.png)
+  ![7-33](E:\markdown笔记\笔记图片\7\7-33.png)
 
 * HTTPS真的很安全吗
 
-  ![7-34](/7-34.png)
+  ![7-34](E:\markdown笔记\笔记图片\7\7-34.png)
 ### 9.Socket相关
 
 * Socket简介
 
-  ![7-35](/7-35.png)
+  ![7-35](E:\markdown笔记\笔记图片\7\7-35.png)
 
 * Socket通信流程
 
-  ![7-36](/7-36.png)
+  ![7-36](E:\markdown笔记\笔记图片\7\7-36.png)
 
 * Socket编程
 
@@ -264,17 +264,17 @@ TCP报文头字段的含义
 
 ## 第二章 数据库
 
-![7-38](/7-38.png)
+![7-38](E:\markdown笔记\笔记图片\7\7-38.png)
 
 * 一道面试题：如何设计一个关系型数据库？
 
-  ![7-39](/7-39.png)
+  ![7-39](E:\markdown笔记\笔记图片\7\7-39.png)
 
   要设计一个关系型数据库，要将其划分为两个部分。一个是程序实例部分，一个是存储部分，该部分类似于一个文件系统，将数据持久化到存储设备当中。除了存储部分，我们还需要通过程序实例部分对存储部分进行逻辑上的管理。程序实例部分包括将数据的逻辑关系转换为物理存储关系的存储模块；优化执行效率的缓存模块；将SQL语句进行解析的SQL解析模块；记录操作的日志管理模块；进行多于户管理的权限划分模块；灾难恢复的容灾机制模块；优化数据查询效率的索引管理模块；使得数据库支持并发操作的锁模块。
 
 ### 1.索引模块
 
-![7-40](/7-40.png)
+在开始本节之前请阅读本篇文章：[再有人问你为什么MySQL用B+树做索引，就把这篇文章发给她]( https://mp.weixin.qq.com/s?__biz=MzI3NzE0NjcwMg==&mid=2650125030&idx=1&sn=1c2a09a80547159b336e7ea25d7f4955&chksm=f36bafc7c41c26d14cf685d42369e82b3ead547a919b6e86b8068ef88464cb8ac13f72271a74&scene=27#wechat_redirect )![7-40](E:\markdown笔记\笔记图片\7\7-40.png)
 
 * **为什么要是用索引？**
 
@@ -293,7 +293,7 @@ TCP报文头字段的含义
 
 * 二叉查找树，也称二叉排序树
 
-  ![7-41](/7-41.png)
+  ![7-41](E:\markdown笔记\笔记图片\7\7-41.png)
 
   二叉查找树的特点：（1）若左子树不空，则左子树上所有结点的值均小于它的根结点的值；（2）若右子树不空，则右子树上所有结点的值均大于它的根结点的值；（3）左、右子树也分别为二叉排序树；（4）没有键值相等的节点。
 
@@ -301,7 +301,7 @@ TCP报文头字段的含义
 
 * B-Tree，又称多路搜索树
 
-  ![7-42](/7-42.png)
+  ![7-42](E:\markdown笔记\笔记图片\7\7-42.png)
 
   * 定义（制定这样的约束为的是让每个节点存储更多的数据，尽可能较少IO的次数）
 
@@ -318,14 +318,16 @@ TCP报文头字段的含义
     * 假设每个非终端节点中包含有n个关键字信息，其中
 
       * a) Ki(i=1...n)为关键字，且关键字按照顺序升序排序K(i-1)<Ki
-      * b)关键字的个数n必须满足：[ceil(m/2)-1]<-n<=m-1
+      * b)关键字的个数n必须满足：[ceil(m/2)-1]<=n<=m-1
       * c)非叶子节点的指针：Pi(1...n)为指向子树根结点的指针；其中P(i)指向关键字小于K[i]，P[i]指向关键字大于K[i-1]，其他P[i]指向关键字大小范围为(K[i-1],K[i])
+      
+    * 上面的内容太过冗长，简而言之： **B树相对于平衡二叉树，每个节点存储了更多的键值(key)和数据(data)，并且每个节点拥有更多的子节点，子节点的个数一般称为阶，上述图中的B树为3阶B树，高度也会很低。**  
 
 * B+Tree
 
   B+树是B树的变体，其定义基本与B树相同，除了：
 
-  ![7-43](/7-43.png)
+  ![7-43](E:\markdown笔记\笔记图片\7\7-43.png)
 
   * 非叶子节点的子树指针与关键字的个数相同(可以存储更多的关键字)
   * 非叶子节点的子树指针P[i]，指向关键字值大小范围为[K[i], K[i+1])
@@ -364,13 +366,13 @@ TCP报文头字段的含义
 
   * BitMap索引（MySQL不支持）
 
-    ![7-44](/7-44.png)
+    ![7-44](E:\markdown笔记\笔记图片\7\7-44.png)
 
     所谓的BitMap就是用一个bit位来标记某个元素所对应的value，而key即是该元素，由于BitMap使用了bit位来存储数据，因此可以大大节省存储空间。
 
 * 密集索引和稀疏索引的区别
 
-  ![7-45](/7-45.png)
+  ![7-45](E:\markdown笔记\笔记图片\7\7-45.png)
 
   * 区别
     * 密集索引文件中的每个搜索码值都对应一个索引值
@@ -384,7 +386,7 @@ TCP报文头字段的含义
 
     在MySQL中表结构信息存储在.frm文件中，若使用InnoDB引擎，他的数据和索引都是存储在.idb文件下的；若使用的是MyISAM引擎，他的数据存储在.MYD，索引存储在.MYI中。
 
-    ![7-46](/7-46.png)
+    ![7-46](E:\markdown笔记\笔记图片\7\7-46.png)
 
     * mysam存储引擎，不管是主键索引，唯一键索引还是普通索引都是稀疏索引
 
@@ -400,7 +402,7 @@ TCP报文头字段的含义
 
 * 根据慢日志定位慢查询sql
 
-  * 在MySQL数据库中查询，输入`show variables like '%quer%'`，然后我们需要关注这三个点：
+  * 在MySQL数据库中查询，输入`show variables like '%query%'`，然后我们需要关注这三个点：
 
     * slow_query_log：是否开启慢日志。默认为关闭OFF
     * slow_query_log_file：慢日志的存储位置
@@ -414,7 +416,7 @@ TCP报文头字段的含义
 
   * 输入SQL：`select name from person_info_large order by name desc`就会产生一条慢日志
 
-    ![7-47](/7-47.png)
+    ![7-47](E:\markdown笔记\笔记图片\7\7-47.png)
 
 * 使用explain等工具分析SQL
 
@@ -426,71 +428,71 @@ TCP报文头字段的含义
 
     在下图中如果type结果为index和all，说明sql有待优化
 
-    ![7-48](/7-48.png)
+    ![7-48](E:\markdown笔记\笔记图片\7\7-48.png)
 
   * Extra
 
-    ![7-49](/7-49.png)
+    ![7-49](E:\markdown笔记\笔记图片\7\7-49.png)
 
 * 修改SQL或者尽量让SQL走索引
 
   我们先来看下表结构：
 
-  ![7-50](/7-50.png)
+  ![7-50](E:\markdown笔记\笔记图片\7\7-50.png)
 
   在表结构中account是唯一索引，所以我们使用account唯一索引进行检索：
 
-  ![7-51](/7-51.png)
+  ![7-51](E:\markdown笔记\笔记图片\7\7-51.png)
 
   在上图中我们可以看到type，key，Extra都发生了变化，是因为我们使用了索引。
 
   接下来我们给name字段添加索引`alter table person_info_large add index idx_name(name)`。然后我们再输入sql`select name from person_info_large order by name desc`，就可以看到下图：
 
-  ![7-52](/7-52.png)
+  ![7-52](E:\markdown笔记\笔记图片\7\7-52.png)
 
   添加索引后，sql执行的速度有了明显的提升。
 
 ### 3.索引额外问题之最左匹配原则的成因
 
-![7-53](/7-53.png)
+![7-53](E:\markdown笔记\笔记图片\7\7-53.png)
 
 在上面的建表语句中我们可以看到index_area_title的组合索引。
 
-![7-54](/7-54.png)
+![7-54](E:\markdown笔记\笔记图片\7\7-54.png)
 
 通过explain可以看到key为index_area_title，sql执行使用了组合索引。
 
-![7-55](/7-55.png)
+![7-55](E:\markdown笔记\笔记图片\7\7-55.png)
 
 此时，我们单独使用area进行检索，可以看到key依然为index_area_title，sql执行依然使用了组合索引。
 
-![7-56](/7-56.png)
+![7-56](E:\markdown笔记\笔记图片\7\7-56.png)
 
 但是，如果我们单独使用title进行检索却没有使用组合索引。这就与mysql最左匹配原则有关系了。
 
-![7-57](/7-57.png)
+![7-57](E:\markdown笔记\笔记图片\7\7-57.png)
 
- 其中第二条等于可以乱序的意思就是说，使用`select * from person_info_large where area='' and title=''`与`select * from person_info_large where title='' and area='' `x效果是一样的，都会使用联合索引进行查询。
+ 其中第二条等于可以乱序的意思就是说，使用`select * from person_info_large where area='' and title=''`与`select * from person_info_large where title='' and area='' `效果是一样的，都会使用联合索引进行查询。
 
 ### 4.索引是建立的越多越好吗
 
-* 数据量小的表是不需要简历索引的，建立会增加额外的索引开销
-* 数据变更需要维护索引，因此更多的索引意味着更多的维护成本
-* 更多的索引意味着也需要更多的空间
+* 数据量小的表是不需要建立索引的，建立索引会增加额外的索引开销。
+* 数据变更需要维护索引，因此更多的索引意味着更多的维护成本。
+* 更多的索引意味着也需要更多的空间。
 
-### 5.锁模块
+### 5.锁模块之MyISAM与InooDB关于锁方面的区别（1）
 
-![7-58](/7-58.png)
+![7-58](E:\markdown笔记\笔记图片\7\7-58.png)
 
 * MyISAM与InnoDB关于锁方面的区别是什么
 
-  * MyISAM默认用的是表级锁，不支持行级锁
+  * MyISAM默认用的是表级锁，不支持行级锁（MyISAM不支持事务）
   * InnoDB默认用的是行级锁，也支持表级锁
 
-* 锁的实验
+* MyISAM引擎锁的实验（下面的两个操作都是使用两个session进行的）
   * 先执行读锁，后执行写锁
 
-    MyISAM引擎下，当我们使用select语句对表进行查询时，他会为查询添加一个读锁，当我们进行增删改时，他会为增删改添加一个写锁。如果我们运行读锁，此时读锁还没运行结束然后在运行写锁，当读锁还没有释放时，他会阻塞读锁，直到读锁结束。其中读锁也称**共享锁**。
+    MyISAM引擎下，当我们使用select语句对表进行查询时，他会为查询添加一个读锁（表锁），当我们进行增删改时，他会为增删改添加一个写锁（表锁）。如果我们运行读锁，此时读锁还没运行结束然后在运行写锁，当读锁还没有释放时，他会阻塞写锁，直到读锁结束。
 
     显式的设置锁和释放锁：
 
@@ -501,16 +503,518 @@ TCP报文头字段的含义
 
   * 先执行读锁，后也执行读锁
 
-    MyISAM引擎下，我先执行select语句，然后我再执行一条select语句。可以发现在第一条读锁还没有结束的时候，第二条读锁就可以快速的查询并结束。
+    MyISAM引擎下，我先执行select语句，然后我再执行一条select语句。可以发现在第一条读锁还没有结束的时候，第二条读锁就可以快速的查询并结束。其中读锁也称**共享锁**。
 
   * 先执行写锁，后执行读锁
 
-    MyISAM引擎下，我们先
-
-
-​      
-
+    MyISAM引擎下，我们先执行更新操作，接着我们在另一个session中执行读操作。此时之前的更新操作还没有执行完，MyISAM会为这个表加一个写锁。写锁会阻塞读锁，直到写锁释放，读操作才能进行。
+    
+  * 先执行写锁，后执行写锁
   
+    MyISAM引擎下，我们先执行更新操作接着我们继续执行更新操作。此时我们就会发现我们第一次的更新操作还未完成，他会阻塞第二次的更新操作。所以读锁又称为**排他锁**。
+  
+  * select语句也可以设置**排他锁**
+  
+    通过为select语句添加**for update**语句，来为他添加排他锁。先执行下列语句：
+  
+    ```sql
+    select * from person_info_myisam where id between 1 and 2000000 for update;
+    ```
+  
+    接着执行:
+  
+    ```sql
+    select * from person_info_myisam where id in (20000001);
+    ```
+  
+    此时第一条语句还未执行完，执行第二条语句。此时你就会发现第二条查询被阻塞了。只有第一条语句执行完后，第二条数据才执行。
+  
+* InnoDB引擎锁的实验
 
+  1. 关闭数据库的自动提交。（预先准备）
+
+    ```sql
+    show variables like 'autocommit';
+    
+    set autocommit = 0; -- 关闭自动提交，该操作只针对当前的查询session
+    ```
+
+    如果你不想显示的关闭自动提交，可以使用以下语句：
+
+    ```sql
+    begin transaction
+    -- update .....sql
+    ```
+
+  2. 实验一：InnoDB并未为select语句添加共享锁（先读后写）
+  
+     首先关闭两个session的自动提交，然后在session1中执行：
+  
+     ```sql
+     set autocommit = 0;
+     select * from person_info_large where id = 3;
+     ```
+  ```
+     
+  接着再session2中执行更新操作：
+     
+     ```sql
+     set autocommit = 0;
+  update person_info_large set title='test3' where id = 3;
+  ```
+  
+     按照常理来说在select操作中InnoDB会给改行数据添加共享锁，共享锁未释放之前session中的写锁是会被堵塞的，只有commit之后才会被释放。但是session2中的更新操作却并未被阻塞。**原因是InnoDB会并没有为select语句添加锁，所以更新操作可以顺畅执行**。
+  
+  3. 实验二：InnoDB为select显式添加**行级共享锁**（先读后写）
+  
+     在session1中显式添加共享锁：
+  
+     ```sql
+     set autocommit = 0;
+     select * from person_info_large where id = 3 lock in share mode;
+     ```
+  ```
+     
+  在session2中更新：
+     
+     ```sql
+     set autocommit = 0;
+  update person_info_large set title='test3' where id = 3;
+  ```
+  
+     此时我们就会发现更新操作被阻塞了。只有在session1中commit之后，共享锁才会被释放。
+  
+  4. 实验三：InnoDB是否真的支持行级锁（先读后写）
+  
+     在session1中显式添加共享锁，为id=3添加行锁：
+  
+     ```sql
+     set autocommit = 0;
+     select * from person_info_large where id = 3 lock in share mode;
+     ```
+  ```
+     
+  在session2中更新操作：
+     
+     ```sql
+     set autocommit = 0;
+  update person_info_large set title='test4' where id = 4;
+  ```
+  
+     此时我们顺利执行了id=4的数据，该行数据并没有被阻塞。
+  
+  5. 实验四：先写后读
+  
+     在session2中执行更新操作：
+  
+     ```sql
+     set autocommit = 0;
+     update art_article set title = title where id = 4181;
+     ```
+  
+     在session1中执行查询操作：
+  
+     ```sql
+     set autocommit = 0;
+     select * from art_article where id = 4181;
+     ```
+  
+     此时我们可以从数据库中查询到数据。
+  
+     如果我们在session1中显式的添加共享锁：
+  
+     ```sql
+     set autocommit = 0;
+     select * from art_article where id = 4181 lock in share mode;
+     ```
+  
+     此时只有session2中的数据commit之后，session1中的查询才能执行。
+  
+  6. 实现五：先读后读
+  
+     在session1中执行：
+  
+     ```sql
+     set autocommit = 0;
+     select * from art_article where id = 4181;
+     ```
+  
+     在session2中执行：
+  
+     ```sql
+     set autocommit = 0;
+     select * from art_article where id = 4181;
+     ```
+  
+     他们都不会阻塞，能够顺利的进行。
+  
+## 第三章 Redis
+
+### 1.Redis的五种数据结构
+
+* String：最基础的数据类型，二进制安全
+  * `set`
+  * `get`
+  * `incr`：将值为数值类型的键，每次加1，`incr key`
+* Hash：String元素组成的字典，使用用于存储对象
+  * `hmset`：`hmset map filed1 value1 field2 value2`设置哈希表map的多个域与值
+  * `hset`
+  * `hget`
+* List：列表，按照String元素插入顺序排序（类似栈，后进先出）
+  * `lpush`
+  * `lrange`：`LRANGE key start stop` 返回存储在 key 的列表里指定范围内的元素 
+* Set：String元素组成的无需集合，通过哈希表实现，不允许重复
+  * `sadd`
+  * `smembers`： 返回key集合所有的元素 
+* Sorted Set：通过分数来为集合中的成员进行从小到大的排序
+  * `zadd`
+  * `zrangebyscore`：返回有序集合中指定分数区间内的成员，分数由低到高排序
+* 其他：用于计数的HyperLogLog，用于支持存储地理位置信息的Geo
+
+#### Redis底层数据类型
+
+1. 简单动态字符串
+2. 链表
+3. 字典
+4. 跳跃表
+5. 整数集合
+6. 压缩列表
+7. 对象
+
+### 2.从海量数据里查询某一固定前缀的key
+
+注意：此时应先搞清楚有多少数据
+
+#### 使用keys对线上的业务的影响
+
+KEYS pattern：查找所有符合给定模式pattern的key
+
+* KEYS指令一次性返回所有匹配的key
+* 健的数量过大会使服务卡顿
+
+#### SCAN cursor [MATCH pattern] [Count count]
+
+```
+scan 0 match k1* count 10
+```
+
+* 基于游标的迭代器，需要基于上一次的游标延续之前的迭代过程
+* 以0作为游标开始一次新的迭代，知道命令返回游标0完成一次遍历
+* 不保证每次执行都返回某个给定数量的元素，有可能返回0个，支持模糊查询
+* 一次返回的数量不可控，只能是大概率符合count参数
+
+### 3.如何通过Redis实现分布式锁
+
+#### 分布式锁需要解决的问题
+
+* 互斥性：同一时刻，只能有一个客户端能够获取锁
+* 安全性：锁只有拥有该锁的客户端才能删除
+* 死锁：避免死锁
+* 容错：当redis节点宕机的情况下，客户端仍然能够获取锁
+
+#### SETNX key value：如果key不存在，则创建并赋值
+
+* 时间复杂度：O(1)
+* 返回值：设置成功，返回1；设置失败，返回0。
+
+#### 如何解决SETNX长期有效的问题
+
+* EXPIRE key seconds
+
+  * 设置key的生存时间，当key过期时（生存时间为0），会自动删除
+  * 缺点：原子性得不到满足
+
+* 分布式锁实现的伪代码
+
+  ```java
+  RedisService redisService = SpringUtils.getBean(RedisService.class);
+  long status = redisService.setnx(key, "1");
+  
+  if(status == 1){
+      redisService.expire(key, expire);  // 在执行这句的时候该服务就宕机了，那redis中的key就不会自动删除，原子性得不到满足
+      // 执行独占资源逻辑
+      doOcuppiedWork();
+  }
+  ```
+
+#### SET key value [EX seconds] [PX milliseconds] [NX|XX]
+
+* EX second：设置键的过期时间为second秒
+
+* PX millisecond：设置键的过期时间为millisecond毫秒
+
+* NX：只在键不存在时，才对键进行设置操作
+
+* XX：只在键已经存在时，才对键进行设置操作
+
+* SET操作成功完成时，返回OK，否则返回nil
+
+* 伪代码：
+
+  ```java
+  RedisService redisService = SpringUtils.getBean(RedisService.class);
+  long status = redisService.set(key, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);
+  
+  if("OK".equals(status)){
+      redisService.expire(key, expire);
+      // 执行独占资源逻辑
+      doOcuppiedWork();
+  }
+  ```
+
+#### 大量的key同时过期的注意事项
+
+集中过期，由于清除大量的key很耗时，会出现短暂的卡顿现象
+
+* 解决方案：在设置key的过期时间的时候，给每个key的时间加上随机值
+
+### 4.如何使用Redis做异步队列
+
+#### 使用List作为队列，RPUSH生产消息，LPOP消费消息
+
+* 缺点：没有等待队列里有值就直接消费
+* 弥补：可以通过在应用层引入Sleep机制去调用LPOP重试
+
+#### Blpop key [key ...] timeout：阻塞直到队列有消息或者超时
+
+```
+# 从testlist中取值，等待20秒，如果没有则返回超时
+blpop testlist 20
+```
+
+* 缺点：只能提供一个消费者消费，不能一次发布多个消费。
+
+#### pub/sub：主题订阅者模式
+
+* 发送者(pub)发送消息，订阅者(sub)接收消息
+
+* 订阅者可以订阅任意数量的频道
+
+  ```
+  session1订阅mytopic:
+  subscribe mytopic
+  
+  session2订阅mytopic：
+  subscirbe mytopic 
+  
+  session3订阅mytopic:
+  subscirbe othertopic
+  
+  session4发布消息到mytopic，此时只要session1和session2能够接收到这条消息：
+  publish mytopic "hello"
+  ```
+
+* 缺点：消息的发布是五状态的，无法保证可达。
+
+### 5.持久化方式之RDB
+
+#### RDB（快照）持久化：保存某个时间点的全量数据快照
+
+配置在redis.conf中：
+
+```
+# 在900秒之内有一次写入就触发一次快照
+save 900 1
+save 300 10
+save 60 10000
+# 禁用rdb配置
+save ""
+
+# 当备份进程出错的时候，主进程停止新的内容的写入操作。
+stop-writes-on-bgsave-error yes
+
+# 将rdb文件压缩之后采去做保存，建议设置为no，因为这样会加大对cpu的消耗
+rdbcompression yes
+```
+
+快照文件：dump.rdb
+
+RBD文件的创建方式：
+
+* SAVE：阻塞Redis的服务器进程，直到RDB文件被创建完成。
+  * `lastsave`：上次执行save操作的时间
+* BGSAVE：Fork出一个子进程来创建RDB文件，不阻塞服务器进程。（异步备份）
+
+#### 自动化触发RDB持久化的方式
+
+* 根据redis.conf配置里的SAVE m n定时触发（用的是BGSAVE）
+* 主从复制时，主节点自动触发
+* 执行Debug Reload
+* 执行Shutdown且没有开启AOF持久化
+
+#### BGSAVE原理
+
+* 系统调用fork()：创建进程，实现Copy-on-Write写时复制优化策略
+
+* Copy-on-Write
+
+  如果有多个同时要求相同资源（如内存或磁盘上的数据存储），他们会共同获取相同的指针指向相同的资源，直到某个调用者试图修改资源的内容时，系统才会真正复制一份专用副本给该调用者，而其他调用者所见到的最初的资源仍然保持不变。
+
+#### RDB持久化的缺点
+
+* 内存数据的全量同步，数据量大会使得I/O操作严重影响性能
+* 可能会因为Redis挂掉而丢失从当前至最后一次快照期间的数据
+
+### 6.持久化方式之AOF
+
+#### AOF(Append-Only-File)持久化：保存写状态
+
+* 记录下除了查询以外的所有变更数据库状态的指令
+* 以append的形式追加保存到AOF文件中（增量）
+
+#### AOF的相关配置
+
+在nginx.conf中进行相关的配置：
+
+```
+# 开启AOF，设置为yes即可。也可以使用命令开启：config set appendonly yes
+appendonly no
+
+# 配置AOF文件的位置：
+appendfilename "appendonly.aof"
+
+# 配置AOF文件的保存方式，主要有三种
+# 1.如果缓存区的内容发生变化，就及时将缓存区的内容写入到AOF中
+# appendfsync always
+# 2.将缓存区的内容每隔一秒就写入到AOF文件里面，建议使用这种方式
+appendfsync everysec
+# 3.让操作系统去确定写入的时机，一般操作系统会等待缓存区填满之后才往AOF写入数据
+# appendfsync no
+```
+
+#### Redis日志重写
+
+Redis可以不中断主进程的情况下，进行日志重写。日志重写解决了AOF文件大小不断增大的问题，原理如下：
+
+* 调用fork()，创建一个子进程
+* 子进程把新的AOF写到一个临时文件里，不依赖原来的AOF文件
+* 主进程持续将新的变动同时写到内存和原来的AOF里
+* 主进程获取子进程重写AOF的完成信号，往新AOF同步增量变动
+* 使用新的AOF文件替换掉旧的AOF文件
+
+#### Redis数据的恢复
+
+RDB和AOF文件共存情况下的恢复流程
+
+#### RDB和AOF的优缺点
+
+* RDB优点：全量数据快照，文件小，恢复快
+* RDB缺点：无法保存最近一次快照之后的数据
+* AOF优点：可读性高，适合保存增量数据，数据不易丢失
+* AOF缺点：文件体积大，恢复时间长
+
+#### RDB-AOF混合持久化方式
+
+* BGSAVE做镜像全量持久化，AOF做增量持久化
+
+### 7.Pipeline及主从同步
+
+#### 使用Pipeline和Linux的管道类似
+
+* Pipeline和Linux的管道类似
+* Redis基于请求/响应模型，单个请求处理需要一一应答
+* Pipeline批量执行指令，节省多次IO往返的时间
+* 有顺序依赖的指令建议分配发送
+
+#### Redis的同步机制
+
+* 主从同步原理
+
+  master与多个slave之间的数据要达到最终一致性。
+
+* 全同步过程：
+
+  * Slave发送sync命令到Master
+  * Master启动一个后台进程，将Redis中的数据快照保存到文件中
+  * Master将保存数据快照期间接收到的写命令缓存起来
+  * Master完成写文件操作后，将该文件发送给Slave
+  * 使用新的AOF文件替换旧的AOF文件
+  * Master将这期间收集的增量写命令发送给Slave端
+
+* 增量同步过程
+
+  * Master接收到用户的操作指令，判断是否需要传播到Salve
+  * 将操作记录追加到AOF文件
+  * 将操作传播到其他Slave：
+    * 1.对齐主从库
+    * 2.往响应缓存写入指令
+  * 将缓存中的数据发送给Slave
+
+#### Redis Sentinel哨兵
+
+* 监控：检查主从服务器是否运行正常
+* 提醒：通过API向管理员或者其他应用程序发送故障通知
+* 自动故障迁移：主从切换
+
+#### 流言协议Gossip
+
+在杂乱无章中寻求一致
+
+* 每个节点都随机地与对方通信，最终所有节点的状态达成一致
+* 种子节点定期所及向其他节点发送节点列表以及需要传播的消息
+* 不保证信息一定会传递给所有节点，但是最终会趋于一致
+
+### 8.Redis集群
+
+#### 如何从海量数据里快速找到所需？
+
+* 分片：按照某种规则去划分数据，分散存储在多个节点上
+* 常规的按照哈希划分无法实现节点的动态增减
+
+#### 一致性哈希算法
+
+* 对2的32次取模，将哈希值空间组织成虚拟的圆环
+* 将数据key使用相同的函数Hash计算出哈希值
+* 当其中的一台节点宕机后，受影响的数据只有该节点逆时针到上一个节点的数据，其他数据不受影响。
+* 当新增一台节点后，受影响的数据只有新节点逆时针到上一个节点之间的数据，其他数据不受影响。
+
+#### Hash环的数据倾斜问题
+
+引入虚拟节点解决数据倾斜问题。
+
+### 9.Redis客户端Jedis与Lettuce
+
+#### Jedis客户端
+
+1. Core: 核心模块，实现RESP协议
+   - Jedis/BinaryJedis: 入口类，封装Redis的各种命令。
+   - Client/BinaryClient/Connection: 与Redis进行具体的交互工作。
+   - Protocol, RedisInputStream, RedisOutputStream: 实现RESP协议。
+2. Sharding: 提供Partitioning支持
+   *  ShardedJedis/BinaryShardedJedis: 首先对传入的Key进行Hash计算（默认使用高性能、低碰撞率的MurmurHash算法），然后根据计算结果找到相应的Jedis实例，最后执行命令。 
+3. Pool: 提供连接池和Sentinel支持
+   * JedisPool: 基于Apache Commons Pool实现的连接池，通过JedisFactory获取Jedis实例。
+   * JedisSentinelPool: 通过侦听”switch-master”事件，每当master切换时，调用JedisFactory重新初始化master连接信息。
+   * ShardedJedisPool: 与JedisPool类似，通过ShardedJedisFactory获取ShardedJedis实例。
+4. Pipeline: 提供Pipelining和事务支持
+   * Pipeline: 通过Jedis#pipelined()获取实例。以类型安全的方式获取执行结果，通过BuilderFactory将Object类型的Response转化为期望的结果类型。
+     - 非事务模式：构建Response Queue，然后通过Client#getMany()批量获取结果。
+     - 事务模式：通过MultiResponseBuilder缓存Response，然后批量获取结果。
+   * Transaction: 通过Jedis#multi()获取实例。天然的事务属性，通过Client#getMany()批量获取结果，但无法获取单条命令的结果，且类型非安全。
+   * ShardedJedisPipeline: ShardedJedis#pipelined()获取实例。不同于Pipeline和Transaction，由于请求可能落到多个Client上，只能通过Client#getOne()挨个获取结果，类型非安全。
+5. Cluster: 提供Cluster支持
+   * JedisCluster/BinaryJedisCluster: 通过JedisClusterConnectionHandler获取Jedis实例，然后执行命令。
+   * JedisClusterConnectionHandler & JedisClusterInfoCache: 通过Collections#shuffle()随机返回一个Jedis实例。使用ReentrantReadWriteLock保证更新Cluster的Jedis实例列表时的线程安全性。
+   * JedisClusterCommand: 通过retry机制获取有效的Jedis实例，然后再执行命令。
+
+#### Lettuce客户端
+
+ Lettuce 是 一种可伸缩，线程安全，完全非阻塞的Redis客户端，多个线程可以共享一个RedisConnection,它利用Netty NIO 框架来高效地管理多个连接，从而提供了异步和同步数据访问方式，用于构建非阻塞的反应性应用程序。 
+
+目前Lettuce已经是Spring-Data-redis中默认的底层实现。
+
+* 支持`Redis`的新增命令`ZPOPMIN, ZPOPMAX, BZPOPMIN, BZPOPMAX`。
+
+* 支持通过`Brave`模块跟踪`Redis`命令执行。
+
+* 支持`Redis Streams`。
+
+* 支持异步的主从连接。
+
+* 支持异步连接池。
+
+* 新增命令最多执行一次模式（禁止自动重连）。
+
+* 全局命令超时设置（对异步和反应式命令也有效）。
 
 
