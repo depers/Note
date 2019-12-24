@@ -8,15 +8,15 @@
 
 * 企业级安全认证和授权模块考虑的问题和实现的特性
 
-  ![](E:\markdown笔记\笔记图片\19\1.png)
+  ![](.\笔记图片\19\1.png)
 
 * 企业级认证和授权的组成
 
-  ![](E:\markdown笔记\笔记图片\19\2.png)
+  ![](.\笔记图片\19\2.png)
 
 * 课程目标
 
-  ![](E:\markdown笔记\笔记图片\19\3.png)
+  ![](.\笔记图片\19\3.png)
 
 ## 第2章 开始开发
 
@@ -30,7 +30,7 @@
 
 *  代码结构
 
-  ![](E:\markdown笔记\笔记图片\19\4.png)
+  ![](.\笔记图片\19\4.png)
 
 * 分别在IDEA中新建spring-security、security-core、security-broewer、security-app和security-demo项目，按照项目示例代码的pom文件对上述的几个项目进行配置。
 
@@ -87,9 +87,9 @@
 
 ### 1 Restful简介
 
-![](E:\markdown笔记\笔记图片\19\5.png)
+![](.\笔记图片\19\5.png)
 
-![6](E:\markdown笔记\笔记图片\19\6.png)
+![6](.\笔记图片\19\6.png)
 
 ### 2.查询请求
 
@@ -235,4 +235,26 @@
       }
       ```
 
-      
+### 4.用户创建请求
+
+* @RequestBody映射请求题到Java方法的参数
+
+  * 用法
+    * 该注解适用于POST请求，因为他会接收content方法体中的参数，而GET方式无请求体 
+    * 在post请求中，前端请求的参数会绑定到@RequestBody修饰的对象属性中。若在post请求中没有使用@RequestBody修饰的对象，则相关参数是不会绑定到对象的属性上
+    * @RequestBody接收http请求中包裹在content中的参数
+    * @RequestParam接收http请求中包裹在param中的参数
+
+* 日期类型参数的处理
+
+  * 使用时间戳进行输出，在后端并不进行日期格式的装换
+
+  * 通过日期获取时间戳：
+
+    ```java
+    Date date = new Date();
+    System.out.println(date.getTime());
+    ```
+
+* @Valid注解和BindingResult验证请求参数的合法性并处理校验结果
+
