@@ -33,7 +33,7 @@
 
 #### 1.5 关于异构系统的讨论
 
-![](E:\markdown笔记\笔记图片\20\1\1\2-彩蛋： 关于异构系统的讨论.png)
+![](.\笔记图片\20\1\1\2-彩蛋： 关于异构系统的讨论.png)
 
 ###  第2章 单体架构设计与准备工作
 
@@ -53,3 +53,30 @@
 6. 安全性
 7. 成功案例
 8. 开源精神
+
+#### 2.3 前后端分离开发模式
+
+1. 早期传统Javaweb开发：用户在浏览器中请求的页面都是通过url进行跳转的
+2. 前后端单页面交互，mvvm开发模式
+
+#### 2.4项目分层设计
+
+1. 项目拆分与聚合
+2. Maven聚合项目
+
+#### 2.5 构建聚合工程-1
+
+1. 聚合工程里可分为顶级项目（顶级工程、父工程）与子工程，这两者的关系其实就是父子继承的关系，子工程在maven里称为模块（module），模块之间是平级的，是可以相互依赖的
+2. 子模块可以使用顶级工程里所有的资源（依赖），子模块之间如果要使用资源，必须构建依赖（构建关系）
+3.  一个顶级工程可以有多个不同的子工程共同组合而成。
+
+#### 2.6 构建聚合工程-2
+
+1. 搭建mall项目聚合结构，mall项目分别包含mall-common、mall-pojo、mall-mapper、mall-service、mall-api五个module。
+2. github提交commit： https://github.com/depers/mall/commit/bec41aeb38a4ce37284ebdd39744c49405d8b2f3 
+
+#### 2.7 PDMan数据库建模工具使用
+
+1. 介绍了PDMan工具的使用方法
+2. 本项目的设计文件： [https://github.com/depers/mall/blob/master/%E9%A1%B9%E7%9B%AE%E8%AE%BE%E8%AE%A1%E6%96%87%E4%BB%B6/mall.pdman.json](https://github.com/depers/mall/blob/master/项目设计文件/mall.pdman.json) 
+
