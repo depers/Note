@@ -80,3 +80,95 @@
 1. 介绍了PDMan工具的使用方法
 2. 本项目的设计文件： [https://github.com/depers/mall/blob/master/%E9%A1%B9%E7%9B%AE%E8%AE%BE%E8%AE%A1%E6%96%87%E4%BB%B6/mall.pdman.json](https://github.com/depers/mall/blob/master/项目设计文件/mall.pdman.json) 
 
+#### 2.8 生产环境增量与全量脚本迭代讲解
+
+在PDMan中的模型版本设置中，有一个选项是同步配置，在这里有两个选项一个是全量脚本迭代(重建数据表)，另一个是增量脚本迭代（字段增量）。推荐使用增量脚本迭代，因为全量脚本迭代耗时过多。
+
+<img src="E:\markdown笔记\笔记图片\20\1\1\4.png" style="zoom:70%;" />
+
+#### 2.9 数据库物理外键移除原因讲解
+
+采用数据库外键带来的问题
+
+1. 性能影响：影响数据库性能
+2. 热更新：导致项目无法做热更新
+3. 降低耦合度：若不使用物理外键会极大的降低数据库表与表之间的耦合度，保留逻辑外键
+4. 数据库分库分表：难以实现数据库的分库分表
+
+#### 2.10 聚合工程整合SpringBoot
+
+1. 引入依赖parent
+
+   ```xml
+   <parent>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-parent</artifactId>
+       <version>2.1.5.RELEASE</version>
+       <relativePath />
+   </parent>
+   ```
+
+2. 设置资源属性
+
+   ```xml
+   <properties>
+       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+       <java.version>1.8</java.version>
+   </properties>
+   ```
+
+3. 引入依赖dependency
+
+   ```xml
+   <dependencies>
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter</artifactId>
+           <!--排除spring日志模块-->
+           <exclusions>
+               <exclusion>
+                   <groupId>org.springframework.boot</groupId>
+                   <artifactId>spring-boot-starter-logging</artifactId>
+               </exclusion>
+           </exclusions>
+       </dependency>
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-web</artifactId>
+       </dependency>
+       <!--spring默认使用yml中的配置，但有时候要用传统的xml或properties配置，就需要使用spring-boot-configuration-processor-->
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-configuration-processor</artifactId>
+           <optional>true</optional>
+       </dependency>
+   </dependencies>
+   ```
+
+4. github提价commit： https://github.com/depers/mall/commit/cb41e10ba698d6b17a9321ce16e827e5022c3781 
+
+#### 2.12 SpringBoot自动装配简述
+
+探究Spring Boot自动装配背后的秘密
+
+1. @SpringBootApplication 
+2. org.springframework.boot.autoconfigure.EnableAutoConfiguration
+3. org.springframework.boot.autoconfigure.AutoConfigurationImportSelector
+   1. getAutoConfigurationEntry
+   2. getCandidateConfigurations
+      1. \META-INF\spring.factories
+         1. org.springframework.boot.autoconfigure.web.embedded.EmbeddedWebServerFactoryCustomizerAutoConfiguration
+         2. org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration
+         3. org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration
+
+#### 2.13 HikariCP数据源简述
+
+* HikariCP Github:  https://github.com/brettwooldridge/HikariCP 
+
+* HikariCP为什么那么快？
+
+  *  https://github.com/brettwooldridge/HikariCP/wiki/Down-the-Rabbit-Hole 
+
+  * 参见《Spring全家桶-上卷》第二章第七节。
+
