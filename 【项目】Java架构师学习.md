@@ -146,7 +146,7 @@
    </dependencies>
    ```
 
-4. github提价commit： https://github.com/depers/mall/commit/cb41e10ba698d6b17a9321ce16e827e5022c3781 
+4. github提交commit： https://github.com/depers/mall/commit/cb41e10ba698d6b17a9321ce16e827e5022c3781 
 
 #### 2.12 SpringBoot自动装配简述
 
@@ -169,6 +169,186 @@
 * HikariCP为什么那么快？
 
   *  https://github.com/brettwooldridge/HikariCP/wiki/Down-the-Rabbit-Hole 
+* 参见《Spring全家桶-上卷》第二章第七节。
 
-  * 参见《Spring全家桶-上卷》第二章第七节。
+#### 2.14 数据层HikariCP与MyBatis整合
+
+1. 在模块mall-api中，在pom文件中引入数据源驱动与Mybatis依赖
+
+   ```xml
+   <!-- mysql驱动 -->
+   		<dependency>
+   			<groupId>mysql</groupId>
+   			<artifactId>mysql-connector-java</artifactId>
+   			<version>5.1.41</version>
+   		</dependency>
+   		<!-- mybatis -->
+   		<dependency>
+   			<groupId>org.mybatis.spring.boot</groupId>
+   			<artifactId>mybatis-spring-boot-starter</artifactId>
+   			<version>2.1.0</version>
+   		</dependency>
+   ```
+
+2. 在模块mall-api中，在yml中配置数据源和mybatis
+
+   ```yaml
+   ############################################################
+   #
+   # 配置数据源信息
+   #
+   ############################################################
+   spring:
+     profiles:
+       active: dev
+     datasource:                                           # 数据源的相关配置
+       type: com.zaxxer.hikari.HikariDataSource          # 数据源类型：HikariCP
+       driver-class-name: com.mysql.jdbc.Driver          # mysql驱动
+       url: jdbc:mysql://localhost:3306/mall-dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+       username: root
+       password: root
+       hikari:
+         connection-timeout: 30000       # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 默认:30秒
+         minimum-idle: 5                 # 最小连接数
+         maximum-pool-size: 20           # 最大连接数
+         auto-commit: true               # 自动提交
+         idle-timeout: 600000            # 连接超时的最大时长（毫秒），超时则被释放（retired），默认:10分钟
+         pool-name: DateSourceHikariCP     # 连接池名字
+         max-lifetime: 1800000           # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟 1800000ms
+         connection-test-query: SELECT 1
+     servlet:
+       multipart:
+         max-file-size: 512000     # 文件上传大小限制为500kb
+         max-request-size: 512000  # 请求大小限制为500kb
+   
+   ############################################################
+   #
+   # mybatis 配置
+   #
+   ############################################################
+   mybatis:
+     type-aliases-package: cn.bravedawn.pojo        # 所有POJO类所在包路径
+     mapper-locations: classpath:mapper/*.xml      # mapper映射文件
+   ```
+
+3. 在模块mall-api中，进行内置Tomcat的配置
+
+   ```yaml
+   ############################################################
+   #
+   # web访问端口号  约定：8088
+   #
+   ############################################################
+   server:
+     port: 8088
+     tomcat:
+       uri-encoding: UTF-8
+     max-http-header-size: 80KB
+   ```
+
+4. github提交commit： https://github.com/depers/mall/commit/1bf357a0723a0580125120a588205284aff27ecb 
+
+#### 2.15 数据源连接数详解
+
+在模块mall-api中的application.yml文件中的配置如下：
+
+```yaml
+minimum-idle: 5                 # 最小连接数
+maximum-pool-size: 20           # 最大连接数
+```
+
+1. 在HikariCP中默认最大连接数为10，没有配置最小连接数，此时最小连接数等于最大连接数为10，固定的连接数性能较好。
+2. 最大连接数是要根据自己服务器的具体配置而定的，四核处理器建议配置为10，八核的话建议配置为20。
+3. 这里最小的连接数是为了防止闲置的连接数过多而配置的，建议配置为5-10。
+4. 在自己的项目中使用的话，建议配置：
+   1. 将最大最小连接数配置为相同值，具体大小根据服务器性能而定；
+   2. 最小连接数配置为5，最大连接数根据服务器性能而定；
+
+#### 2.15 MyBatis 数据库逆向生成工具
+
+MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件），可以帮助开发人员生成相关文件：
+
+* pojo
+* *mapper.xml
+* *mapper.java
+
+1. 在mall项目的pom中引入通用mapper工具
+
+   ```xml
+   <!-- 通用mapper逆向工具 -->
+   <dependency>
+       <groupId>tk.mybatis</groupId>
+       <artifactId>mapper-spring-boot-starter</artifactId>
+       <version>2.1.5</version>
+   </dependency>
+   ```
+
+2. 在mall-api项目的yml中引入通用mapper配置
+
+   ```yaml
+   ############################################################
+   #
+   # mybatis mapper 配置
+   #
+   ############################################################
+   # 通用 Mapper 配置
+   mapper:
+     mappers: cn.bravedawn.my.mapper.MyMapper
+     not-empty: false    # 在进行数据库操作的的时候，判断表达式 username != null, 是否追加 username != ''
+     identity: MYSQL
+   ```
+
+3. 在mall-mapper项目中引入MyMapper接口类
+
+   ```java
+   import tk.mybatis.mapper.common.Mapper;
+   import tk.mybatis.mapper.common.MySqlMapper;
+   
+   /**
+    * 继承自己的MyMapper
+    */
+   public interface MyMapper<T> extends Mapper<T>, MySqlMapper<T> {
+   }
+   ```
+
+4. github提交commit： https://github.com/depers/mall/commit/79d55b03c185ada8c6fd98f1b4f98856e6986c95 
+
+#### 2.17 通用Mapper接口所封装的常用方法
+
+![](E:\markdown笔记\笔记图片\20\1\1\5.jpg)
+
+#### 2.18 关于Restful webservice的那些事儿
+
+* Restful Web Service
+
+  1. 它是一种通信方式，例如rpc通信
+  2. 它是系统与系统之间进行消息传递的一种方式，使用JSON作为介质
+  3. 所有的请求都是无状态的
+  4. 使用Restful进行交互的系统，他们各自是独立的
+
+* Rest设计规范
+
+  1. get（/order/{id} -> /getOrder?id=1）：获取资源
+  2. post（/order -> /saveOrder）：保存
+  3. put（/order/{id} -> /modifyOrder?id=1）：更新
+  4. delete（/order/{id} -> /deleteOrder?id=1）：删除
+
+  注意：严格规范下url中不要出现动词，但是弱规范下其实可以使用更加有意义的动词去描述接口的功能
+
+#### 2.19  基于通用Mapper基于Rest编写api接口
+
+1. 添加mybatis通用mapper的包扫描，在mall-api的application.java文件中
+
+   ```java
+   // 扫描mybatis通用mapper所在的包
+   @MapperScan("cn.bravedawn.mapper")
+   ```
+
+   
+
+
+
+
+
+
 
