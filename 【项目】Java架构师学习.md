@@ -344,11 +344,780 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
    @MapperScan("cn.bravedawn.mapper")
    ```
 
+   这里的@MapperScan切记是**import tk.mybatis.spring.annotation.MapperScan;**下的。
    
+2. 注入Mapper实例时IDEA红色下划线的错误，解决方法：
 
+   ![](E:\markdown笔记\笔记图片\20\1\1\6.png)
 
+   去掉图中红色框中的对勾。
 
+#### 2.20 详解事务的传播-Propagation.REQUIRED
 
+对于Spring事务这部分的知识，也可以参考《玩转Spring全家桶-上卷》2.10节。
+
+1. 在mall-api项目中的pom文件中引入依赖：
+
+   ```xml
+   <!--引入junit单元测试-->
+   <dependency>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-test</artifactId>
+       <scope>test</scope>
+   </dependency>
+   ```
+
+2. **事务测试1**-没有任何事务
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件：
+
+      ```java
+      public class StuServiceImpl implements StuService {
+          @Autowired
+          private StuMapper stuMapper;
+      
+          public void saveParent() {
+              Stu stu = new Stu();
+              stu.setName("parent");
+              stu.setAge(19);
+              stuMapper.insert(stu);
+          }
+          
+          // 子方法
+          public void saveChildren() {
+              saveChild1();
+              int a = 1 / 0;  //------------------------------报除0异常
+              saveChild2();
+          }
+      
+          public void saveChild1() {
+              Stu stu1 = new Stu();
+              stu1.setName("child-1");
+              stu1.setAge(11);
+              stuMapper.insert(stu1);
+          }
+          public void saveChild2() {
+              Stu stu2 = new Stu();
+              stu2.setName("child-2");
+              stu2.setAge(22);
+              stuMapper.insert(stu2);
+          }
+      }
+      ```
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Service
+      public class TestTransServiceImpl implements TestTransService {
+      
+          @Autowired
+          private StuService stuService;
+          
+          @Override
+          public void testPropagationTrans() {
+              // 1. 在没有任何事务下
+              stuService.saveParent();
+              stuService.saveChildren();
+          }
+      }
+      
+      ```
+
+   3. （mall-api）此时的cn.bravedawn.TransTest文件：
+
+      ```java
+      @RunWith(SpringRunner.class)
+      @SpringBootTest(classes = Application.class)
+      public class TransTest {
+      
+          @Autowired
+          private StuService stuService;
+      
+          @Autowired
+          private TestTransService testTransService;
+      
+      	@Test
+          public void myTest() {
+              testTransService.testPropagationTrans();
+          }
+      
+      }
+      ```
+
+   4. 数据库的保存效果，select * from stu：
+
+      ![](E:\markdown笔记\笔记图片\20\1\1\5.PNG)
+
+      如上图所示，测试案例只插入了parent和child-1，但是没有插入child-2。因为程序cn.bravedawn.service.Impl.StuServiceImpl中的saveChildren()执行出现了除0错误。
+
+3. **测试案例2**-父方法添加事务传播Propagation.REQUIRED
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          // 2. 在事务传播特性Propagation.REQUIRED下
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+   2. 数据库的保存效果，select * from stu：没有存入任何数据。**父方法上添加了事务，父方法中调用的子方法也具备事务性，一并回滚了**。
+
+4. **测试案例2**-子方法添加事务传播Propagation.REQUIRED，父方法则没有声明事务
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          // 2. 在事务传播特性Propagation.REQUIRED下
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：
+
+      ![](E:\markdown笔记\笔记图片\20\1\1\7.png)
+
+      从图中我们可以看出，子方法声明了事务，父方法未声明事务，则子方法有事务特性，而父方法没有。
+
+5. **测试案例3**-父子方法都添加事务传播Propagation.REQUIRED
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          // 2. 在事务传播特性Propagation.REQUIRED下
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：父子方法都遵从事务特性，数据库中没有数据。
+
+6. 总结：
+
+   1. **对子方法而言：当前有事务就用当前的，当前没有事务则自己新建一个事务，子方法是必须运行在一个事务中的；**。
+   2. 父级有事务，则子级也有事务。此时父子共用一个事务；
+   3. 子级声明事务，则父级没有声明事务，则子有父没有；
+   4. 父子都声明事务，其实共用的是一个事务；
+   5. 常用于增、删、改操作；
+
+#### 2.21 详解事务的传播-Propagation.SUPPORTS
+
+1. **测试案例1**-给子方法添加Propagation.SUPPORTS声明
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.SUPPORTS)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：
+
+      ![](E:\markdown笔记\笔记图片\20\1\1\8.png)
+
+      可以看到数据库中有两条数据，和父子都没有添加任何事务的效果一致。
+
+2. **测试案例2**-给子方法添加Propagation.SUPPORTS声明，给父方法添加Propagation.REQUIRED
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.SUPPORTS)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：没有插入任何数据，父方法的事务覆盖了子方法的事务。
+
+3. 总结：
+
+   1. 事务可有可无，不是必须的
+   2. 对子方法而言：当前有事务，则使用事务；若当前没有事务，则不使用事务
+
+#### 2.22 详解事务的传播-Propagation.MANDATORY
+
+1. **测试案例1**-给子方法添加Propagation.MANDATORY声明
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.MANDATORY)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 抛出**org.springframework.transaction.IllegalTransactionStateException: No existing transaction found for transaction marked with propagation 'mandatory'**异常。
+
+      若子方法声明mandatory事务，而父方法没有声明任何事务，则会抛出异常。
+
+   4. 数据库的保存效果，select * from stu：
+
+      ![](E:\markdown笔记\笔记图片\20\1\1\7.png)
+
+      只执行了saveParent()，并未执行声明了mandatory事务的saveChildren()方法。
+
+2. **测试案例2**-给子方法添加Propagation.MANDATORY声明，给父方法添加Propagation.REQUIRED声明
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.MANDATORY)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：没有插入任何数据，并没有报测试案例2的错误。
+
+3. 总结：子方法声明该事物，该传播属性强制父方法必须存在一个事务，如果不存在，则抛出异常
+
+#### 2.23 详解事务的传播-Propagation.REQUIRES_NEW
+
+1. **测试案例1**-给子方法添加Propagation.REQUIRES_NEW声明
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRES_NEW)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：
+
+      ![](E:\markdown笔记\笔记图片\20\1\1\7.png)
+
+      此时，子方法有事务，而父方法没有事务。
+
+2. **测试案例2**-给子方法添加Propagation.REQUIRES_NEW声明，给父方法添加Propagation.REQUIRES声明：
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRES_NEW)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：没有插入任何数据。
+
+      此时，父方法和子方法各有一个事务。
+
+3. **测试案例3**-给子方法添加Propagation.REQUIRES_NEW声明，给父方法添加Propagation.REQUIRES声明，并修改父子方法：
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+          int a = 1 / 0; //----------------------------除0异常
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRES_NEW)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：
+
+      ![](E:\markdown笔记\笔记图片\20\1\1\9.png)
+
+      这下就有意思了，子方法会顺利执行，而父方法抛出除0异常，导致saveParent()方法回滚，却没有影响到saveChildren()子方法。
+
+      这说明子方法和父方法是各持有一个事务，互不干扰。
+
+      是否有异常也不影响自己。
+
+4. 总结：
+
+   1. 如果当前有事务，则挂起该事务，并且自己创建一个新的事务给自己使用；
+   2. 如果当前没有事务，则同 REQUIRED
+   3. 无论是否有事务都起个新事务
+
+#### 2.24 详解事务的传播-Propagation.NOT_SUPPORTED
+
+1. **测试案例1**-给子方法添加Propagation.NOT_SUPPORTED声明
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.NOT_SUPPORTED)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：
+
+      ![](E:\markdown笔记\笔记图片\20\1\1\8.png)
+
+      和没有添加任何事务的情况是相同的。
+
+2. **测试案例2**-给子方法添加Propagation.NOT_SUPPORTED声明，给父方法添加Propagation.REQUIRED声明
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.NOT_SUPPORTED)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：
+
+      ![](E:\markdown笔记\笔记图片\20\1\1\10.png)
+
+      父方法由于事务的原因，他的数据并没有成功的插入数据库中；而子方法由于不支持事务，所以插入了一条数据。
+
+3. 总结：
+
+   1. 如果当前有事务，则把事务挂起，自己不用事务去运行数据库操作；
+   2. 不支持事务，按非事务方式运行；
+
+#### 2.25 详解事务的传播-Propagation.NEVER
+
+1. **测试案例1**-给子方法添加Propagation.NEVER声明
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.NEVER)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：此时数据库中没有插入任何数据。执行该方法会报**org.springframework.transaction.IllegalTransactionStateException: Existing transaction found for transaction marked with propagation 'never'**异常
+
+2. 总结：**如果当前有事务存在，则抛出异常**。
+
+#### 2.26 详解事务的传播-Propagation.NESTED
+
+1. **测试案例1**-给子方法添加Propagation.NESTED声明，父方法抛出异常
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+          int a = 1 / 0;  //------------------------------报除0异常
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.NESTED)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：此时数据库中没有插入任何数据。子方法使用Propagation.NESTED，他会嵌套在父事务中执行。他与父事务共用一个事务。这个要与Propagation.REQUIRES_NEW的测试案例3相区别。
+
+2. **测试案例2**-给子方法添加Propagation.NESTED声明，子方法抛出异常
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.NESTED)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+          int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：数据库中没有插入任何数据。子事务异常，父事务也要进行回滚。
+
+3. **测试案例3**-给子方法添加Propagation.NESTED声明，
+
+   1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
+
+      ```java
+      @Transactional(propagation = Propagation.REQUIRED)
+      @Override
+      // 父方法
+      public void testPropagationTrans() {
+          stuService.saveParent();
+          stuService.saveChildren();
+      }
+      ```
+
+      去掉该父方法的事务声明。
+
+   2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
+
+      ```java
+      @Transactional(propagation = Propagation.NESTED)
+      // 子方法
+      public void saveChildren() {
+      	saveChild1();
+          int a = 1 / 0;  //------------------------------报除0异常
+      	saveChild2();
+      }
+      ```
+
+      给子方法添加事务声明。
+
+   3. 数据库的保存效果，select * from stu：
+
+      ![](E:\markdown笔记\笔记图片\20\1\1\11.png)
+
+      此时数据库中插入一条数据，子方法的异常被父方法捕获。父事务可以不随子事务进行回滚。
+
+4. 总结：
+
+   1. 如果当前有事务，则开启子事务（**嵌套事务**），嵌套事务是独立提交或者回滚；
+   2. 如果当前没有事务，则同 REQUIRED。
+   3. 如果主事务提交，则会携带子事务一起提交。如果主事务回滚，则子事务会一起回滚。
+   4. **相反，子事务异常，则父事务可以回滚或不回滚。**
+
+#### 2.27 为何不使用@EnableTransactionManagement？
+
+在SpringBoot中使用**@SpringBootApplication**注解，会对开启自动装配的设置。其中在META-I**NF/spring.factories**文件中已经对org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration进行了开启，所以不用再使用@EnableTransactionManagement开启Spring的事务管理。
+
+ #### 2.28 复习总结
+
+![](E:\markdown笔记\笔记图片\20\1\1\12.jpg)
+
+### 第3章 用户登录注册模块开发
+
+#### 3.1 验证用户是否存在接口和注册接口开发
+
+1. 编写验证用户是否存在接口代码
+
+   * 代码：cn.bravedawn.controller.PassportController#usernameIsExist
+
+2. 创建响应信息结构：cn.bravedawn.utils.JsonResult
+
+3. 引入apache工具依赖：
+
+   ```xml
+   <!-- apache 工具类 -->
+   <dependency>
+       <groupId>commons-codec</groupId>
+       <artifactId>commons-codec</artifactId>
+       <version>1.11</version>
+   </dependency>
+   <dependency>
+       <groupId>org.apache.commons</groupId>
+       <artifactId>commons-lang3</artifactId>
+       <version>3.4</version>
+   </dependency>
+   <dependency>
+       <groupId>org.apache.commons</groupId>
+       <artifactId>commons-io</artifactId>
+       <version>1.3.2</version>
+   </dependency>
+   ```
+
+4. 编写用户注册接口
+
+   * 代码：cn.bravedawn.controller.PassportController#regist
+
+   * 引入ID生成方法：
+
+     * org.n3r.idworker.Sid#nextShort
+
+     * 修改mall-api中的application.java
+
+       ```java
+       // 扫描所有包以及相关组件包
+       @ComponentScan(basePackages = {"cn.bravedawn", "org.n3r.idworker"})
+       ```
+
+   * 引入MD5加密工具：cn.bravedawn.utils.MD5Utils
+
+   * 引入日期处理工具：cn.bravedawn.utils.DateUtil
+
+   * 引入性别处理枚举：cn.bravedawn.enums.Sex
+
+#### 3.2 整合swagger2文档API
+
+1. 在mall项目的Pom文件中添加swagger的相关依赖：
+
+   ```xml
+    <!-- swagger2 配置 -->
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>2.4.0</version>
+    </dependency>
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>2.4.0</version>
+    </dependency>
+    <dependency>
+        <groupId>com.github.xiaoymin</groupId>
+        <artifactId>swagger-bootstrap-ui</artifactId>
+        <version>1.6</version>
+    </dependency>
+   ```
+
+2. 对Swagger进行配置：cn.bravedawn.config.Swagger2
 
 
 
