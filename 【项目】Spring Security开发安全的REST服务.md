@@ -85,6 +85,10 @@
 
 ## 第三章 使用Spring MVC开发RESTful API
 
+* Restful请求编写
+* bernate.validator校验框架
+* Controller测试案例的编写
+
 ### 1 Restful简介
 
 ![](.\笔记图片\19\5.png)
@@ -241,9 +245,18 @@
 
   * 用法
     * 该注解适用于POST请求，因为他会接收content方法体中的参数，而GET方式无请求体 
+    
     * 在post请求中，前端请求的参数会绑定到@RequestBody修饰的对象属性中。若在post请求中没有使用@RequestBody修饰的对象，则相关参数是不会绑定到对象的属性上
+    
     * @RequestBody接收http请求中包裹在content中的参数
+    
     * @RequestParam接收http请求中包裹在param中的参数
+    
+    * 若一个Controller方法中，即用了@RequestParam又用了@RequestBody。此时在该方法的参数中应该先写@RequestParam参数后写@RequestBody参数。例如：
+    
+      ```java
+      public User create(@RequestParam String username, @Valid @RequestBody User user, BindingResult result){
+      ```
 
 * 日期类型参数的处理
 
@@ -257,4 +270,256 @@
     ```
 
 * @Valid注解和BindingResult验证请求参数的合法性并处理校验结果
+
+  * controller方法：
+
+    ```java
+    public User create(@RequestParam String username, @Valid @RequestBody User user, BindingResult result){
+    
+    if (result.hasErrors()){
+    	result.getAllErrors().stream().forEach(error -> System.out.println(error.getDefaultMessage()));
+    }
+    ```
+
+  * User对象定义：
+
+    ```java
+    @Data
+    public class User {
+    
+        // 使用接口来声明多个视图
+        public interface UserSimpleView {};
+        public interface UserInfoView extends UserSimpleView {};
+    
+        // 在对象的属性上指定视图
+        @JsonView(UserSimpleView.class)
+        @NotBlank
+        private String username;
+    
+        @JsonView(UserInfoView.class)
+        @NotBlank
+        private String password;
+    
+        @JsonView(UserSimpleView.class)
+        private int age;
+    
+        @JsonView(UserSimpleView.class)
+        @NotBlank
+        private String id;
+    
+        @JsonView(UserSimpleView.class)
+        private Date birthday;
+    }
+    ```
+
+### 5.修改和删除请求
+
+hibernate.validator校验框架的学习：
+
+1. 常用的验证注解
+
+   ![](E:\markdown笔记\笔记图片\19\7.png)
+
+   ![8](E:\markdown笔记\笔记图片\19\8.png)
+
+2. 自定义消息
+
+   ```java
+   @Past(message = "生日必须是过去的时间")
+   private Date birthday;
+   ```
+
+3. 自定义校验注解
+
+   1. 编辑校验注解cn.bravedawn.validator.MyConstraint
+
+      ```java
+      @Target({ElementType.METHOD, ElementType.FIELD})
+      @Retention(RetentionPolicy.RUNTIME)
+      @Constraint(validatedBy = MyConstraintValidator.class)
+      public @interface MyConstraint {
+      
+          String message();
+      
+          Class<?>[] groups() default {};
+      
+          Class<? extends Payload>[] payload() default {};
+      }
+      ```
+
+   2. 编辑校验规则实现类cn.bravedawn.validator.MyConstraintValidator。
+
+      * 该校验规则类不用使用@Bean注解，该类会自动被spring注入；
+      * 该类中也可以注入其他的类并调用他的方法；
+
+      ```java
+      public class MyConstraintValidator implements ConstraintValidator<MyConstraint, Object> {
+      
+          @Autowired
+          private HelloService helloService;
+      
+          @Override
+          public void initialize(MyConstraint myConstraint) {
+              System.out.println("my validator init");
+          }
+      
+          // 验证成功返回true，错误返回false
+          @Override
+          public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
+              System.out.println("my validator value is : " + o);
+              helloService.greeting("tom");
+              return false;
+          }
+      }
+      ```
+
+   3. 在User对象中使用该注解
+
+      ```java
+      @MyConstraint(message = "测试message")
+      private String username;
+      ```
+### 6.服务异常处理
+
+1. Spring Boot中默认的错误处理机制
+
+   1. 在Spring Boot中是如何处理error请求的？
+      * 若用户是通过浏览器请求到了错误的页面，则会返回html页面。Spring Boot中代码实现org.springframework.boot.autoconfigure.web.BasicErrorController#errorHtml
+      * 若用户是通过客户端发送的请求遇到错误，则会返回Json信息。Spring Boot中代码的实现org.springframework.boot.autoconfigure.web.BasicErrorController#error
+
+2. 自定义异常处理
+
+   自定义异常处理类cn.bravedawn.web.controller.ControllerExceptionHandler：
+
+   ```java
+   @ControllerAdvice
+   public class ControllerExceptionHandler {
+   
+       @ExceptionHandler(UserNotExistException.class)
+       @ResponseBody
+       @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+       public Map<String, Object> handleUserNotExistException(UserNotExistException ex) {
+           Map<String, Object> result = new HashMap<>();
+           result.put("id", ex.getId());
+           result.put("message", ex.getMessage());
+           return result;
+       }
+   
+   }
+   ```
+
+### 7.使用切片拦截REST服务
+
+1. 过滤器（Filter）
+
+   1. 自定义请求计时的Filter，参见cn.bravedawn.filter.TimeFilter，所有的请求都会被这个Filter拦截。
+
+   2. 如果项目中引用第三方的Filter，但是第三方的Filter是不能添加@Component注解的，如何在Spring Boot项目中引入第三方的Filter？
+
+      编写配置类cn.bravedawn.config.WebConfig：
+
+      ```java
+      @Configuration
+      public class WebConfig {
+      
+          @Bean
+          public FilterRegistrationBean timeFilter() {
+      
+              FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+      
+              TimeFilter timeFilter = new TimeFilter();
+              registrationBean.setFilter(timeFilter);
+      
+              // 设置请求非拦截的路径，该处设置为所有请求路径
+              List<String> urls = new ArrayList<>();
+              urls.add("/*");
+              registrationBean.setUrlPatterns(urls);
+              return registrationBean;
+          }
+      }
+      ```
+
+   3. 采用Filter的不足：
+
+      使用Filter是不能获取到具体是那个Controller的那个方法处理某一个请求。
+
+2. 拦截器（Interceptor）
+
+   1. 编写自定义拦截器cn.bravedawn.interceptor.TimeInterceptor，记得将该类声明为spring组件：
+
+      ```java
+      @Component
+      public class TimeInterceptor implements HandlerInterceptor {
+      
+          /**
+           * 该方法在进入控制器之前调用，该方法返回true之后，才会进入控制器
+           * @param request
+           * @param response
+           * @param handler
+           * @return
+           * @throws Exception
+           */
+          @Override
+          public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+              System.out.println("preHandle");
+      
+              System.out.println(((HandlerMethod)handler).getBean().getClass().getName());
+              System.out.println(((HandlerMethod)handler).getMethod().getName());
+      
+              request.setAttribute("startTime", new Date().getTime());
+              return true;
+          }
+      
+          /**
+           * 该方法在请求正常结束后调用，若报异常则不会调用该方法
+           * @param request
+           * @param response
+           * @param o
+           * @param modelAndView
+           * @throws Exception
+           */
+          @Override
+          public void postHandle(HttpServletRequest request, HttpServletResponse response, Object o, ModelAndView modelAndView) throws Exception {
+              System.out.println("postHandle");
+              Long start = (Long) request.getAttribute("startTime");
+              System.out.println("time interceptor 耗时:"+ (new Date().getTime() - start));
+          }
+      
+          /**
+           * 在请求结束之后调用，若之前定义的ControllerExceptionHandler自定义异常处理类将异常处理之后，则该处的Exception e参数则为null
+           * @param request
+           * @param response
+           * @param o
+           * @param e
+           * @throws Exception
+           */
+          @Override
+          public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) throws Exception {
+              System.out.println("afterCompletion");
+              Long start = (Long) request.getAttribute("startTime");
+              System.out.println("time interceptor 耗时:"+ (new Date().getTime() - start));
+              System.out.println("ex is "+ e);
+          }
+      }
+      ```
+
+   2. 对拦截器进行注册：
+
+      ```java
+      @Configuration
+      public class WebConfig extends WebMvcConfigurerAdapter {
+      
+          @Autowired
+          private TimeInterceptor timeInterceptor;
+          
+          @Override
+          public void addInterceptors(InterceptorRegistry registry) {
+              registry.addInterceptor(timeInterceptor);
+          }
+      }
+      ```
+
+3. 切片（Aspect）
+
+   
 

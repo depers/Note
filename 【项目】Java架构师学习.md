@@ -1119,5 +1119,224 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
 2. 对Swagger进行配置：cn.bravedawn.config.Swagger2
 
+#### 3.3 优化Swagger2显示
 
+1. 忽略Controller显示，@ApiIgnore：cn.bravedawn.controller.HelloController
+2. 添加接口信息：cn.bravedawn.controller.PassportController
+   1. @Api
+   2. @ApiOperation
+3. 添加请求参数对象注解，@ApiModel：cn.bravedawn.bo.UserBO
+
+#### 3.4 使用Tomcat运行前端源码
+
+将前端源码foodie-shop放置到tomcat的webapp目录下，然后启动Tomcat，在浏览器中输入http://localhost:8080/foodie-shop进行请求。
+
+#### 3.5 设置跨域配置，实现前后端联调
+
+1. 后端对跨域请求进行配置，参见cn.bravedawn.config.CorsConfig
+
+2. 前端的跨域配置，register.html：
+
+   ```js
+   // 前端请求，可以携带cookie信息
+   axios.defaults.withCredentials = true;
+   ```
+
+3. 前端的js\app.js文件中设置后端请求连接：
+
+   ```js
+   serverUrl: "http://localhost:8088",
+   ```
+
+#### 3.6 回顾cookie与session
+
+1. Cookie
+   * 以键值对的形式存储信息在浏览器中，一个cookie保存的大小是4kb
+   * cookie不能跨域，当前及其父级域名可以取值
+   * cookie可以设置有效期
+   * cookie可以设置path
+2. session
+   * 基于服务器内存的缓存（非持久化），可保存请求会话
+   * 每个session通过sessionId来区分不同请求
+   * session可设置过期时间
+   * session也是以键值对形式存在的
+3. 在mall-common中添加JsonUtils和CookieUtils代码。
+4. 在mall-api中给注册和登录接口添加Cookie相关的逻辑代码。
+
+#### 3.7 整合log4j打印日志
+
+1. 移除Spring Boot默认日志，修改mall的pom文件：
+
+   ```xml
+   <!--排除spring日志模块-->
+   <exclusions>
+       <exclusion>
+       	<groupId>org.springframework.boot</groupId>
+       	<artifactId>spring-boot-starter-logging</artifactId>
+       </exclusion>
+   </exclusions>
+   ```
+
+2. 添加log4j日志依赖在mall的pom文件中
+
+   ```xml
+   <!--引入日志依赖 抽象层 与 实现层-->
+   <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-api</artifactId>
+       <version>1.7.21</version>
+   </dependency>
+   <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-log4j12</artifactId>
+       <version>1.7.21</version>
+   </dependency>
+   ```
+
+3. 创建log4j.properties，放到mall-api的src/main/resources目录下
+
+   ```properties
+   log4j.rootLogger=DEBUG,stdout,file
+   log4j.additivity.org.apache=true
+   
+   log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+   log4j.appender.stdout.threshold=debug
+   log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+   log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+   
+   log4j.appender.file=org.apache.log4j.DailyRollingFileAppender
+   log4j.appender.file.layout=org.apache.log4j.PatternLayout
+   log4j.appender.file.DatePattern='.'yyyy-MM-dd-HH-mm
+   log4j.appender.file.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+   log4j.appender.file.Threshold=INFO
+   log4j.appender.file.append=true
+   log4j.appender.file.File=/workspaces/logs/mall-api/mall.log
+   ```
+
+#### 3.8 通过日志监控service执行时间
+
+1. 在mall的pom文件中引入aop依赖：
+
+   ```xml
+   <dependency>
+   	<groupId>org.springframework.boot</groupId>
+   	<artifactId>spring-boot-starter-aop</artifactId>
+   </dependency>
+   ```
+
+2. 编辑service监控的日志切面，参见cn.bravedawn.aspect.ServiceLogAspect
+
+#### 3.9 开启Mybatis SQL日志打印设置
+
+编辑mall-api中的application.yml文件：
+
+```yaml
+mybatis:
+    configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 开启Mybatis SQL日志打印设置
+
+```
+
+#### 3.10获取商品子分类
+
+1. 编写获取商品子分类SQL
+
+   ```sql
+   SELECT
+       f.id as id,
+       f.`name` as `name`,
+       f.type as type,
+       f.father_id as fatherId,
+       c.id as subId,
+       c.`name` as subName,
+       c.type as subType,
+       c.father_id as subFatherId
+   FROM
+       category f
+   LEFT JOIN
+   	category c
+   on
+   	f.id = c.father_id
+   WHERE
+   	f.father_id = #{rootCatId}
+   ```
+
+2. 编写MyBatis相关文件
+
+   * 在mall-pojo项目中，编写cn.bravedawn.vo.CategoryVO和cn.bravedawn.vo.SubCategoryVO。
+
+   * 在mall-mapper项目中，编写cn.bravedawn.mapper.CategoryMapperCustom，为什么不在原来的CategoryMapper文件中写呢，我觉得作者主要是为了将自定义的mapper内容与框架所包含的内容区别开来，别名重命名的问题。
+
+   * **在mall-mapper项目中，编写mapper/CategoryMapperCustom.xml**
+
+     编写resultMap、collection，该部分主要涉及了自定义对象与Mybatis xml文件如何协作工作。
+
+#### 3.11 商品推荐（查询每个一级分类下的最新6条商品数据）
+
+1. 编写查询每个一级分类下的最新6条商品数据SQL，这里需要查询3张表做联合查询：
+
+   ```sql
+   SELECT
+   	f.id as rootCatId,
+   	f.`name` as rootCatName,
+   	f.slogan as slogan,
+   	f.cat_image as catImage,
+   	f.bg_color as bgColor,
+   	i.id as itemId,
+   	i.item_name as itemName,
+   	ii.url as itemUrl,
+   	i.created_time as createdTime
+   FROM
+   	category f
+   LEFT JOIN items i ON f.id = i.root_cat_id
+   LEFT JOIN items_img ii ON i.id = ii.item_id
+   WHERE
+   	f.type = 1
+   AND
+   	i.root_cat_id = 1
+   AND
+   	ii.is_main = 1
+   ORDER BY
+   	i.created_time DESC
+   LIMIT 0,6
+   ```
+
+2. 在mall-mapper项目中，编写Mapper文件，这里涉及到了Mybatis xml文件中**parameterType="Map"**属性的相关写法。编辑cn.bravedawn.mapper.CategoryMapperCustom文件：
+
+   ```java
+   List<NewItemsVO> getSixNewItemsLazy(@Param("paramsMap") Map<String, Object> map);
+   ```
+
+3. 在mall-mapper项目中，编辑mapper/CategoryMapperCustom.xml文件：
+
+   ```xml
+   <select id="getSixNewItemsLazy" resultMap="myNewItemsVO" parameterType="Map">
+   SELECT
+       f.id as rootCatId,
+       f.`name` as rootCatName,
+       f.slogan as slogan,
+       f.cat_image as catImage,
+       f.bg_color as bgColor,
+       i.id as itemId,
+       i.item_name as itemName,
+       ii.url as itemUrl,
+       i.created_time as createdTime
+   FROM
+       category f
+   LEFT JOIN items i ON f.id = i.root_cat_id
+   LEFT JOIN items_img ii ON i.id = ii.item_id
+   WHERE
+       f.type = 1
+   AND
+       i.root_cat_id = #{paramsMap.rootCatId}
+   AND
+       ii.is_main = 1
+   ORDER BY
+       i.created_time
+   DESC
+   LIMIT 0,6
+   </select>
+   ```
+
+4. 然后再在mall-service，mall-api中编写相关接口。
 
