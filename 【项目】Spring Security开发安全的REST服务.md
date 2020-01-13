@@ -441,7 +441,7 @@ hibernate.validator校验框架的学习：
 
    3. 采用Filter的不足：
 
-      使用Filter是不能获取到具体是那个Controller的那个方法处理某一个请求。
+      使用Filter是不能获取到具体是**那个Controller的那个方法**处理某一个请求。
 
 2. 拦截器（Interceptor）
 
@@ -518,8 +518,29 @@ hibernate.validator校验框架的学习：
           }
       }
       ```
+      
+   3. 采用拦截器的不足
+
+      从上面的实例你可以看到，通过preHandle方法的handle方法，我们可以获取请求调用的类和方法名。但是并**不能获取请求的调用方法的具体参数**。
+
+      在这里我们可以看下源码，在org.springframework.web.servlet.DispatcherServlet#doDispatch方法中：
+
+      ```
+      // 如果preHandle方法返回false，则会直接return
+      if (!mappedHandler.applyPreHandle(processedRequest, response)) {
+      	return;
+      }
+      
+      // 如果preHandle方法返回true，才会执行真正的
+      // Actually invoke the handler.
+      mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+      ```
+
+      
 
 3. 切片（Aspect）
 
+  
+  
    
 
