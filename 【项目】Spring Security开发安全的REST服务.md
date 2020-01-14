@@ -441,7 +441,8 @@ hibernate.validator校验框架的学习：
 
    3. 采用Filter的不足：
 
-      使用Filter是不能获取到具体是**那个Controller的那个方法**处理某一个请求。
+      * 使用Filter是不能获取到具体是**那个Controller的那个方法**处理某一个请求。
+      * 可以获取http请求和响应信息
 
 2. 拦截器（Interceptor）
 
@@ -521,11 +522,11 @@ hibernate.validator校验框架的学习：
       
    3. 采用拦截器的不足
 
-      从上面的实例你可以看到，通过preHandle方法的handle方法，我们可以获取请求调用的类和方法名。但是并**不能获取请求的调用方法的具体参数**。
+      从上面的实例你可以看到，通过preHandle方法的handle方法，我们可以**获取请求调用的类和方法名**。但是并**不能获取请求的调用方法的具体参数**。
 
       在这里我们可以看下源码，在org.springframework.web.servlet.DispatcherServlet#doDispatch方法中：
 
-      ```
+      ```java
       // 如果preHandle方法返回false，则会直接return
       if (!mappedHandler.applyPreHandle(processedRequest, response)) {
       	return;
@@ -536,11 +537,105 @@ hibernate.validator校验框架的学习：
       mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
       ```
 
-      
-
 3. 切片（Aspect）
 
+  **切片正好弥补了拦截器（Interceptor）的不足，它可以获取请求调用方法的具体参数。**但是他却**拿不到http请求和响应的信息。**
   
+  1. 在security-demo引入AOP依赖
   
+     ```
+     <dependency>
+     	<groupId>org.springframework.boot</groupId>
+     	<artifactId>spring-boot-starter-aop</artifactId>
+     </dependency>
+     ```
+  
+  2. 切片的定义
+  
+     ![](E:\markdown笔记\笔记图片\19\9.png)
+  
+     * 切片类
+     * 切入点
+     * 编写增强方法
+  
+### 8.Filter、Inteceptor、ControllerAdvice、Aspect和Controller的关系
+
+![](E:\markdown笔记\笔记图片\19\10.png)
+
+* 6、7节所讲的内容的调用顺序如上图所示
+* 从外到内，依次是Filter、Interceptor、ControllerAdvice、Aspect、Controller
+* 从内到外，依次是Controller、Aspect、ControllerAdvice、Interceptor、Filter
+* **若程序抛出异常，从内到外会依次传递，如果上述五层的某一层没有处理异常，则会继续向外层传递；若某一层处理了异常，则停止异常传递**
+* 在Interceptor是不会进行任何异常处理的，如要进行异常的处理请在别的层级进行。
+
+### 9.使用Rest方式处理文件服务
+
+1. 编写文件上传的测试代码cn.bravedawn.UserControllerTest#whenUploadSuccess
+
+2. 编写文件上传和文件下载的接口cn.bravedawn.web.controller.FileController
+
+3. 其中在文件的下载代码中，涉及到了一个名为IOUtils的类，该类是在security-demo中的pom文件中引入了
+
+   ```xml
+   <dependency>
+       <groupId>commons-io</groupId>
+       <artifactId>commons-io</artifactId>
+   </dependency>
+   ```
+
+### 10. 异步处理REST服务
+
+![](E:\markdown笔记\笔记图片\19\11.png)
+
+* 传统的同步处理机制，是主线程接收http请求，然后处理，最后主线程输出http响应
+* 异步处理机制，是主线程接收http请求，副线程处理，最后再由主线程输出http响应。在副线程处理的时候，主线程还可以处理别的http请求，提高的服务的吞吐量。
+
+1. 使用Runnable异步处理Rest服务
+
+   * 编写代码cn.bravedawn.web.async.AsyncController#async
+
+   * 执行的结果：
+
+     ![](E:\markdown笔记\笔记图片\19\14.png)
+
+2. 使用DeferredResult一步处理Rest服务
+
+   ![](E:\markdown笔记\笔记图片\19\12.png)
+
+   下面根据上图进行模拟：
+
+   * 编写线程1：cn.bravedawn.web.async.AsyncController#async_de
+
+   * 编写消息队列，并模拟应用2处理：cn.bravedawn.web.async.MockQueue
+
+   * 编写线程2：cn.bravedawn.web.async.QueueListener#onApplicationEvent
+
+   * 日志结果：
+
+     ![](E:\markdown笔记\笔记图片\19\15.png)
+
+3. 异步处理配置
+
+   在cn.bravedawn.config.WebConfig#configureAsyncSupport设置异步处理配置：
+
+   ```java
+   @Override
+   public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+       configurer
+           // 设置callable拦截器
+           .registerCallableInterceptors()
+           // 设置DeferredResult拦截器
+           .registerDeferredResultInterceptors()
+           // 设置默认超时时间
+           .setDefaultTimeout(1000)
+           // 设置可重用的线程池
+           .setTaskExecutor();
+   }
+   ```
+
    
+
+  
+
+  
 
