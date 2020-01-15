@@ -1424,6 +1424,8 @@ mybatis:
 
 代码详情参见mall-common的cn.bravedawn.utils.DesensitizationUtil。下面我详细的分析一下这个脱敏算法的内部逻辑：
 
+这个代码我debug了一下，感觉不是很难。分别对脱敏字符串长度为1、2、3、7、其他这些进行了处理。
+
 ### 第4章 商品搜索功能开发
 
 #### 4.1 商品搜索-自定义mapper

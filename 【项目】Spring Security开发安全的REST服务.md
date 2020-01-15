@@ -583,7 +583,7 @@ hibernate.validator校验框架的学习：
    </dependency>
    ```
 
-### 10. 异步处理REST服务
+### 10.异步处理REST服务
 
 ![](E:\markdown笔记\笔记图片\19\11.png)
 
@@ -633,9 +633,96 @@ hibernate.validator校验框架的学习：
    }
    ```
 
-   
 
-  
+### 11.使用swagger自动生成文档
 
-  
+1. 在security-demo项目中引入swagger相关依赖
 
+   ```xml
+   <!--引入swagger相关配置-->
+   <dependency>
+       <groupId>io.springfox</groupId>
+       <artifactId>springfox-swagger2</artifactId>
+       <version>2.7.0</version>
+   </dependency>
+   <dependency>
+       <groupId>io.springfox</groupId>
+       <artifactId>springfox-swagger-ui</artifactId>
+       <version>2.7.0</version>
+   </dependency>
+   ```
+
+2. 修改security-demo项目中的cn.bravedawn.DemoApplication
+
+   ```java
+   @EnableSwagger2
+   ```
+
+3. 常用的swagger注解
+
+   * 写在controller类上
+
+     ```java
+     @Api(value = "购物车接口controller", tags = {"购物车接口相关的api"})
+     ```
+
+   * 写在controller方法上
+
+     ```java
+     @ApiOperation(value = "添加商品到购物车", notes = "添加商品到购物车", httpMethod = "POST")
+     ```
+
+   * 写在controller方法的参数上
+
+     ```java
+     @ApiParam(name = "itemId", value = "商品id", required = true)
+                 @RequestParam String itemId
+     ```
+
+   * @ApiModel（）用于类：表示对类进行说明，用于参数用实体类接收
+
+   * @ApiModelProperty（）用于方法，字段：表示对model属性的说明或者是数据操作更改
+
+   * @ApiIgnore（）用于类，方法，方法参数：表示这个方法或者类被忽略
+
+4. 更多详细的配置，请参见《Java架构师学习》中的“3.2 整合swagger2文档API”和“3.3 优化Swagger2显示”这两节的文档。
+
+### 12.使用wiremock模拟rest服务
+
+1. 在security-demo项目中引入swagger相关依赖
+
+   ```xml
+    <!--引入wiremock模拟后端数据-->
+    <dependency>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock</artifactId>
+    </dependency>
+   ```
+
+2. 下载wiremock程序包
+
+   * wiremock官网地址：http://wiremock.org/
+
+   * 启动wiremock jar文件
+
+     ```
+     java -jar wiremock-standalone-2.25.1.jar --port 8062
+     ```
+
+3. 编写Mock数据接口，详情参见cn.bravedawn.wiremock.MockServer
+
+4. 启动项目，然后在浏览器中输入
+
+## 第4章 使用Spring Security开发基于表单的登录
+
+Spring Security核心功能
+
+1. 认证（你是谁）
+2. 授权（你能干什么）
+3. 攻击防护（防止伪造身份）
+
+本章的主要内容：
+
+1. Spring security基本原理
+2. 实现用户名+密码验证
+3. 实现手机号+短信认证
