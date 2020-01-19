@@ -715,6 +715,8 @@ hibernate.validator校验框架的学习：
 
 ## 第4章 使用Spring Security开发基于表单的登录
 
+### 1.简介
+
 Spring Security核心功能
 
 1. 认证（你是谁）
@@ -726,3 +728,305 @@ Spring Security核心功能
 1. Spring security基本原理
 2. 实现用户名+密码验证
 3. 实现手机号+短信认证
+
+### 2.Spring Security基本原理
+
+* 使用**httpBasic**方式验证身份
+
+  1. 在security-demo项目中，修改application.properties
+
+     ```java
+     # 开启/关闭spring security默认验证配置
+     security.basic.enabled = true
+     ```
+
+  2. 然后启动项目，在浏览器中请求http://localhost:8060/user，就会出现下图的图片：
+
+     ![](E:\markdown笔记\笔记图片\19\16.png)
+
+  3. 然后在浏览器中输入用户名user，密码是项目启动时控制台打印的一串字符串：
+
+     ![](E:\markdown笔记\笔记图片\19\17.png)
+
+  4. 登录之后就可以获取到请求的连接资源了
+
+* 使用**formLogin**方式验证身份，在security-browser项目中配置security
+
+  1. 编辑cn.bravedawn.browser.BrowserSecurityConfig
+
+     ```java
+     @Configuration
+     public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
+     
+         @Override
+         protected void configure(HttpSecurity http) throws Exception {
+             http.formLogin()
+                     .and()
+                     // 对请求进行授权配置
+                     .authorizeRequests()
+                     // 对所有请求
+                     .anyRequest()
+                     // 都要进行身份认证
+                     .authenticated();
+         }
+     }
+     ```
+
+  2. 启动项目之后，在浏览器中输入http://localhost:8060/user，就会出现下图的图片，后面的操作和上面的一样。
+
+     ![](E:\markdown笔记\笔记图片\19\18.png)
+
+  3. 如果你不想使用formLogin进行验证，想通过httpBasic方式进行验证，修改cn.bravedawn.browser.BrowserSecurityConfig：
+
+     ```java
+     @Configuration
+     public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
+     
+         @Override
+         protected void configure(HttpSecurity http) throws Exception {
+     
+             //http..formLogin()
+             // 采用默认方式验证
+             http.httpBasic()
+                     .and()
+                     // 对请求进行授权配置
+                     .authorizeRequests()
+                     // 对所有请求
+                     .anyRequest()
+                     // 都要进行身份认证
+                     .authenticated();
+         }
+     }
+     ```
+
+* Spring Security基本原理
+
+  ![](E:\markdown笔记\笔记图片\19\19.png)
+
+  1. UsernamePasswordAuthenticationFilter（`http..formLogin()`）、BasicAuthenticationFilter（`http.httpBasic()`）
+
+     定义用何种方式去进行身份验证
+
+  2. FilterSecurityInterceptor
+
+     * 过滤器链的最后一关（过了这一关之后直接就可以访问REST API）
+
+     * 会根据绿色部分的过滤器的验证结果判断是否通行；
+
+     * 若验证失败，他会根据不同的原因抛出响应的异常，异常抛向ExceptionTranslationFilter
+
+  3. ExceptionTranslationFilter
+
+     * 接收FilterSecurityInterceptor抛出的异常
+     * 根据异常做出相应的处理，依据前面绿色部分的配置引导用户进行验证；
+       * 若你是因为没有登录导致的异常，他会根据前面绿色过滤器的配置引导你去登录；
+     
+  4. 上述过滤器链的调用逻辑
+  
+     FilterSecurityInterceptor-->ExceptionTranslationFilter-->UsernamePasswordAuthenticationFilter（验证逻辑的filter）
+
+### 3.自定义用户认证逻辑
+
+1. 处理用户信息获取逻辑
+
+   在项目sercurity-brower中，编辑cn.bravedawn.browser.MyUserDetailsService。在这个方法里面添加查询用户信息
+
+2. 处理用户校验逻辑
+
+   * 在项目sercurity-brower中，编辑cn.bravedawn.browser.MyUserDetailsService。对用户信息进行校验：
+
+     ```java
+     /**
+     * 参数1：用户名
+     * 参数2：密码
+     * 参数3：校验用户是否可用
+     * 参数4：校验用户是否没过期
+     * 参数5：校验用户密码是否没过期
+     * 参数6：校验用户是否没被锁
+     * 参数7：权限信息数组
+     */
+     return new User(username, "123456", true, true, true, true,
+     AuthorityUtils.createAuthorityList("admin"));
+     ```
+
+   * seceurty中org.springframework.security.core.userdetails.UserDetails接口的方法说明：
+     * boolean isAccountNonExpired();
+       * 校验用户是否**没过期**
+     * boolean isAccountNonLocked();
+       * 校验账户是不是**没锁定**
+     * boolean isCredentialsNonExpired();
+       * 校验密码是否**没过期**
+     * boolean isEnabled();
+       * 校验账户是否**可用**
+
+3. 处理密码加密解密
+
+   * 编写spring security加密的实现类，在代码在security-browser的cn.bravedawn.browser.BrowserSecurityConfig中
+
+     ```java
+      /**
+      * spring security默认密码实现配置
+      * BCryptPasswordEncoder类是PasswordEncoder接口的实现类
+      * @return
+      */
+      @Bean
+      public PasswordEncoder passwordEncoder(){
+      	return new BCryptPasswordEncoder();
+      }
+     ```
+
+   * spring默认实现的加密算法，每次登陆的加密字符串都是不同的。如下图所示：
+
+     ![](E:\markdown笔记\笔记图片\19\20.png)
+
+### 4.个性化用户认证流程
+
+1. 自定义登录页面
+
+   * 自定义登录页面配置
+
+     1. 编辑cn.bravedawn.browser.BrowserSecurityConfig
+
+        * 配置html登录页面
+        * 配置登录逻辑的处理url
+        * 若请求的url为/signIn.html，放开请求，无需身份认证
+        * 关闭csrf防护
+
+        ```java
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+        
+            http.formLogin()
+            //http.httpBasic()
+            // 配置html登录页面
+            .loginPage("/signIn.html")
+            // 配置登录逻辑的处理url
+            .loginProcessingUrl("/authentication/form")
+            .and()
+            // 对请求进行授权配置
+            .authorizeRequests()
+            // 若请求的url为/signIn.html，放开请求，无需身份认证
+            .antMatchers("/signIn.html").permitAll()
+            // 对所有请求
+            .anyRequest()
+            // 都要进行身份认证
+            .authenticated()
+            // 关闭csrf防护
+            .and()
+            .csrf().disable();
+        }
+        ```
+
+     2. 编辑src/main/resources/resources/signIn.html
+
+   * 处理不同类型的请求
+
+   ![](E:\markdown笔记\笔记图片\19\21.png)
+
+     1. 编辑自定义的Controller方法，编辑cn.bravedawn.BrowserSecurityController
+
+        ```java
+        @RestController
+        @Slf4j
+        public class BrowserSecurityController {
+        
+            private RequestCache requestCache = new HttpSessionRequestCache();
+        
+            private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+        
+            @Autowired
+            private SecurityProperties securityProperties;
+        
+            /**
+            * 当需要身份认证时，跳转到这里
+            *
+            * @param request
+            * @param response
+            * @return
+            * @throws IOException
+            */
+            @RequestMapping("/authentication")
+            @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+            public SimpleResponse requireAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        
+                // 获取之前请求的url
+                SavedRequest savedRequest = requestCache.getRequest(request, response);
+        
+                if (savedRequest != null) {
+                String targetUrl = savedRequest.getRedirectUrl();
+                log.info("引发跳转的请求是:" + targetUrl);
+                if (StringUtils.endsWithIgnoreCase(targetUrl, ".html")) {
+                	redirectStrategy.sendRedirect(request, response, 	securityProperties.getBrowser().getLoginPage());
+                }
+                }
+        
+                return new SimpleResponse("访问的服务需要身份认证，请引导用户到登录页");
+            }
+        }
+        ```
+
+     2. 在security-demo项目中编写自定义登录页面，编辑src/main/resources/resources/demo-signIn.html
+
+     3. 编写读取properties配置
+
+      * 在security-demo项目中编辑src/main/resources/application.properties
+
+        ```properties
+        # 配置自定义登录页面路径
+        bravedawn.security.browser.loginPage = /demo-signIn.html
+        ```
+
+      * 在security-core项目中编辑
+
+        * cn.bravedawn.properties.BrowserProperties
+        * cn.bravedawn.properties.SecurityProperties
+
+      * 在security-core项目中配置读取属性配置，编辑cn.bravedawn.config.SecurityCoreConfig
+
+     4. 在security-demo项目中，编辑cn.bravedawn.BrowserSecurityConfig，相关片段
+
+      ```java
+       // 配置身份校验路由
+       .loginPage("/authentication")
+       
+       // 放开请求，无需身份认证
+       .antMatchers(
+           "/authentication",
+           securityProperties.getBrowser().getLoginPage()
+       ).permitAll()
+      ```
+
+2. 自定义登录成功处理--AuthenticationSuccessHandler
+
+   * 在security-core中，编辑cn.bravedawn.properties.LoginResponseType
+
+   * 在security-browser中，编辑cn.bravedawn.properties.BrowserProperties
+
+     ```java
+     private LoginResponseType loginResponseType = LoginResponseType.JSON;
+     ```
+
+   * 在security-browser中，编辑cn.bravedawn.authentication.CustomAuthenticationSuccessHandler
+
+   * 在security-browser中，编辑cn.bravedawn.BrowserSecurityConfig
+
+     ```java
+     // 配置身份校验成功处理类
+     .successHandler(customAuthenticationSuccessHandler)
+     // 配置身份校验失败处理类
+     .failureHandler(customAuthenticationFailureHandler)
+     ```
+
+   * 在security-demo中，编辑src/main/resources/resources/index.html
+
+   * 在security-demo中，编辑src/main/resources/application.properties
+
+     ```properties
+     # 配置用户验证通过后的处理形式
+     bravedawn.security.browser.loginResponseType = REDIRECT
+     ```
+
+3. 自定义登录失败处理--AuthenticationFailureHandler
+
+   大部分操作和成功处理的差不多，只是编辑了cn.bravedawn.authentication.CustomAuthenticationFailureHandler。更多详情参见本节提交的commit。

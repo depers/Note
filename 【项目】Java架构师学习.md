@@ -84,7 +84,7 @@
 
 在PDMan中的模型版本设置中，有一个选项是同步配置，在这里有两个选项一个是全量脚本迭代(重建数据表)，另一个是增量脚本迭代（字段增量）。推荐使用增量脚本迭代，因为全量脚本迭代耗时过多。
 
-<img src="E:\markdown笔记\笔记图片\20\1\1\4.png" style="zoom:70%;" />
+<img src="E:\markdown笔记\笔记图片\20\1\4.png" style="zoom:70%;" />
 
 #### 2.9 数据库物理外键移除原因讲解
 
@@ -315,7 +315,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
 #### 2.17 通用Mapper接口所封装的常用方法
 
-![](E:\markdown笔记\笔记图片\20\1\1\5.jpg)
+![](E:\markdown笔记\笔记图片\20\1\5.jpg)
 
 #### 2.18 关于Restful webservice的那些事儿
 
@@ -348,7 +348,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
    
 2. 注入Mapper实例时IDEA红色下划线的错误，解决方法：
 
-   ![](E:\markdown笔记\笔记图片\20\1\1\6.png)
+   ![](E:\markdown笔记\笔记图片\20\1\6.png)
 
    去掉图中红色框中的对勾。
 
@@ -447,7 +447,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    4. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\1\5.PNG)
+      ![](E:\markdown笔记\笔记图片\20\1\5.PNG)
 
       如上图所示，测试案例只插入了parent和child-1，但是没有插入child-2。因为程序cn.bravedawn.service.Impl.StuServiceImpl中的saveChildren()执行出现了除0错误。
 
@@ -500,7 +500,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\1\7.png)
+      ![](E:\markdown笔记\笔记图片\20\1\7.png)
 
       从图中我们可以看出，子方法声明了事务，父方法未声明事务，则子方法有事务特性，而父方法没有。
 
@@ -578,7 +578,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\1\8.png)
+      ![](E:\markdown笔记\笔记图片\20\1\8.png)
 
       可以看到数据库中有两条数据，和父子都没有添加任何事务的效果一致。
 
@@ -656,7 +656,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    4. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\1\7.png)
+      ![](E:\markdown笔记\笔记图片\20\1\7.png)
 
       只执行了saveParent()，并未执行声明了mandatory事务的saveChildren()方法。
 
@@ -727,7 +727,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\1\7.png)
+      ![](E:\markdown笔记\笔记图片\20\1\7.png)
 
       此时，子方法有事务，而父方法没有事务。
 
@@ -797,7 +797,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\1\9.png)
+      ![](E:\markdown笔记\笔记图片\20\1\9.png)
 
       这下就有意思了，子方法会顺利执行，而父方法抛出除0异常，导致saveParent()方法回滚，却没有影响到saveChildren()子方法。
 
@@ -844,7 +844,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\1\8.png)
+      ![](E:\markdown笔记\笔记图片\20\1\8.png)
 
       和没有添加任何事务的情况是相同的。
 
@@ -880,7 +880,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\1\10.png)
+      ![](E:\markdown笔记\笔记图片\20\1\10.png)
 
       父方法由于事务的原因，他的数据并没有成功的插入数据库中；而子方法由于不支持事务，所以插入了一条数据。
 
@@ -1023,7 +1023,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\1\11.png)
+      ![](E:\markdown笔记\笔记图片\20\1\11.png)
 
       此时数据库中插入一条数据，子方法的异常被父方法捕获。父事务可以不随子事务进行回滚。
 
@@ -1040,7 +1040,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
  #### 2.28 复习总结
 
-![](E:\markdown笔记\笔记图片\20\1\1\12.jpg)
+![](E:\markdown笔记\笔记图片\20\1\12.jpg)
 
 ### 第3章 用户登录注册模块开发
 
@@ -1475,4 +1475,22 @@ mybatis:
    * 优点1：数据持久化，可在任何地点任何时间访问
    * 优点2：频繁的读写只基于缓存，不会造成数据库压力
    * 优点3：适用于集群和分布式系统，可扩展性强
+
+## 3.地址，订单，支付，定时任务开发
+
+### 第2章 确认订单功能开发
+
+#### 1.订单流程梳理与订单状态
+
+* 订单状态流转
+
+  ![](E:\markdown笔记\笔记图片\20\1\13.png)
+
+* 复杂订单状态设计
+
+  ![](E:\markdown笔记\笔记图片\20\1\12.png)
+
+* 聚合支付中心
+
+  ![](E:\markdown笔记\笔记图片\20\1\14.png)
 
