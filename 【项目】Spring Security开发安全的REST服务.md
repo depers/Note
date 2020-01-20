@@ -827,11 +827,11 @@ Spring Security核心功能
 
 ### 3.自定义用户认证逻辑
 
-1. 处理用户信息获取逻辑
+1. 处理用户信息获取逻辑--UserDetailsService
 
    在项目sercurity-brower中，编辑cn.bravedawn.browser.MyUserDetailsService。在这个方法里面添加查询用户信息
 
-2. 处理用户校验逻辑
+2. 处理用户校验逻辑--UserDetails
 
    * 在项目sercurity-brower中，编辑cn.bravedawn.browser.MyUserDetailsService。对用户信息进行校验：
 
@@ -859,7 +859,7 @@ Spring Security核心功能
      * boolean isEnabled();
        * 校验账户是否**可用**
 
-3. 处理密码加密解密
+3. 处理密码加密解密--PasswordEncoder
 
    * 编写spring security加密的实现类，在代码在security-browser的cn.bravedawn.browser.BrowserSecurityConfig中
 
@@ -1030,3 +1030,116 @@ Spring Security核心功能
 3. 自定义登录失败处理--AuthenticationFailureHandler
 
    大部分操作和成功处理的差不多，只是编辑了cn.bravedawn.authentication.CustomAuthenticationFailureHandler。更多详情参见本节提交的commit。
+
+### 5.认证流程源码详解
+
+1. 认证处理流程说明，下面是整个调用的流程
+
+   ![](E:\markdown笔记\笔记图片\19\23.png)
+
+   * org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter#**doFilter**
+   * org.springframework.security.web.authentication.**UsernamePasswordAuthenticationFilter**#attemptAuthentication
+   * 进行身份校验逻辑
+     * org.springframework.security.authentication.**ProviderManager**#authenticate
+     * org.springframework.security.authentication.dao.**AbstractUserDetailsAuthenticationProvider**#authenticate
+     * 详细的身份校验逻辑
+       * org.springframework.security.authentication.dao.**DaoAuthenticationProvider**#retrieveUser
+       * org.springframework.security.core.userdetails.UserDetailsService#**loadUserByUsername**
+       * org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.**DefaultPreAuthenticationChecks**#**check**
+       * org.springframework.security.authentication.dao.**DaoAuthenticationProvider**#**additionalAuthenticationChecks**
+       * org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.**DefaultPostAuthenticationChecks**#**check**
+   * 校验之后的成功还是失败
+     * org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter#**successfulAuthentication**
+     * org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter#**successfulAuthentication**
+     * cn.bravedawn.authentication.CustomAuthenticationSuccessHandler#**onAuthenticationSuccess**
+     * org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter#**unsuccessfulAuthentication**
+     * cn.bravedawn.authentication.CustomAuthenticationFailureHandler#**onAuthenticationFailure**
+
+2. 认证结果如何在多个请求之间共享
+
+   spring security将用户信息放到了session中，具体是如何操作的
+
+   ![](E:\markdown笔记\笔记图片\19\24.png)
+
+   * 在org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter#successfulAuthentication方法中
+
+     ```java
+     SecurityContextHolder.getContext().setAuthentication(authResult);
+     ```
+
+   * org.springframework.security.core.context.SecurityContextImpl是SecurityContext的实现类
+
+   * org.springframework.security.core.context.SecurityContextHolder是ThreadLocal的封装
+
+     * Spring框架借助ThreadLocal来保存和传递用户登录信息。
+     * ThreadLocal是线程级的程序变量，同一线程在不同的方法中可以对线程中变量进行设置和读取
+     * 一般情况下一个访问的请求和响应都是在一个线程中进行的，也就是说把Authentication放入到当前的线程中，在另一个方法中还可以取出来
+
+   * org.springframework.security.web.context.SecurityContextPersistenceFilter
+
+     ![](E:\markdown笔记\笔记图片\19\25.png)
+
+     功能：
+
+     1. 在请求进入之前，将用户信息从session中放入请求线程
+
+     2. 在请求响应之后，从线程中把用户信息保存到session中
+
+ 3. 获取认证用户信息
+
+    1. 通过SecurityContextHolder获取用户信息
+
+      ```java
+      @GetMapping("/me")
+      public Object getCurrentUser(){
+      	return SecurityContextHolder.getContext().getAuthentication();
+      }
+      ```
+
+   2. 通过请求参数Authentication获取用户信息
+
+      ```java
+      @GetMapping("/me")
+      public Object getCurrentUser(Authentication authentication){
+      	return authentication;
+      }
+      ```
+
+   3. 通过@AuthenticationPrincipal获取用户的主要信息
+
+      ```java
+      @GetMapping("/me")
+      public Object getCurrentUser(@AuthenticationPrincipal UserDetails userDetails){
+      	return userDetails;
+      }
+      ```
+
+### 6.实现图形验证码功能
+
+1. 开发生成图形验证码接口
+
+   1. 在security-core中，编写cn.bravedawn.validate.code.ImageCode
+   2. 在security-browser中，编写src/main/resources/resources/signIn.html，添加验证码的html
+   3. 在security-core中，编写cn.bravedawn.validate.code.ValidateCodeController
+      1. 根据随机数生成图片
+      2. 将随机数存到session
+      3. 在将生成的图片写到接口的响应中
+
+2. 在认证流程中加入图形码校验
+
+   1. 在security-core中编写cn.bravedawn.validate.code.ValidateCodeFilter
+
+   2. 在security-code中编写cn.bravedawn.validate.code.ValidateCodeException
+
+   3. 在security-browser中将图形码校验的filter加入认证流程
+
+      ```java
+      ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
+      validateCodeFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
+      
+      http
+          // 在UsernamePasswordAuthenticationFilter之前校验图形验证码
+         .addFilterBefore(validateCodeFilter,UsernamePasswordAuthenticationFilter.class)
+      ```
+
+3. 重构代码
