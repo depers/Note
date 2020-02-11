@@ -1142,4 +1142,91 @@ Spring Security核心功能
          .addFilterBefore(validateCodeFilter,UsernamePasswordAuthenticationFilter.class)
       ```
 
-3. 重构代码
+
+### 7.图形验证码重构
+
+1. 验证码基本参数可配置
+
+   ![](E:\markdown笔记\笔记图片\19\26.png)
+
+   * 默认配置
+
+     图形验证码的默认参数配置是在项目security-core的cn.bravedawn.properties.ImageCodeProperties
+
+   * 应用级配置
+
+     图形验证码的应用级配置是在项目security-demo的application.properties
+
+     ```properties
+     # 配置应用级图形验证码字符的长度
+     bravedawn.security.code.image.length = 6
+     bravedawn.security.code.image.width = 100
+     ```
+
+   * 请求级配置
+
+     图形验证码的请求级配置：
+
+     1. 在项目security-core的cn.bravedawn.validate.code.ValidateCodeController#createImageCode
+
+        ```java
+        // 请求参数级配置
+        int width = ServletRequestUtils.getIntParameter(request.getRequest(), "width", securityProperties.getCode().getImage().getWidth());
+        int height = ServletRequestUtils.getIntParameter(request.getRequest(), "height", securityProperties.getCode().getImage().getHeight());
+        // 应用级配置
+        int length = securityProperties.getCode().getImage().getLength();
+        int expireIn = securityProperties.getCode().getImage().getExpireIn();
+        ```
+
+     2. 在项目security-brower的resources/signIn.html中
+
+        ```html
+        <tr>
+            <td>图形验证码:</td>
+            <td>
+                <input type="text" name="imageCode">
+                <img src="/code/image?width=200">
+            </td>
+        </tr>
+        ```
+
+2. 验证码拦截的接口可配置
+
+   1. 在项目security-core的cn.bravedawn.properties.ImageCodeProperties添加属性
+
+      ```java
+      // 需要验证码拦截的请求
+      private String url;
+      ```
+
+   2. 在项目security-demo的application.properties配置url
+
+      ```properties
+      # 配置需要图形二维码验证的请求
+      bravedawn.security.code.image.url = /user/*
+      ```
+
+   3. 编辑security-core中的cn.bravedawn.validate.code.ValidateCodeFilter
+
+      * 实现接口InitializingBean并实现cn.bravedawn.validate.code.ValidateCodeFilter#afterPropertiesSet方法
+
+      * 然后在cn.bravedawn.validate.code.ValidateCodeFilter#doFilterInternal方法中，添加请求拦截的验证
+
+        ```java
+        // 判断请求是否满足bravedawn.security.code.image.url配置的要求
+        Boolean action = false;
+        for (String url : urls){
+            if(pathMatcher.match(url, request.getRequestURI())){
+            	action = true;
+            	break;
+            }
+        }
+        if (action){
+        ```
+
+3. 验证码的生成逻辑可配置
+
+   1. 在项目security-core中编写cn.bravedawn.validate.code.ValidateCodeGenerator接口，定义图形验证码生成方法
+   2. 在项目security-core中编写cn.bravedawn.validate.code.ImageCodeGenerator，即图形验证码默认的具体实现
+   3. 在项目security-core中编写图形验证码默认实现的配置类cn.bravedawn.validate.code.ValidateCodeBeanConfig
+   4. 在项目security-demo中编写cn.bravedawn.code.DemoImageCodeGenerator用来取代图形验证码的默认实现。**在这个例子中通过编写接口，实现接口，配置接口从而实现了通过增量方式适应变化。**
