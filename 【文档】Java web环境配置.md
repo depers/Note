@@ -126,6 +126,34 @@
 
 11. mysql自启动设置：1）执行`chkconfig mysqld on`，2）执行`chlconfig --list mysqld`查看，如果2-5位启用on状态即成功。
 
+### MySQL安装过程中出现的问题
+
+#### 1.在/var/log/mysqld.log文件中出现错误日志：/usr/sbin/mysqld: Can't find file: './mysql/plugin.frm' (errno: 13)
+
+输入以下命令解决：
+
+```sh
+# cd /var/lib/mysql/mysql
+
+// 利用 chown 将指定文件的拥有者改为指定的用户或组
+// 指定该目录下所有文件的拥有者为mysql
+# chown mysql *
+
+// Linux chgrp命令用于变更文件或目录的所属群组。
+// 指定该目录下所有文件的所属群(用户组)为mysql
+# chgrp mysql *
+
+// Linux/Unix 的文件调用权限分为三级 : 文件拥有者、群组、其他。利用 chmod 可以藉以控制文件如何被他人所调用。
+// 设置该目录下所有文件的拥有者(u)和群组(g)，加权限(+)，r 表示可读取，w 表示可写入，x 表示可执行
+# chmod ug+rwx *
+
+# service mysqld start
+```
+
+#### 2.MySQL相关文件目录
+
+
+
 ## Nginx配置
 
 1. 安装Nginx依赖：`yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel`

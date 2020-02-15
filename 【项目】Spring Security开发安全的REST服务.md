@@ -823,7 +823,7 @@ Spring Security核心功能
      
   4. 上述过滤器链的调用逻辑
   
-     FilterSecurityInterceptor-->ExceptionTranslationFilter-->UsernamePasswordAuthenticationFilter（验证逻辑的filter）
+     **FilterSecurityInterceptor-->ExceptionTranslationFilter-->UsernamePasswordAuthenticationFilter（验证逻辑的filter）**
 
 ### 3.自定义用户认证逻辑
 
@@ -1230,3 +1230,48 @@ Spring Security核心功能
    2. 在项目security-core中编写cn.bravedawn.validate.code.ImageCodeGenerator，即图形验证码默认的具体实现
    3. 在项目security-core中编写图形验证码默认实现的配置类cn.bravedawn.validate.code.ValidateCodeBeanConfig
    4. 在项目security-demo中编写cn.bravedawn.code.DemoImageCodeGenerator用来取代图形验证码的默认实现。**在这个例子中通过编写接口，实现接口，配置接口从而实现了通过增量方式适应变化。**
+
+### 8.记住我功能实现
+
+1. 记住我功能基本原理
+
+   ![](E:\markdown笔记\笔记图片\19\27.png)
+
+   ![28](E:\markdown笔记\笔记图片\19\28.png)
+
+   上图中可以看到RememberMeAuthenticationFilter在过滤器链的位置。
+
+2. 记住我功能具体实现
+
+   1. 在项目security-browser的cn/bravedawn/BrowserSecurityConfig.java。加入记住我功能配置：
+
+      ```java
+      /**
+      * 记住我功能配置
+      * @return
+      */
+      @Bean
+      public PersistentTokenRepository persistentTokenRepository(){
+          JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+          tokenRepository.setDataSource(dataSource);
+          // 新建数据表之后注释这句代码
+          // tokenRepository.setCreateTableOnStartup(true);
+          return tokenRepository;
+      }
+      ```
+
+   2. 在项目security-browser的cn/bravedawn/BrowserSecurityConfig.java添加认证流程配置：
+
+      ```java
+      // 配置记住我功能
+      .rememberMe()
+          .tokenRepository(persistentTokenRepository())
+          .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
+          .userDetailsService(userDetailsService)
+      ```
+
+3. 记住我功能Spring Security源码解析
+
+   * 向数据库和cookie保存token信息
+     * 
+   * 第二次登录时，校验token，无需登录

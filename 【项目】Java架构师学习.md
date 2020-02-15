@@ -862,12 +862,10 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
       }
       ```
 
-      去掉该父方法的事务声明。
-
    2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
 
       ```java
-      @Transactional(propagation = Propagation.NOT_SUPPORTED)
+   @Transactional(propagation = Propagation.NOT_SUPPORTED)
       // 子方法
       public void saveChildren() {
       	saveChild1();
@@ -875,7 +873,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
       	saveChild2();
       }
       ```
-
+   
       给子方法添加事务声明。
 
    3. 数据库的保存效果，select * from stu：
@@ -905,12 +903,10 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
       }
       ```
 
-      去掉该父方法的事务声明。
-
    2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
 
       ```java
-      @Transactional(propagation = Propagation.NEVER)
+   @Transactional(propagation = Propagation.NEVER)
       // 子方法
       public void saveChildren() {
       	saveChild1();
@@ -918,7 +914,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
       	saveChild2();
       }
       ```
-
+   
       给子方法添加事务声明。
 
    3. 数据库的保存效果，select * from stu：此时数据库中没有插入任何数据。执行该方法会报**org.springframework.transaction.IllegalTransactionStateException: Existing transaction found for transaction marked with propagation 'never'**异常
@@ -942,19 +938,17 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
       }
       ```
 
-      去掉该父方法的事务声明。
-
    2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
 
       ```java
-      @Transactional(propagation = Propagation.NESTED)
+   @Transactional(propagation = Propagation.NESTED)
       // 子方法
       public void saveChildren() {
       	saveChild1();
       	saveChild2();
       }
       ```
-
+   
       给子方法添加事务声明。
 
    3. 数据库的保存效果，select * from stu：此时数据库中没有插入任何数据。子方法使用Propagation.NESTED，他会嵌套在父事务中执行。他与父事务共用一个事务。这个要与Propagation.REQUIRES_NEW的测试案例3相区别。
@@ -973,12 +967,10 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
       }
       ```
 
-      去掉该父方法的事务声明。
-
    2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
 
       ```java
-      @Transactional(propagation = Propagation.NESTED)
+   @Transactional(propagation = Propagation.NESTED)
       // 子方法
       public void saveChildren() {
       	saveChild1();
@@ -986,7 +978,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
       	saveChild2();
       }
       ```
-
+   
       给子方法添加事务声明。
 
    3. 数据库的保存效果，select * from stu：数据库中没有插入任何数据。子事务异常，父事务也要进行回滚。
@@ -1001,11 +993,16 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
       // 父方法
       public void testPropagationTrans() {
           stuService.saveParent();
-          stuService.saveChildren();
+          try {
+              // save point
+              stuService.saveChildren();
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
       }
       ```
 
-      去掉该父方法的事务声明。
+      父方法捕获异常。
 
    2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
 
