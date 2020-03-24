@@ -1477,7 +1477,7 @@ mybatis:
 
 ### 第2章 确认订单功能开发
 
-#### 1.订单流程梳理与订单状态
+#### 2-1.订单流程梳理与订单状态
 
 * 订单状态流转
 
@@ -1491,3 +1491,87 @@ mybatis:
 
   ![](E:\markdown笔记\笔记图片\20\1\14.png)
 
+### 第4章 微信支付功能集成
+
+#### 4-9 微信支付 - 商户回调地址与内网穿透
+
+* 内网穿刺工具：[NATAPP](https://natapp.cn/)
+
+### 第5章 支付宝支付集成
+
+#### 5-2 支付宝支付 - 构建支付表单填并提交
+
+1. 在mall-payment项目的pom文件中，引入alipay的jar包
+
+   ```xml
+   <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-sdk-java -->
+   <dependency>
+   	<groupId>com.alipay.sdk</groupId>
+   	<artifactId>alipay-sdk-java</artifactId>
+   	<version>3.7.110.ALL</version>
+   </dependency>
+   ```
+
+2. 前端调用后端的具体方法：com.imooc.controller.PaymentController#goAlipay
+
+#### 5-3 支付宝支付 - 异步通知与同步通知
+
+支付宝的异步回调地址的具体方法：com.imooc.controller.NotifyController#alipay
+
+### 第6章 定时任务功能开发
+
+#### 6-1 定时任务 - 构建定时任务task
+
+1. 编写一个定时任务
+
+   ```java
+   @Component
+   public class OrderJob {
+   
+       @Scheduled(cron = "0/3 * * * * ?")
+       public void closeOrder(){
+           System.out.println("执行任务的当前时间： " +
+                   DateUtil.getCurrentDateString(DateUtil.DATETIME_PATTERN));
+       }
+   }
+   ```
+
+2. 在启动类上添加开启定时任务的注解
+
+   ```java
+   // 开启定时任务
+   @EnableScheduling
+   public class Application {
+   
+       public static void main(String[] args) {
+           SpringApplication.run(Application.class, args);
+       }
+   }
+   ```
+
+#### 6-2 定时任务 - 定时关闭超期未支付订单
+
+具体代码提交参见：https://github.com/depers/mall/commit/f855fee079ccd27e1e8f54427d28a316f118a45f
+
+#### 6-3 定时任务 - 定时任务弊端与优化方案
+
+* 使用定时任务关闭超期未支付订单，会存在的弊端：
+
+  1. 会有时间差，程序不严谨
+
+     10:39下单，11:00检查不足1小时，12:00检查，超过1小时多余39分钟
+
+  2. 不支持集群
+
+     单机没毛病，使用集群后，就会有多个定时任务
+
+     解决方案：只使用一台计算机节点，单独用来运行所有的定时任务
+
+  3. 会对数据库全表搜索，及其影响数据库性能：select \* from order where orderStatus = 10;
+     定时任务，仅仅只适用于小型轻量级项目，传统项目
+  
+* 后续课程会涉及到消息队列：MQ-> RabbitMQ, RocketMQ, Kafka, ZeroMQ...
+  
+     延时任务（队列）10:12分下单的，未付款（10）状态，11:12分检查，如果当前状态还是10，则直接关闭订单即可
+
+#### 
