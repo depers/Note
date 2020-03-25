@@ -1574,4 +1574,44 @@ mybatis:
   
      延时任务（队列）10:12分下单的，未付款（10）状态，11:12分检查，如果当前状态还是10，则直接关闭订单即可
 
-#### 
+## 4.用户中心 ,订单
+
+### 第1章 用户中心-查询，编辑，验证用户信息
+
+#### 1-1 本章概述
+
+本章主要涉及的开发内容有：
+
+* 用户个人信息维护
+* 用户头像上传
+* 用户收货地址
+* 用户订单管理
+* 用户评价模块
+
+用户中心的前端源码的文件叫foodie-center。
+
+#### 1-2 用户中心 - 查询用户信息
+
+具体代码提交参见：https://github.com/depers/mall/commit/f377f1155af544ce5c617b2f2ad06ee40e7210ba
+
+#### 1-3 用户中心 - 修改用户信息
+
+1. 从body请求参数中复制参数信息到具体对象，这个API有意思。代码在cn.bravedawn.service.impl.center.CenterUserServiceImpl#updateUserInfo中
+
+   ```java
+   BeanUtils.copyProperties(centerUserBO, updateUser);
+   ```
+
+2. 具体代码提交参见：https://github.com/depers/mall/commit/57f7d88403cf9a6d860d9564414233c8e6497583
+
+#### 1-4 用户中心 - 使用Hibernate验证用户信息
+
+1. 查看父级项目的pom文件，点击Show Dependencies...查看依赖关系，其中hibernate-validator是项目spring-boot-starter-web引入的依赖
+
+   ![](E:\markdown笔记\笔记图片\20\1\15.png)
+
+2. hibernate-validator的用法
+
+   ![](E:\markdown笔记\笔记图片\20\1\16.jpg)
+
+3. 具体代码提交参见：https://github.com/depers/mall/commit/30abaaf2a3ba6f77ce72e7c01be3e5383af9b263
