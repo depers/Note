@@ -6,7 +6,7 @@
 
    `rpm -qa|grep jdk`搜索已经安装的jdk；
 
-   卸载命令：`yum remove xxx`
+   卸载命令：`yum remove xxx`或`rpm -e --nodeps xxx`
 
 2. 安装OracleJDK
 
@@ -34,7 +34,7 @@
 
 2. 修改第二个tomcat的server.xml文件
 
-   ```
+   ```xml
    <Server port="9005" shutdown="SHUTDOWN">
    
    <Connector port="9080" protocol="HTTP/1.1"
@@ -46,7 +46,7 @@
 
 3. 打开第二个tomcat目录bin下catalina.sh，即${tomcat}/bin/catalina.sh。找到`# OS specific support. $var _must_ be set to either true or false.`，在这行下面编辑，新增配置，保存退出：
 
-   ```
+   ```co
    export CATALINA_BASE=$CATALINA_2_BASE
    export CATALINA_HOME=$CATALINA_2_HOME
    ```
@@ -157,9 +157,49 @@
 ## Nginx配置
 
 1. 安装Nginx依赖：`yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel`
+
 2. 解压Nginx：`tar -zxvf nginx`
-3. 依次输入：`./configure --prefix=/usr/local/webapp/`，`make`，`make install`
-4. Nginx常用命令：
+
+3. 创建Makefile文件：`./configure --prefix=/usr/local/webapp/`
+
+   下面是更加具体的配置：
+
+   ```sh
+   ./configure \
+   --prefix=/usr/local/myapp/program/nginx \
+   --pid-path=/var/run/nginx/nginx.pid \
+   --lock-path=/var/lock/nginx.lock \
+   --error-log-path=/var/log/nginx/error.log \
+   --http-log-path=/var/log/nginx/access.log \
+   --with-http_gzip_static_module \
+   --http-client-body-temp-path=/var/temp/nginx/client \
+   --http-proxy-temp-path=/var/temp/nginx/proxy \
+   --http-fastcgi-temp-path=/var/temp/nginx/fastcgi \
+   --http-uwsgi-temp-path=/var/temp/nginx/uwsgi \
+   --http-scgi-temp-path=/var/temp/nginx/scgi
+   ```
+
+   配置命令：
+
+   | 命令                           | 说明                                 |
+   | ------------------------------ | ------------------------------------ |
+   | --prefix                       | 指定nginx安装目录                    |
+   | --pid-path                     | 指向nginx的pid                       |
+   | --lock-path                    | 锁定安装文件，防止被恶意篡改或误操作 |
+   | --error-log-path               | 配置错误日志路径                     |
+   | --http-log-path                | 配置http日志路径                     |
+   | --with-http_gzip_static_module | 启动gzip模块，在线实时压缩输出数据流 |
+   | --http-client-body-temp-path   | 设定客户端请求的临时目录             |
+   | --http-proxy-temp-path         | 设定http代理临时目录                 |
+   | --http-fastcgi-temp-path       | 设定fastcgi临时目录                  |
+   | --http-uwsgi-temp-path         | 设定uwsgi临时目录                    |
+   | --http-scgi-temp-path          | 设定scgi临时目录                     |
+
+4. 编译：`make`
+
+5. 安装：`make install`
+
+6. Nginx常用命令：
    * 测试配置文件：`./nginx -t`
    * 启动：`./nginx`
    * 停止：`./nginx -s stop`或`./nginx -s quit`
@@ -170,6 +210,16 @@
 ## Redis配置
 
 修改第二个redis的redis.conf文件的端口为6380
+
+## MariaDB安装
+
+* 官网安装文档：https://mariadb.com/kb/en/mariadb-installation-version-10121-via-rpms-on-centos-7/
+
+* 具体如下图：
+
+  ![](E:\markdown笔记\笔记图片\20\1\17.png)
+
+* 其中赋予root用户远程连接权限时，输入小写的grant命令时不起作用不知道为什么。若出现这种情况请输入：`GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'IDENTIFIED BY 'fx1212' WITH GRANT OPTION;`
 
 ## Centos自启动配置
 
