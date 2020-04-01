@@ -246,3 +246,276 @@ USR1亦通常被用来告知应用程序重载配置文件；例如，向Apache 
 
 ![](E:\markdown笔记\笔记图片\20\2\5.png)
 
+下面是图中具体的脚本mall\conf\nginx\cut_my_log.sh：
+
+```shell
+#!/bin/bash
+LOG_PATH="/usr/local/myapp/program/nginx/logs"
+RECODE_TIME=$(date -d "yesterday" +%Y-%m-%d+%H:%M)
+PID=/usr/local/myapp/nginx/logs/nginx.pid
+
+mv ${LOG_PATH}/access.log ${LOG_PATH}/access.${RECODE_TIME}.log
+mv ${LOG_PATH}/error.log ${LOG_PATH}/error.${RECODE_TIME}.log
+
+# 向nginx主进程大发送信号，用于重新打开日志文件
+kill -USR1 `cat $PID`
+```
+
+#### 1-19 Nginx日志切割 - 定时
+
+![](E:\markdown笔记\笔记图片\20\2\6.png)
+
+#### 1-21 虚拟主机 - 使用Nginx为静态资源提供服务
+
+![](E:\markdown笔记\笔记图片\20\2\7.png)
+
+使用下面这段脚本进行静态资源的配置：
+
+```nginx
+server {
+    listen  90;
+    server_name localhost;
+
+    location / {				  #通过/请求
+        root    /home/fooie-shop; #静态文件路径
+        index   index.html;		  #首页设置
+    }
+
+    location /imooc {             #通过/imooc请求
+        root /home;				  #静态文件路径会和请求路径进行拼接，访问/home/imooc下的文件
+    }
+
+    location /static {			  #通过/static请求
+        alias /home/imooc;        #通过设置static别名，访问/home/imooc项目的文件
+    }
+}
+```
+
+#### 1-22 使用Gzip压缩提升请求效率
+
+前端浏览器访问网站时会请求大量的多媒体文件和js、css文件。通过在nginx中使用Gzip对其进行压缩。下面是在nginx.conf中的配置：
+
+```nginx
+# 开启gzip压缩功能。目的：提高传输效率，节省带宽
+gzip on;
+
+# 限制最小压缩。小于1字节文件不会压缩
+gzip_min_length 1;
+
+# 定义压缩的级别（压缩比，文件越大，压缩越多，但是cpu使用会越多）
+gzip_com_level 3;
+
+# 定义压缩文件的类型
+gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png application/json;
+```
+
+#### 1-24 location的匹配规则解析
+
+1. `空格/`：location的默认匹配规则，普通匹配
+
+   ```nginx
+   # 通过/访问
+   location / {
+   
+   # 通过/imooc访问。只要服务器的文件目录存在
+   location /imooc {
+   ```
+
+2. `=`：精准匹配。通过http://.../imooc/img/face1.png可以精准的访问到/home/imooc/img/face1.png这张图片
+
+   ```nginx
+   location = /imooc/img/face1.png {
+   	root /home;
+   }
+   ```
+
+3. `~*`：匹配正则表达式，不区分大小写
+
+   ```nginx
+   # 正则表达式。*代表不区分大小写
+   localtion ~* \.(GIF|png|bmp|jpg|jpeg) {
+       root /home;
+   }
+   # 正则表达式, 区分大小写精准匹配
+   localtion ~* \.(GIF|png|bmp|jpg|jpeg) {
+       root /home;
+   }
+   ```
+
+4. `^~`：以某个字符路径开头
+
+   配置这个规则之后，用户只能访问/home/imooc/img下的资源了
+
+   ```nginx
+   # ^~ 以某个字符路径开头请求
+   localtion ^~ /imooc/img {
+   	root /home;
+   }
+   ```
+
+
+### 第2章 Nginx进阶与实战
+
+#### 2-0 在Nginx中解决跨域问题
+
+参考文章：https://segmentfault.com/a/1190000011145364
+
+* 什么是跨域？
+
+  跨域是指一个域下的文档或脚本试图去请求另一个域下的资源，这里跨域是广义的。
+
+  其实我们通常所说的跨域是狭义的，是由浏览器同源策略限制的一类请求场景。
+
+* 什么是同源策略？
+
+  同源策略/SOP（Same origin policy）是一种约定，由Netscape公司1995年引入浏览器，它是浏览器最核心也最基本的安全功能，如果缺少了同源策略，浏览器很容易受到XSS、CSFR等攻击。所谓同源是指**"协议+域名+端口"三者相同**，即便两个不同的域名指向同一个ip地址，也非同源。
+
+* 同源策略限制以下几种行为：
+
+  * Cookie、LocalStorage 和 IndexDB 无法读取
+  * DOM 和 Js对象无法获得
+  * AJAX 请求不能发送
+
+* 常见跨域场景
+
+  ```
+  URL                                      说明                    是否允许通信
+  http://www.domain.com/a.js
+  http://www.domain.com/b.js         同一域名，不同文件或路径           允许
+  http://www.domain.com/lab/c.js
+  
+  http://www.domain.com:8000/a.js
+  http://www.domain.com/b.js         同一域名，不同端口                不允许
+   
+  http://www.domain.com/a.js
+  https://www.domain.com/b.js        同一域名，不同协议                不允许
+   
+  http://www.domain.com/a.js
+  http://192.168.4.12/b.js           域名和域名对应相同ip              不允许
+   
+  http://www.domain.com/a.js
+  http://x.domain.com/b.js           主域相同，子域不同                不允许
+  http://domain.com/c.js
+   
+  http://www.domain1.com/a.js
+  http://www.domain2.com/b.js        不同域名                         不允许
+  ```
+
+* 跨域解决方案
+
+  1. 跨域资源共享（CORS）
+
+     * Cross-Origin Resource Sharing
+
+     * 允许浏览器向跨Origin的服务器发起js请求获取响应
+
+     * 普通跨域请求：只服务端设置Access-Control-Allow-Origin即可，前端无须设置，若要带cookie请求：前后端都需要设置。
+
+       * 前端axios设置：
+
+         ```js
+         axios.defaults.withCredentials = true
+         ```
+
+       * 后台Java：
+
+         ```java
+         CorsConfiguration config = new CorsConfiguration();
+         config.addAllowedOrigin("http://localhost:8080");
+         ```
+
+  2. nginx跨域配置
+
+     ```NGINX
+     server {
+         listen  90;
+         server_name localhost;
+         
+         # 允许跨域请求的域，*代表所有
+         add_header 'Access-Control-Allow-Origin' *;
+         # 允许带上cookie请求
+         add_header 'Access-Control-Allow-Credentials' 'true';
+         # 允许请求的方法，比如GET/POST/PUT/DELETE
+         add_header 'Access-Control-Allow-Methods' *;
+         # 允许请求的header
+         add_header 'Access-Control-Allow-Headers' *;
+     
+         location / {				  
+             root    /home/fooie-shop;
+             index   index.html;
+         }
+     }
+     ```
+
+#### 2-1 在Nginx中配置静态资源防盗链
+
+* 什么是盗链
+   客户端向服务器请求资源时，为了减少网络带宽，提升响应时间，服务器一般不会一次将所有  资源完整地传回给客户端。比如在请求一个网页时，首先会传回该网页的文本内容，当客户端  浏览器在解析文本的过程中发现有图片存在时，会再次向服务器发起对该图片资源的请求，服  务器将存储的图片资源再发送给客户端。在这个过程中，如果该服务器上只包含了网页的文本  内容，并没有存储相关的图片资源，而是将图片资源链接到其他站点的服务器上，就形成了盗链行为。
+
+* nginx中防盗链配置
+
+  ```nginx
+  # 对源站点验证
+  valid_referers *.bravedawn.cn;
+  #非法引入会进入下方判断
+  if ($invalid_referer) {
+  	return 404;
+  }
+  ```
+
+#### 2-2 Nginx的模块化设计解析
+
+* 具体文字叙述：https://www.w3cschool.cn/nginx/yg731pe9.html
+
+#### 2-3 Nginx的集群负载均衡解析
+
+假如我们的集群环境中有三个角色，分别是客户端、Nginx和多台Tomcat服务器。客户端发送请求到服务器，首先会经过Nginx，Nginx在这里充当了网关、反向代理器和负载均衡器的角色。由Nginx将请求分发给不同的Tomcat服务器。
+
+如果多台Tomcat服务器中有一台宕机，Nginx就不会给他分发请求，他会给其他别的Tomcat分发请求。
+
+#### 2-6 四层、七层与DNS负载均衡
+
+* 四层与七层负载均衡在原理上的区别请阅读这两篇文章：
+  * https://www.cnblogs.com/readygood/p/9757951.html
+  * https://www.jianshu.com/p/fa937b8e6712
+
+* 四层负载均衡实现
+  * F5硬负载均衡
+  * LVS四层负载均衡
+  * Haproxy四层负载均衡
+  * Nginx四层负载均衡
+* 七层负载均衡实现
+  * Nginx七层负载均衡
+  * Haproxy七层负载均衡
+  * apache七层负载均衡
+* 全局负载均衡：根据地区来选择不同的地区机房进行访问
+  * 参考文章：https://www.cnblogs.com/foxgab/p/6900101.html
+
+#### 2-8 使用Nginx搭建3台Tomcat集群
+
+在本节中我们总共启动四台虚拟机，分别是一台nginx服务器和三台tomcat服务器。下面是Nginx的配置脚本：
+
+```nginx
+upstream tomcats {
+	server 192.168.1.173:8080;
+	server 192.168.1.174:8080;
+	server 192.168.1.175:8080;
+}
+
+server {
+	listen 80;
+	server_name www.tomcats.com;
+
+	location / {
+		proxy_pass http://tomcats;
+	}
+}
+```
+
+#### 2-9 使用JMeter测试单节点与集群的并发异常率
+
+本节涉及到Jmeter的具体使用，详情请参考本节视频。
+
+#### 2-10 负载均衡之轮训
+
+根据2-8节的配置，Nginx默认使用的负载均衡策略是轮询，就是Nginx将请求轮流分发给各个服务器。

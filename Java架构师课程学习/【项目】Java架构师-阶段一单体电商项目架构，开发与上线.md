@@ -1999,6 +1999,12 @@ ORDER BY
 * 后端项目部署服务器路径：/usr/local/myapp/mall/tomcat-api
 * 前端项目部署服务器路径：/usr/local/myapp/mall/tomcat-frontend
 
+#### 1-16 发布前端项目
+
+前端请求后端接口存在跨域问题，具体解决方案参见：cn.bravedawn.config.CorsConfig
+
+具体代码提交参见：https://github.com/depers/mall/commit/d36f891201cd43d829bc84b7dd6f8ea42a6e2b47
+
 #### 1-17 解决Cookie异常，测试订单支付流程
 
 在用户注册之后，我们会将用户信息写入cookie中，但是后端会报这个错
