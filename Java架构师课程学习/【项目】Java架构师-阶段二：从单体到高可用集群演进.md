@@ -216,7 +216,7 @@ nginx默认会将pid放在logs文件下的，启动之后才有这个文件。
 
    2. 方案二：可能是nginx.pid文件不存在
 
-      这个问题请参考错误的解决方法
+      这个问题请参考错误二的解决方法
 
 2. 错误二：nginx:[error] invalid PID number "" in "/var/run/nginx/nginx.pid"
 
@@ -519,3 +519,149 @@ server {
 #### 2-10 负载均衡之轮训
 
 根据2-8节的配置，Nginx默认使用的负载均衡策略是轮询，就是Nginx将请求轮流分发给各个服务器。
+
+#### 2-11 负载均衡之权重
+
+> 在多服务器集群中，将更多的请求分发给配置和性能较高的服务器。
+
+* 优点：考虑了每台服务器处理能力的不同
+
+* 配置：
+
+  ```nginx
+  upstream www.happymmall.com{
+      server www.happymmall.com:8080 weight=15;
+      server www.happymmall.com:9080 weight=10;
+  }
+  ```
+
+* 注意：在本课程中采用权重配置负载均衡，**weight默认是1**。如果多个配置权重的节点，比较相对值，例如上面的配置一个是15，一个是10只代表请求访问8080的概率是访问8090的1.5倍。
+
+#### 2-12 upstream的指令参数之max_conns
+
+1. 关于max_conns参数的文档：http://nginx.org/en/docs/http/ngx_http_upstream_module.html
+
+2. Nginx配置脚本：
+
+   ```nginx
+   upstream tomcats {
+   	server 192.168.156.135:8080 max_conns=2;
+   	server 192.168.156.135:8088 max_conns=2;
+   }
+   
+   server {
+   	listen 80;
+   	server_name www.tomcats.com;
+   
+   	location / {
+   		proxy_pass http://tomcats;
+   	}
+   }
+   ```
+
+3. 使用Jmeter进行测试
+
+   * 测试计划位置：mall\conf\nginx\jmeter测试计划\max_cons测试计划.jmx
+
+   * 截图如下
+
+     ![](E:\markdown笔记\笔记图片\20\2\8.png)
+
+   * 在测试计划的线程组设置中，将ramp-up period设置为0。关于这个参数Jmeter官方文档的说明如下：
+   
+     * 决定多长时间启动所有线程。如果使用10个线程，ramp-up period是100秒，那么JMeter用100秒使所有10个线程启动并运行。每个线程会在上一个线程启动后10秒（100/10）启动。Ramp-up需要要充足长以避免在启动测试时有一个太大的工作负载，并且要充足小以至于最后一个线程在第一个完成前启动。  一般设置ramp-up=线程数启动，并上下调整到所需的。
+   
+     * 用于告知JMeter 要在多长时间内建立全部的线程。默认值是0。如果未指定ramp-up period ，也就是说ramp-up period 为零， JMeter 将立即建立所有线程。假设ramp-up period 设置成T 秒， 全部线程数设置成N个， JMeter 将每隔T/N秒建立一个线程。
+   
+     * **Ramp-Up Period(in-seconds)代表隔多长时间执行，0代表同时并发**
+   
+   * 从上图中我们可以看到该请求的最大连接数是4。正如之前我配置的`max_conns=2`。两台服务器的话那么最大的请求连接数就是4。
+
+![](E:\markdown笔记\笔记图片\20\2\9.png)
+
+#### 2-14 upstream的指令参数之slow_start
+
+![](E:\markdown笔记\笔记图片\20\2\10.png)
+
+#### 2-16 upstream的指令参数之down与backup
+
+![](E:\markdown笔记\笔记图片\20\2\11.png)
+
+#### 2-18 upstream的指令参数之max_fails 与 fail_timeout
+
+![](E:\markdown笔记\笔记图片\20\2\12.png)
+
+#### 2-20 使用Keepalived提高吞吐量
+
+![](E:\markdown笔记\笔记图片\20\2\13.png)
+
+#### 2-22 负载均衡原理 - ip_hash
+
+![](E:\markdown笔记\笔记图片\20\2\14.png)
+
+#### 2-24  一致性hash算法
+
+在集群中增加和移除一个节点，传统取余的hash算法会重新规划服务器节点hash值，对服务器的冲击很大，很多会话或是缓存都会出现没有命中的情况。而一致性hash算法则能否大大减少增加和减少一个节点对集群环境的冲击。
+
+#### 2-25 负载均衡 url_hash 与 least_conn
+
+![](E:\markdown笔记\笔记图片\20\2\15.png)
+
+#### 2-27 Nginx控制浏览器缓存
+
+1. 缓存
+   * 浏览器与Nginx服务器之间：静态资源会缓存在浏览器
+   * **Nginx**服务器与上游服务器（Tomcat、Apache、Nginx）之间：上游静态资源会缓存到**Nginx**端
+2. Nginx conf中expires指令，通过该指令控制浏览器中的缓存动作。针对于html、css和js等文件进行缓存
+   * expires [time]
+   * expires @[time] @22h30m
+   * expires -[time]
+   * expires epoch
+   * expires off
+   * expires max
+
+#### 2-30 Nginx的反向代理缓存
+
+![](E:\markdown笔记\笔记图片\20\2\17.png)
+
+#### 2-32 使用Nginx配置SSL证书提供HTTPS访问
+
+![](E:\markdown笔记\笔记图片\20\2\18.png)
+
+#### 2-33 动静分离的那些事儿
+
+1. 动静分离的特点
+
+   * 分布式
+   * 前后端解耦
+   * 静态归Nginx
+   * 接口服务化
+
+2. 动静分离
+
+   * 静态数据：css/js/html/images/audios/videos/...
+   * 动态数据：得到的响应可能会和上一次不同
+
+3. 动静分离的实现方式
+
+   * CDN
+
+     * 使用户就近获取所需内容，降低网络拥塞，提高用户访问响应速度和命中率。
+     * 静态资源部署在云服务提供商的服务器上
+
+   * Nginx
+
+     1. 使用Nginx为静态资源提供服务
+     2. 在nginx的上游可以部署nginx服务器集群，在集群中对静态资源提供服务。通过upstream进行配置
+     3. 在nginx的上游可以部署Tomcat服务器集群，提供动态的接口数据，从而实现动静分离，他也可以使用upstream进行配置
+
+     ![](E:\markdown笔记\笔记图片\20\2\19.png)
+
+4. 动静分离的问题
+
+   1. 跨域
+      1. Spring Boot
+      2. Nginx
+      3. Jsonp
+   2. 分布式会话
+      1. 分布式缓存中间件Redis
