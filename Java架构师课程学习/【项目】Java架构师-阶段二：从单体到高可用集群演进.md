@@ -352,6 +352,10 @@ gzip_types text/plain application/javascript application/x-javascript text/css a
    	root /home;
    }
    ```
+   
+5. `~ `：表示区分大小写的正则匹配
+
+6. `!~`和`!~*`：分别为区分大小写不匹配及不区分大小写不匹配 的正则
 
 
 ### 第2章 Nginx进阶与实战
@@ -663,5 +667,122 @@ server {
       1. Spring Boot
       2. Nginx
       3. Jsonp
+      
    2. 分布式会话
-      1. 分布式缓存中间件Redis
+     
+      分布式缓存中间件Redis
+
+#### 2-34 部署Nginx到云端 - 安装Nginx
+
+1. 现阶段部署架构
+
+   ![](E:\markdown笔记\笔记图片\20\2\20.png)
+
+2. Nginx架构图
+
+   ![](E:\markdown笔记\笔记图片\20\2\21.png)
+
+#### 2-35 部署Nginx到云端 - 配置反向代理（部署后端程序）
+
+1. 后端nginx配置文件：
+
+   ```nginx
+   upstream api.bravedawn.cn {
+   	server 192.168.156.134:8088;
+   	# server 192.168.156.135:8088;
+   }
+   
+   server {
+   	listen 80;
+   	server_name api.bravedawn.cn;
+   
+   	location ~ {
+   		proxy_pass http://api.bravedawn.cn;
+   	}
+   }
+   ```
+
+2. 后端代码虚拟机部署路径：/usr/local/myapp/mall/Architecture-2/tomcat-api
+
+#### 2-37 部署Nginx到云端 - 实现动静分离与虚拟主机
+
+1. 修改前端请求地址配置，在js/app.js文件下：
+
+   ```js
+   /* 生产环境 */
+   serverUrl: "http://api.bravedawn.cn/mall-api",       // 接口服务接口地址
+   shopServerUrl: "http://shop.bravedawn.cn",           // 门户网站地址
+   centerServerUrl: "http://center.bavedawn.cn",   	 // 用户中心地址
+   
+   ```
+
+2. 前端的nginx配置：
+
+   ```nginx
+   server {
+   	listen 80;
+   	server_name shop.bravedawn.cn;
+   
+   	location / {
+   		root /usr/local/myapp/mall/Architecture-2/front/foodie-shop;
+   		index index.html;
+   	}
+   }
+   
+   server {
+   	listen 80;
+   	server_name center.bravedawn.cn;
+   
+   	location / {
+   		root /usr/local/myapp/mall/Architecture-2/front/foodie-center;
+   		index index.html;
+   	}
+   }
+   ```
+
+3. 前端代码虚拟机部署路径：/usr/local/myapp/mall/Architecture-2/front
+
+### 第3章 Keepalived 原理与实战
+
+#### 3-1 高可用集群架构 Keepalived 双机主备原理
+
+1. Nginx高可用（High Availablity）
+
+   现在我们有两台Nginx服务器，一主一备。如果主Nginx挂掉之后，那么备Nginx就会顶替主机的位置充当主Nginx。如果原来的主Nginx服务器修复之后，他又会回到自己原来的位置，作为主Nginx服务器。
+
+2. Keepalived概念
+
+   * 解决单点故障
+   * 组件免费
+   * 可以实现高可用HA机制
+   * 基于VRRP协议
+
+3. 虚拟路由冗余协议 VRRP
+
+   * Virtual Router Redundancy Protocol
+   * 解决内网单机故障的路由协议
+   * 构建有多个路由器MASTER、BACKUP
+   * 虚拟IP - VIP（Virtual IP Address）
+
+4. Keepalived双机主备原理
+
+   1. 用户通过虚拟Ip去访问Nginx服务器的
+   2. 虚拟IP会进行心跳检测，判断Nginx服务器是否正常运行
+   3. 如果主Nginx宕机之后，虚拟IP就会与备用Nginx服务器进行绑定
+   4. 切记主备Nginx服务器的硬件配置应该相同，这样才能保证切换到备用机之后服务的正常运行
+
+#### 3-2 Keepalived安装
+
+1. keepalived安装规划
+
+   1. VIP：
+   2. 主Nginx：
+   3. 备Nginx：
+
+2. Keepalived的安装步骤：
+
+   ![](E:\markdown笔记\笔记图片\20\2\22.png)
+
+3. 安装过程中一些重要的命令：
+
+   
