@@ -773,16 +773,166 @@ server {
 
 #### 3-2 Keepalived安装
 
-1. keepalived安装规划
+1. Keepalived官网：https://www.keepalived.org/
 
-   1. VIP：
-   2. 主Nginx：
-   3. 备Nginx：
+2. keepalived安装规划
 
-2. Keepalived的安装步骤：
+   1. VIP：192.168.156.161
+   2. 主Nginx：192.168.156.136
+   3. 备Nginx：192.168.156.135
+
+3. Keepalived的安装步骤：
 
    ![](E:\markdown笔记\笔记图片\20\2\22.png)
 
-3. 安装过程中一些重要的命令：
+4. 安装过程中一些重要的命令：
 
+  * 配置安装目录和核心配置文件路径：`./configure --prefix=/usr/local/myapp/program/keepalived --sysconf=/etc`
+  * 安装libnl/libnl-3依赖：`yum -y install libnl libnl-3`
+
+#### 3-4 Keepalived核心配置文件
+
+1. 对keepalived核心配置文件进行配置:
+
+   ```nginx
+   ! Configuration File for keepalived
    
+   global_defs {
+      # 路由id：当前安装keepalived节点主机的标识符，全局唯一
+      router_id keep_136
+   }
+   
+   # 基于vrrp协议的一个实例节点
+   vrrp_instance VI_1 {
+       # 表示节点的状态，当前的136为Nginx的主节点，这里有两个可配置参数 MASTER/BACKUP
+       state MASTER
+       # 当前实例绑定的网卡
+       interface ens33
+       # 虚拟的路由id，主备节点配置一致即可
+       virtual_router_id 51
+       # 优先级/权重，谁的优先级高，在MASTER挂掉以后，就能成为MASTER
+       priority 100
+       # 主备之间同步检查的时间间隔，默认为1s
+       advert_int 1
+       # 认证授权的密码，防止非法节点的进入
+       authentication {
+           auth_type PASS
+           auth_pass 1111
+       }
+       # 虚拟IP配置
+       virtual_ipaddress {
+           192.168.156.161
+       }
+   }
+   ```
+
+2. 然后启动keepalived，使用`ip addr`命令查看效果：
+
+   从下图中我们就可以看到，我配置的虚拟节点起作用了。
+
+   ![](E:\markdown笔记\笔记图片\20\2\23.png)
+   
+3. 笔记图片
+
+   ![](E:\markdown笔记\笔记图片\20\2\24.png)
+
+#### 3-6 把Keepalived 注册为系统服务
+
+1. 复制下面两个文件到etc目录下
+
+   ![](E:\markdown笔记\笔记图片\20\2\25.png)
+
+2. `cp init.d/keepalived /etc/init.d/ `
+
+3. `cp sysconfig/keepalived /etc/sysconfig/`
+
+4. `systemctl daemon-reload`：重新加载某个服务的配置文件，如果新安装了一个服务，归属于 systemctl 管理，要是新服务的服务程序配置文件生效，需重新加载。
+
+5. 然后就可以使用`systemctl`命令进行启动了
+
+#### 3-7 Keepalived实现双机主备高可用
+
+1. 按照3-4节的步骤在虚拟机192.168.156.135上安装keepalived
+
+2. 备用节点的keepalived的配置：
+
+   ```nginx
+   ! Configuration File for keepalived
+   
+   global_defs {
+      # 路由id：当前安装keepalived节点主机的标识符，全局唯一
+      router_id keep_135
+   }
+   
+   # 基于vrrp协议的一个实例节点
+   vrrp_instance VI_1 {
+       # 表示节点的状态，当前的135为Nginx的备用节点，这里有两个可配置参数 MASTER/BACKUP
+       state BACKUP
+       # 当前实例绑定的网卡
+       interface ens33
+       # 虚拟的路由id，主备节点配置一致即可
+       virtual_router_id 51
+       # 优先级/权重，谁的优先级高，在MASTER挂掉以后，就能成为MASTER
+       priority 80
+       # 主备之间同步检查的时间间隔，默认为1s
+       advert_int 1
+       # 认证授权的密码，防止非法节点的进入
+       authentication {
+           auth_type PASS
+           auth_pass 1111
+       }
+       # 虚拟IP配置，主备节点使用相同的虚拟IP
+       virtual_ipaddress {
+           192.168.156.161
+       }
+   }
+   ```
+
+3. 【问题】[keepalived的vip无法ping通排查过程](keepalived的vip无法ping通排查过程)
+
+4. 这里我们设置host为：
+
+   ```nginx
+   # keepalived
+   
+   192.168.156.136 www.136.com
+   192.168.156.161 www.ha.com
+   192.168.156.135 www.135.com
+   ```
+
+5. 分别在192.168.156.136和192.168.156.135上启动Nginx和keepalived，此时我们访问上面的三个域名：
+
+   * www.ha.com
+
+     ![](E:\markdown笔记\笔记图片\20\2\26.png)
+
+   * www.136.com
+
+     ![](E:\markdown笔记\笔记图片\20\2\26.png)
+
+   * www.135.com
+
+     ![](E:\markdown笔记\笔记图片\20\2\27.png)
+
+6. 此时，我们在136上关闭keepalived
+
+   * 访问www.ha.com
+
+     ![](E:\markdown笔记\笔记图片\20\2\27.png)
+
+   * 在135上命令`ip addr`
+
+     ![](E:\markdown笔记\笔记图片\20\2\28.png)
+
+7. 然后，我们在136上启动keepalived，来模拟修复的动作
+
+   * 在136上命令`ip addr`
+
+     ![](E:\markdown笔记\笔记图片\20\2\29.png)
+
+   * 在135上命令`ip addr`
+
+     ![](E:\markdown笔记\笔记图片\20\2\30.png)
+
+
+
