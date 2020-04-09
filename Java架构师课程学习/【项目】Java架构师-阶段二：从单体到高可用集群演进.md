@@ -934,5 +934,235 @@ server {
 
      ![](E:\markdown笔记\笔记图片\20\2\30.png)
 
+#### 3-9 Keepalived配置Nginx自动重启，实现7x24不间断服务
 
+1. 编写check_nginx_alive_or_dead.sh
 
+   ```shell
+   #!/bin/bash
+   
+   A=`ps -C nginx --no-headers |wc -l`
+   # 判断nginx是否宕机
+   if [ $A -eq 0 ];then
+       # 这里写自己安装的nginx的目录
+       /usr/local/myapp/program/nginx/sbin/nginx
+       # 等待3秒再次检查nginx，如果没有启动成功，则停止keepalived，使其启动备用机
+       sleep 3
+       if [ `ps -C nginx --no-headers |wc -l` -eq 0 ];then
+           killall keepalived
+       fi
+   fi
+   ```
+
+   * `ps`命令解析：用于显示当前进程 (process) 的状态。
+     * `-C`：-C<命令>  列出指定命令的状况
+     * `--no-headers`：不打印开头(项目栏)
+   * `wc`命令解析：利用wc指令我们可以计算文件的Byte数、字数、或是列数，若不指定文件名称、或是所给予的文件名为"-"，则wc指令会从标准输入设备读取数据。
+     * `-l`或`--lines`： 只显示行数。
+
+2. 修改keepalived核心配置文件keepalived.conf，在该文件中添加这一部分：
+
+   ```nginx
+   # Keepalived配置Nginx自动重启，实现7x24不间断服务
+   vrrp_script check_nginx_alive {
+       script "/etc/keepalived/check_nginx_alive_or_dead.sh"
+       interval 2 # 每隔2秒运行上一行脚本
+       weight 10  # 如果脚本运行成功，则升级权重+10（priority 100+10）
+       # weight -10 # 如果脚本运行失败，则升级权重-10（priority 100-10）
+   }
+   
+   # 配置追踪nginx脚本
+   track_script {
+   	check_nginx_alive
+   }
+   ```
+
+3. 这两份配置文件我放在mall项目的`mall\conf\keepalived\Keepalived配置Nginx自动重启，实现7x24不间断服务`下
+
+4. 笔记图片
+
+   ![](E:\markdown笔记\笔记图片\20\2\31.png)
+
+#### 3-11 高可用集群架构 Keepalived 双主热备原理
+
+* 概念：
+
+  * 双机主备：一个主节点，一个备用节点。主节点挂了之后，备用节点升为主节点。若主节点没有挂，则备用节点其实什么都不做，存在资源浪费。
+  * 双主热备：两个节点互为主备，你挂了我来，我挂了你来。
+
+* keepalived双机主备图：
+
+  ![](E:\markdown笔记\笔记图片\20\2\32.png)
+
+* keepalived双主热备图：
+
+  ![](E:\markdown笔记\笔记图片\20\2\33.png)
+
+#### 3-12 云服务的DNS解析配置与负载均衡
+
+本节通过演示腾讯云的域名解析实现DNS的负载均衡。
+
+#### 3-13 实现keepalived双主热备
+
+1. 192.168.156.126配置：
+
+   ```nginx
+   ! Configuration File for keepalived
+   
+   global_defs {
+      # 路由id：当前安装keepalived节点主机的标识符，全局唯一
+      router_id keep_136
+   }
+   
+   # Keepalived配置Nginx自动重启，实现7x24不间断服务
+   vrrp_script check_nginx_alive {
+       script "/etc/keepalived/check_nginx_alive_or_dead.sh"
+       interval 2 # 每隔2秒运行上一行脚本
+       weight 10  # 如果脚本运行成功，则升级权重+10（priority 100+10）
+       # weight -10 # 如果脚本运行失败，则升级权重-10（priority 100-10）
+   }
+   
+   # 基于vrrp协议的一个实例节点
+   vrrp_instance VI_1 {
+       # 表示节点的状态，当前的136为Nginx的主节点，这里有两个可配置参数 MASTER/BACKUP
+       state MASTER
+       # 当前实例绑定的网卡
+       interface ens33
+       # 虚拟的路由id，主备节点配置一致即可
+       virtual_router_id 51
+       # 优先级/权重，谁的优先级高，在MASTER挂掉以后，就能成为MASTER
+       priority 100
+       # 主备之间同步检查的时间间隔，默认为1s
+       advert_int 1
+       # 认证授权的密码，防止非法节点的进入
+       authentication {
+           auth_type PASS
+           auth_pass 1111
+       }
+       # 配置追踪nginx脚本
+       track_script {
+           check_nginx_alive
+       }
+       # 虚拟IP配置
+       virtual_ipaddress {
+           192.168.156.161
+       }
+   }
+   
+   # 双主热备配置-备机
+   vrrp_instance VI_2 {    
+       state BACKUP
+       interface ens33
+       virtual_router_id 52
+       priority 80
+       advert_int 1
+       authentication {
+           auth_type PASS
+           auth_pass 1111
+       }
+       virtual_ipaddress {
+           192.168.156.162
+       }
+   }
+   ```
+
+2. 192.168.156.126配置：
+
+   ```nginx
+   ! Configuration File for keepalived
+   
+   global_defs {
+      # 路由id：当前安装keepalived节点主机的标识符，全局唯一
+      router_id keep_135
+   }
+   
+   # Keepalived配置Nginx自动重启，实现7x24不间断服务
+   vrrp_script check_nginx_alive {
+       script "/etc/keepalived/check_nginx_alive_or_dead.sh"
+       interval 2 # 每隔2秒运行上一行脚本
+       weight 10  # 如果脚本运行成功，则升级权重+10（priority 100+10）
+       # weight -10 # 如果脚本运行失败，则升级权重-10（priority 100-10）
+   }
+   
+   # 基于vrrp协议的一个实例节点
+   vrrp_instance VI_1 {
+       # 表示节点的状态，当前的136为Nginx的主节点，这里有两个可配置参数 MASTER/BACKUP
+       state BACKUP
+       # 当前实例绑定的网卡
+       interface ens33
+       # 虚拟的路由id，主备节点配置一致即可
+       virtual_router_id 51
+       # 优先级/权重，谁的优先级高，在MASTER挂掉以后，就能成为MASTER
+       priority 100
+       # 主备之间同步检查的时间间隔，默认为1s
+       advert_int 1
+       # 认证授权的密码，防止非法节点的进入
+       authentication {
+           auth_type PASS
+           auth_pass 1111
+       }
+       # 虚拟IP配置
+       virtual_ipaddress {
+           192.168.156.161
+       }
+   }
+   
+   
+   # 双主热备配置-主机
+   vrrp_instance VI_2 {    
+       state MASTER
+       interface ens33
+       virtual_router_id 52
+       priority 100
+       advert_int 1
+       authentication {
+           auth_type PASS
+           auth_pass 1111
+       }
+       track_script {
+           check_nginx_alive
+       }
+       virtual_ipaddress {
+           192.168.156.162
+       }
+   }
+   ```
+
+3. 测试
+
+   1. host配置
+
+      ```nginx
+      # keepalived
+      192.168.156.136 www.136.com
+      192.168.156.135 www.135.com
+      
+      192.168.156.161 www.ha.com
+      192.168.156.162 www.ha2.com
+      ```
+
+   2. 关闭136上的keepalived
+
+   3. 访问www.ha.com，现在192.168.156.161已经指向了192.168.156.135
+
+      ![27](E:\markdown笔记\笔记图片\20\2\27.png)
+
+   4. 在135上使用`ip addr`
+
+      ![](E:\markdown笔记\笔记图片\20\2\34.png)
+
+### 第4章 搭建高可用集群负载均衡
+
+#### 4-1 LVS简介
+
+1. LVS负载均衡
+
+   * Linux Virtual Server
+   * 章文嵩博士主导的开源的负载均衡项目
+   * LVS（ipvs）已经集成到了LInux内核中
+   * 负载均衡调度器，支持四层负载均衡
+   * 官网：http://www.linuxvirtualserver.org/
+
+2. LVS网络拓扑图
+
+   ![](E:\markdown笔记\笔记图片\20\2\35.png)
