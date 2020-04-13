@@ -7,3 +7,13 @@
 ## 2.Nginx集群架构
 
 ![](E:\markdown笔记\笔记图片\20\2\21.png)
+
+## 3.高可用Nginx集群架构
+
+![](E:\markdown笔记\笔记图片\20\2\52.png)
+
+## 4.Keepalived+LVS高可用架构
+
+![](E:\markdown笔记\笔记图片\20\2\53.png)
+
+## 5.Redis集群架构
