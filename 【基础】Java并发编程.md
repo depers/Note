@@ -841,11 +841,15 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
 避免并发除了将对象声明为不可变对象之外，还有一个简单的方法就是线程封闭。
 
+为了确保线程的安全，通常需要保证可变的共享数据的同步访问，具体采用的方式有很多；但还有一种方法可以保证线程的安全，即是使可变数据不共享，或者是使数据不可变。**所谓“线程封闭”即是仅在单线程中访问数据，也就是通过让可变数据不被多个线程共享以确保数据的正确性。**
+
 ![8-14](/8/8-14.png)
 
-* 堆栈封闭解释：
+* 堆栈封闭：
 
   多个线程访问一个方法的时候，方法的局部变量都会拷贝一份到线程的栈中。所以局部变量不会被多个线程所共享的。因此就不会出现并发问题，所以能局部变量的时候就不用全局变量，全局变量会引发并发问题。
+
+  这也就是我们写的程序基本上都在一个方法里面定义局部变量来完成的，所以不会有并发问题。
 
 * ThreadLocal（详情参见：com.bravedawn.concurrency.example.threadlocal）
 
@@ -856,10 +860,45 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
   * 具体实现
 
     * ThreadLocal处理类：com.bravedawn.concurrency.example.threadlocal.RequestHolder
+    
     * Filter类：com.bravedawn.concurrency.HttpFilter
+    
     * Interceptor类：com.bravedawn.concurrency.HttpInterceptor
+    
     * Controller类：com.bravedawn.concurrency.example.threadlocal.ThreadlocalController
+    
     * 配置类，用于配置Filter和Interceptor：com.bravedawn.concurrency.ConcurrencyApplication
+    
+      * Spring Boot Filter的写法
+    
+        1. 编写com.bravedawn.concurrency.HttpFilter
+    
+        2. 在Application中进行配置
+    
+           ```java
+           @Bean
+           public FilterRegistrationBean httpFilter(){
+               FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+               registrationBean.setFilter(new HttpFilter());
+               registrationBean.addUrlPatterns("/threadlocal/*");
+               return registrationBean;
+           }
+           ```
+    
+      * Spring Boot Interceptor的写法
+    
+        1. 编写com.bravedawn.concurrency.HttpInterceptor
+    
+        2. 首先让Application类继承`WebMvcConfigurationSupport`
+    
+        3. 在Application中进行配置
+    
+           ```java
+           @Override
+           protected void addInterceptors(InterceptorRegistry registry) {
+           	registry.addInterceptor(new HttpInterceptor()).addPathPatterns("/**");
+           }
+           ```
 
 ### 3.线程不安全的类与写法
 
