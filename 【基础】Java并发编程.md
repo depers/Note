@@ -855,7 +855,7 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
   * 使用TreadLocal的相关场景：
 
-    在我们进行web开发的时候，用户的每一个请求就是一个线程。一般的话我们获取用户的信息，需要在controller层通过request进行获取，然后传到service层或者是util里，这样传递数据是很费劲麻烦的。而我们使用TreadLocal之后，我们在请求已经到了后端服务器，在进行处理之前调用RequestHolder.add()将相关信息保存到ThreadLocal中，之后我们随用随取，当请求结束后，我们在调用RequestHolder.remove()。
+    在我们进行**web开发的时候**，用户的每一个请求就是一个线程。一般的话我们获取用户的信息，需要在controller层通过request进行获取，然后传到service层或者是util里，这样传递数据是很费劲麻烦的。而我们使用TreadLocal之后，我们在请求已经到了后端服务器，在进行处理之前调用RequestHolder.add()将相关信息保存到ThreadLocal中，之后我们随用随取，当请求结束后，我们在调用RequestHolder.remove()。
 
   * 具体实现
 
@@ -899,6 +899,30 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
            	registry.addInterceptor(new HttpInterceptor()).addPathPatterns("/**");
            }
            ```
+    
+  * **ThreadLocal对象通常用于防止可变的单实例变量或全局变量进行共享**。例如：在单线程应用程序中可能会维持一个全局的数据库连接，并在程序启动时初始化这个连接对象，从而避免在调用每个方法时都要传递一个Connection对象。由于JDBC的连接对象不一定是线程安全的，因此，当多线程程序在没有协同的情况下使用全局变量时，就不是线程安全的。通过将JDBC的连接保存到ThreadLocal对象中，每个线程都会拥有属于自己的连接，如下为代码示例。
+  
+    ```java
+    private static ThreadLocal<Connection> connectionHolder = new ThreadLocal<Connection>(){
+        //初始化ThreadLocal对象connectionHolder的共享变量为Connection类型的对象
+        public Connection initialValue(){
+            return DriverManager.getConnection(DB_URL);  
+        }
+    };
+     
+    public static Connection getConnection(){
+        //使用ThreadLocal对象的get()方法获取其共享变量
+        return connectionHolder.get();
+    }
+    ```
+    
+  * ThreadLocal的作用
+  
+    ThreadLocal是解决线程安全问题一个很好的思路，它**通过为每个线程提供一个独立的变量副本解决了变量并发访问的冲突问题**。在很多情况下，ThreadLocal比直接使用synchronized同步机制解决线程安全问题更简单，更方便，且结果程序拥有更高的并发性。
+  
+  * ThreadLocal的使用场景
+  
+    在Java的多线程编程中，为保证多个线程对共享变量的安全访问，通常会使用synchronized来保证同一时刻只有一个线程对共享变量进行操作。这种情况下可以将[类变量](https://links.jianshu.com/go?to=https%3A%2F%2Fbaike.baidu.com%2Fitem%2F%E7%B1%BB%E5%8F%98%E9%87%8F)放到ThreadLocal类型的对象中，使变量在每个线程中都有独立拷贝，不会出现一个线程读取变量时而被另一个线程修改的现象。最常见的ThreadLocal使用场景为用来解决数据库连接、Session管理等。
 
 ### 3.线程不安全的类与写法
 
@@ -918,7 +942,7 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
   * 为什么要提供线程不安全的类StringBuilder?
 
-    StringBuffer是线程安全的类。其中他的方法中添加了synchroinzed关键字，保证同一时间只有一个线程才能访问，是由性能损耗的。所以我们可以在方法中使用StringBuilder，因为方法中的局部变量是堆栈封闭的。
+    StringBuffer是线程安全的类。其中他的方法中添加了synchroinzed关键字，保证同一时间只有一个线程才能访问，是有性能损耗的。所以我们可以**在方法中使用StringBuilder**，因为方法中的**局部变量**是堆栈封闭的。
 
 * SimpleDataFormat和JodaTime
 
@@ -934,9 +958,16 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
   后面会有专门的章节来讲解他们对应线程安全的类。
 
-* 先检查在执行是线程不安全的：if(condition(a)){handle(a);}
+* 先检查再执行的写法是线程不安全的：`if(condition(a)){handle(a);}`
 
-   `if（condition（a））{handle（a）；} `就算a是一个线程安全的类所对应的对象，对a的处理handle（a）也是原子性的，但由于这两步之间的不是原子性的也会引发线程安全问题，如A、B两个线程都通过了a的判断条件，A线程执行handle（a）之后，a已经不符合condition（a）的判断条件了，可是此时B线程仍然要执行handle（a），这就引发了线程安全问题。
+   `if（condition（a））{handle（a）；} `就算a是一个线程安全的类所对应的对象，对a的处理handle（a）也是原子性的，但由于**这两步之间的不是原子性的**也会引发线程安全问题，如A、B两个线程都通过了a的判断条件，A线程执行handle（a）之后，a已经不符合condition（a）的判断条件了，可是此时B线程仍然要执行handle（a），这就引发了线程安全问题。
+   
+   之前的Atomic自增在底层实现时是通过CAS原理来保证原子性的更新；
+   
+   在实际项目中，如果要判断某个对象是否满足某个条件，满足某个条件再做某个处理的时候。要考虑：
+   
+   1. 这个对象是不是多线程共享的
+   2. 如果这个对象是多线程共享的，一定要在这个对象上加一个锁，保证检查和执行两个操作时原子性的。否则会触发线程不去安全的问题
 
 ### 4.同步容器
 
