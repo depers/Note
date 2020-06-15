@@ -971,10 +971,37 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
 ### 4.同步容器
 
+![](/8/31.png)
+
 * ArrayList --> Vector，Stack
 
   * Vector 是线程安全的，具体参见：com.bravedawn.concurrency.example.syncContainer.VectorExample
-  * Vector也有线程不安全的时候，具体参见：com.bravedawn.concurrency.example.syncContainer.VectorExample2。在这个方法中，我们启用了两个线程，一个线程做remove操作，一个线程做get操作。当我们运行代码的时候，就会发现get操作老是报错。假设这样的场景，一个线程比如在执行remove(9)这个操作，而第二个线程之后刚好执行get(9)的操作，从而导致线程不安全，引发异常。
+
+  * Vector也有线程不安全的时候，具体参见：com.bravedawn.concurrency.example.syncContainer.VectorExample2。在这个方法中，我们启用了两个线程，一个线程做remove操作，一个线程做get操作。当我们运行代码的时候，就会发现get操作老是报错，显示get越界。假设这样的场景：
+
+    ```java
+    Thread thread1 = new Thread(){
+        @Override
+        public void run() {
+            for (int i = 0; i < vector.size(); i++){  // <--i=9
+            	vector.remove(i);
+            }
+        }
+    };
+    ```
+
+    ```java
+    Thread thread2 = new Thread(){
+        @Override
+        public void run() {
+            for (int i = 0; i < vector.size(); i++){  // <--i=
+                vector.get(i);
+            }
+        }
+    };
+    ```
+
+    上面两段代码当i=9时，线程一先执行，导致第九个元素被移除。然后线程二进行get操作，发生了数据越界。
 
 * HashMap --> HashTable(key, value不能为null)
 
@@ -982,13 +1009,16 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
 * Collections.synchronizedXXX(List, Set, Map)
 
-  * Collections.synchronizedList()是线程安全的，参见：com.bravedawn.concurrency.example.syncContainer.CollectionsExample
+  * Collections.synchronizedList()是线程安全的，参见：com.bravedawn.concurrency.example.syncContainer.CollectionsExample1
   * Collections.synchronizedSet()是线程安全的，参见：com.bravedawn.concurrency.example.syncContainer.CollectionsExample2
   * Collections.synchronizedMap()是线程安全的，参见：com.bravedawn.concurrency.example.syncContainer.CollectionsExample3
 
-* vector类在单线程遍历情况下进行增删操作会造成线程不安全的情况，多线程并发情况下更是如此。详情参见：com.bravedawn.concurrency.example.syncContainer.VectorExample3
+* vector类在单线程遍历情况下进行增删操作会造成线程不安全的情况，多线程并发情况下更是如此。详情参见：com.bravedawn.concurrency.example.syncContainer.VectorExample3。
 
+  所以建议是：
 
+  1. 在对集合进行`foreach`循环和`迭代器`循环时，尽量不要再遍历的过程中进行`remove`操作；
+  2. 如果要对集合进行删除操作，建议是在集合遍历时对相关的值进行标记，等集合遍历结束之后再进行删除操作；
 
 
 
