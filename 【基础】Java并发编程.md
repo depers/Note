@@ -1102,4 +1102,64 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
 ![35](/8/35.png)
 
-   
+## 第7章 J.U.C之AQS
+
+### 7-1 J.U.C之AQS-介绍
+
+![](/8/36.png)
+
+* AQS的设计
+  * 使用Node实现FIFO队列，可以用于构建锁或者其他的同步装置的基础框架
+  * 利用一个int类型表示状态
+  * 使用方法是继承
+  * 子类通过继承并通过实现它的方法管理其状态（acquire和release）的方法操作状态
+  * 可以同时实现排他锁和共享锁模式（独占、共享）
+* AQS的组件
+  * CountDownLatch
+  * Semaphore
+  * CyclicBarrier
+  * ReentrantLock
+  * Condition
+  * FutureTask
+
+### 7-2 J.U.C之AQS-CountDownLatch
+
+1. 概念
+
+   ![](/8/37.png)
+
+   countDownLatch这个类使一个线程等待其他线程各自执行完毕后再执行。
+
+   是通过一个计数器来实现的，计数器的初始值是线程的数量。每当一个线程执行完毕后，计数器的值就-1，当计数器的值为0时，表示所有线程都执行完毕，然后在闭锁上等待的线程就可以恢复工作了。
+
+2. 实践
+
+   1. 使用CountDownLatch计数：com.bravedawn.concurrency.example.aqs.CountDownLatchExample1
+   2. 使用CountDownLatch计数，若在有限的时间内未完成任务，则不再等待，直接结束；或者是有得时候，忘记调用`countDown()`方法时可以设置该值：com.bravedawn.concurrency.example.aqs.CountDownLatchExample2
+
+### 7-3 J.U.C之AQS-Semaphore（信号量）
+
+![](/8/38.png)
+
+1. 概念
+
+   Semaphore也是一个线程同步的辅助类，可以维护当前访问自身的线程个数，并提供了同步机制。使用Semaphore可以控制同时访问资源的线程个数。例如，实现一个文件允许的并发访问数。
+
+2. 方法摘要
+
+  * void acquire()：从此信号量获取一个许可，在提供一个许可前一直将线程阻塞，否则线程被中断。
+* void release()：释放一个许可，将其返回给信号量。
+  * int availablePermits()：返回此信号量中当前可用的许可数。
+* boolean hasQueuedThreads()：查询是否有线程正在等待获取。
+  
+3. 实践
+
+   1. 一次获取一个许可：com.bravedawn.concurrency.example.aqs.SemaphoreExample1
+
+   2. 一次获取多个许可，执行一次需要获得多个许可才能接着进行：com.bravedawn.concurrency.example.aqs.SemaphoreExample2
+
+   3. 尝试获取一个许可，其他的丢弃：com.bravedawn.concurrency.example.aqs.SemaphoreExample3
+
+   4. 在一定时间内，尝试获取一个许可，其他的丢弃：com.bravedawn.concurrency.example.aqs.SemaphoreExample4
+
+      
