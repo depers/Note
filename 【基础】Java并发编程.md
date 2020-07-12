@@ -1,5 +1,5 @@
 ---
-typora-root-url: 笔记图片
+ForkJointypora-root-url: 笔记图片
 ---
 
 # Java并发编程
@@ -1319,10 +1319,134 @@ Java中提供的两种锁，**synchronized**和**ReentrantLock**。
   
         * Condition类的使用：com.bravedawn.concurrency.example.lock.LockExample6
   
-  
-  
-  
-  
+## 第8章 J.U.C组件拓展
+
+   ### 8-1 J.U.C-FutureTask-1
+
+#### 1.Java中三种创建线程类的方式
+
+1. **通过继承Thread类创建线程类**
+
+    通过继承Thread类来创建并启动多线程的步骤如下：
+
+   1、定义一个类继承Thread类，并重写Thread类的run()方法，run()方法的方法体就是线程要完成的任务，因此把run()称为线程的执行体；
+
+   2、创建该类的实例对象，即创建了线程对象；
+
+   3、调用线程对象的start()方法来启动线程；、
+
+2. **通过实现Runnable接口创建线程类**
+
+   这种方式创建并启动多线程的步骤如下：
+
+   1、定义一个类实现Runnable接口；
+
+   2、创建该类的实例对象obj；
+
+   3、将obj作为构造器参数传入Thread类实例对象，这个对象才是真正的线程对象；
+
+   4、调用线程对象的start()方法启动该线程；
    
-  
+3. 上面这两种方式的缺陷：**在执行完任务之后，无法获取执行结果**。可以**通过Callable和Future实现或是通过FutureTask类实现**。
+
+#### 2.Callable与Runnable接口对比
+
+1. Runnable需要在内部使用try-catch处理异常，callable在方法上抛出异常给上一级调用者处理。
+2. Runnable没有返回值，Callable有返回值，泛型指定返回值类型，call方法类型由泛型指定。
+3. 需要使用线程池来启动Callable实现类线程。
+
+#### 3.Future接口
+
+ExecutorService接口的submit()方法和invokeAll()方法返回一个Future对象或者Future对象的集合，**从Future中可以获取到任务执行的结果或者获取到任务执行的状态(任务是运行中还是执行完成)**。
+
+Future接口提供了一个可能阻塞的get()方法,返回Callable任务的返回值,如果是Runnable任务,将返回null。当任务还没有返回结果之前，调用get()方法将会导致方法被阻塞，直到任务返回结果。
+
+#### 4.FutureTask类
+
+FutureTask实现了Runnable和Future的接口，它既可以作为Runnable被线程执行，又可以作为Future得到Callable的返回值。**推荐使用。**
+
+### 8-2 J.U.C-FutureTask-2
+
+1. Future接口的实践：com.bravedawn.concurrency.example.aqs.FutureExample
+2. FutureTask类的实践：com.bravedawn.concurrency.example.aqs.FutureTaskExample
+
+### 8-3 J.U.C-ForkJoin
+
+1. 简介
+
+   ForkJoin框架，它可以将一个大的任务拆分成多个子任务进行并行处理，最后将子任务结果合并成最后的计算结果。类似于MapReduce的思想。
+
+2. 工作窃取算法
+
+   ![](E:\markdown笔记\笔记图片\8\40.png)
+
+   针对多个线程分配相同多子任务的时候，会出现不同线程完成所有任务的时间有快有慢的情况，分支/合并框架工程使用了工作窃取的技术来解决这个问题。在实际应用中，这些子任务被差不多的分配到ForkJoinSumCalculator中的所有线程上，每个线程都为分配给他的任务保存一个双向的链式队列，每完成一个任务，就会队列头上取出下一个任务开始执行。因为上面所述的原因，有些线程可能早早地完成了分配给他的任务，也就是他的队列已经空了，但其他的线程还是很忙。这个时候队列已经空了的线程并不会闲置下来，而是随机选择一个其他的线程从队列的尾巴上“偷走”一个任务。这个过程会一直继续下去，知道所有的任务都执行完毕，所有的队列都清空。这就是为什么要划成许多小任务而不是少数几个大任务的原因，他能有助于工作线程之间的平衡负载。
+
+3. **工作窃取算法的优点：**
+
+   * 充分利用线程进行并行计算，并减少了线程间的竞争。
+
+4. **工作窃取算法的缺点：**
+
+   * 在某些情况下还是存在竞争，比如双端队列里只有一个任务时。
+   * 并且该算法会消耗更多的系统资源，比如创建多个线程和多个双端队列。
+
+5. Fork/Join框架局限性：
+
+   对于Fork/Join框架而言，当一个任务正在等待它使用Join操作创建的子任务结束时，执行这个任务的工作线程查找其他未被执行的任务，并开始执行这些未被执行的任务，通过这种方式，线程充分利用它们的运行时间来提高应用程序的性能。为了实现这个目标，Fork/Join框架执行的任务有一些局限性。
+
+   * 任务只能使用Fork和Join操作来进行同步机制，如果使用了其他同步机制，则在同步操作时，工作线程就不能执行其他任务了。比如，在Fork/Join框架中，使任务进行了睡眠，那么，在睡眠期间内，正在执行这个任务的工作线程将不会执行其他任务了。
+   * 在Fork/Join框架中，所拆分的任务不应该去执行IO操作，比如：读写数据文件。
+   * 任务不能抛出检查异常，必须通过必要的代码来处理这些异常。
    
+6. Fork/Join框架的核心类
+
+  ForkJoinPool和ForkJoinTask是支持Fork/Join机制的核心类。
+
+  ForkjoinPool是实现了ExecutorService和work-stealing(工作窃取)算法。管理工作线程和提供关于任务的状态和执行信息。
+
+  ForkJoinTask主要是任务中执行Fork和join的机制。
+  
+7. Fork/Join框架的实践，计算1-100的加法：com.bravedawn.concurrency.example.aqs.ForkJoinTaskExample
+  
+### 8-4 J.U.C-BlockingQueue
+
+1. 简介
+
+   阻塞队列（BlockingQueue）被广泛使用在“**生产者-消费者**”问题中，其原因是 BlockingQueue 提供了可阻塞的插入和移除的方法。当队列容器已满，生产者线程会被阻塞，直到队列未满；当队列容器为空时，消费者线程会被阻塞，直至队列非空时为止。
+
+2. 阻塞队列一共提供了四套方法，如下图所示：
+
+   ![](E:\markdown笔记\笔记图片\8\41.png)
+
+   * 竖轴
+     * Insert：插入
+     * Remove：移除
+     * Examine：检查
+   * 横轴
+     * Throws Exception：如果不能马上进行就抛出异常
+     * Special Value：如果不能马上进行，就返回一个特殊的值，一般是true和false
+     * Blocks：如果操作不能马上进行，操作就会被阻塞
+     * Times Out：如果不能马上进行，则操作就会被阻塞一段时间，如果超时后，一般会返回true和false
+
+3. 实现类
+
+   在Java中，BlockingQueue是一个接口，它的实现类有ArrayBlockingQueue、DelayQueue、 LinkedBlockingDeque、LinkedBlockingQueue、PriorityBlockingQueue、SynchronousQueue等，它们的区别主要体现在存储结构上或对元素操作上的不同，但是对于take与put操作的原理，却是类似的。
+
+   * **ArrayBlockingQueue**：有界的阻塞队列，内部实现是数组，以先进先出的形式存储数据
+
+   * **DelayQueue**：阻塞的是内部元素，元素需要实现Delayed接口，队列元素需要实现getDelay(TimeUnit unit)方法和compareTo(Delayed o)方法, getDelay定义了剩余到期时间，compareTo方法定义了元素排序规则
+
+   * **LinkedBlockingQueue**：是一个基于链表实现的可选容量的阻塞队列。队头的元素是插入时间最长的，队尾的元素是最新插入的。新的元素将会被插入到队列的尾部。 
+
+     LinkedBlockingQueue的容量限制是可选的，如果在初始化时没有指定容量，那么默认使用int的最大值作为队列容量。
+
+   * **PriorityBlockingQueue**：是一个支持优先级的无界阻塞队列，直到系统资源耗尽。默认情况下元素采用自然顺序升序排列。也可以自定义类实现compareTo()方法来指定元素排序规则，或者初始化PriorityBlockingQueue时，指定构造参数Comparator来对元素进行排序。但需要注意的是不能保证同优先级元素的顺序。PriorityBlockingQueue也是基于最小二叉堆实现，使用基于CAS实现的自旋锁来控制队列的动态扩容，保证了扩容操作不会阻塞take操作的执行。
+
+   * **SynchronousQueue**：是一个内部只能包含一个元素的队列。插入元素到队列的线程被阻塞，直到另一个线程从队列中获取了队列中存储的元素。同样，如果线程尝试获取元素并且当前不存在任何元素，则该线程将被阻塞，直到线程将元素插入队列。
+
+
+
+
+
+
