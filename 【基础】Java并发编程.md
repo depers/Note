@@ -1126,6 +1126,8 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
 1. 概念
 
+   这个图应该从上往下看。
+
    ![](/8/37.png)
 
    countDownLatch这个类使一个线程等待其他线程各自执行完毕后再执行。
@@ -1148,10 +1150,9 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 2. 方法摘要
 
   * void acquire()：从此信号量获取一个许可，在提供一个许可前一直将线程阻塞，否则线程被中断。
-* void release()：释放一个许可，将其返回给信号量。
+  * void release()：释放一个许可，将其返回给信号量。
   * int availablePermits()：返回此信号量中当前可用的许可数。
-* boolean hasQueuedThreads()：查询是否有线程正在等待获取。
-  
+  * boolean hasQueuedThreads()：查询是否有线程正在等待获取。
 3. 实践
 
    1. 一次获取一个许可：com.bravedawn.concurrency.example.aqs.SemaphoreExample1
@@ -1162,4 +1163,166 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
    4. 在一定时间内，尝试获取一个许可，其他的丢弃：com.bravedawn.concurrency.example.aqs.SemaphoreExample4
 
-      
+### 7-4 J.U.C之AQS-CyclicBarrier
+
+下面这个图可以应该从下往上看。
+
+![](/8/39.png)
+
+1. 概念
+
+   假设有一个场景，每个线程代表一个跑步的运动员，当运动员都准备好之后，才一起出发，只要有一个运动员还没有准备好，所有线程就一起等待。
+
+   CyclicBarrier 的字面意思是可循环使用（Cyclic）的屏障（Barrier）。它要做的事情是，让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续干活。CyclicBarrier默认的构造方法是CyclicBarrier(int parties)，其参数表示屏障拦截的线程数量，每个线程调用await方法告诉CyclicBarrier我已经到达了屏障，然后当前线程被阻塞。
+
+2. CyclicBarrier 使用场景
+
+   CyclicBarrier可以用于多线程计算数据，最后合并计算结果的应用场景。比如我们用一个Excel保存了用户所有银行流水，每个Sheet保存一个帐户近一年的每笔银行流水，现在需要统计用户的日均银行流水，先用多线程处理每个sheet里的银行流水，都执行完之后，得到每个sheet的日均银行流水，最后，再用barrierAction用这些线程的计算结果，计算出整个Excel的日均银行流水。
+
+3. CountDownLatch和CyclicBarrier区别
+
+   * CountDownLatch简单的说就是一个线程等待，直到他所等待的其他线程都执行完成并且调用countDown()方法发出通知后，当前线程才可以继续执行。
+   * cyclicBarrier是所有线程都进行等待，直到所有线程都准备好进入await()方法之后，所有线程同时开始执行。
+   * CountDownLatch的计数器只能使用一次。而CyclicBarrier的计数器可以使用reset() 方法重置。所以CyclicBarrier能处理更为复杂的业务场景，比如如果计算发生错误，可以重置计数器，并让线程们重新执行一次。
+   * CyclicBarrier还提供其他有用的方法，比如getNumberWaiting方法可以获得CyclicBarrier阻塞的线程数量。isBroken方法用来知道阻塞的线程是否被中断。如果被中断返回true，否则返回false。
+
+4. 实践
+
+   * CyclicBarrier线程等待策略：com.bravedawn.concurrency.example.aqs.CyclicBarrierExample1
+   * await()超时报错：com.bravedawn.concurrency.example.aqs.CyclicBarrierExample2
+   * 第二个构造方法有一个 Runnable 参数，这个参数的意思是最后一个到达线程要做的任务，他会抢先执行：com.bravedawn.concurrency.example.aqs.CyclicBarrierExample3
+
+5. 博文
+  
+   * https://www.jianshu.com/p/333fd8faa56e
+
+
+### 7-5 J.U.C之AQS-ReentrantLock与锁-1
+
+Java中提供的两种锁，**synchronized**和**ReentrantLock**。
+
+1. **ReentrantLock（可重入锁）和synchronized区别**
+
+   * **可重入性**
+
+     从名字上理解，ReenTrantLock的字面意思就是再进入的锁，其实synchronized关键字所使用的锁也是可重入的，两者关于这个的区别不大。两者都是同一个线程每进入一次，锁的计数器都自增1，所以要等到锁的计数器下降为0时才能释放锁。
+
+   * **锁的实现**
+
+     Synchronized是依赖于JVM实现的，而ReenTrantLock是JDK实现的，有什么区别，说白了就类似于[操作系统](http://lib.csdn.net/base/operatingsystem)来控制实现和用户自己敲代码实现的区别。前者的实现是比较难见到的，后者有直接的源码可供阅读。
+
+   * **性能的区别**
+
+     在Synchronized优化以前，synchronized的性能是比ReenTrantLock差很多的，但是自从Synchronized引入了偏向锁，轻量级锁（自旋锁）后，两者的性能就差不多了，在两种方法都可用的情况下，官方甚至建议使用synchronized，其实synchronized的优化我感觉就借鉴了ReenTrantLock中的CAS技术。都是试图在用户态就把加锁问题解决，避免进入内核态的线程阻塞。
+
+   * **功能区别**
+
+     1. **便利性**：很明显Synchronized的使用比较方便简洁，并且由编译器去保证锁的加锁和释放，而ReenTrantLock需要手工声明来加锁和释放锁，为了避免忘记手工释放锁造成死锁，所以最好在finally中声明释放锁。
+     2. **锁的细粒度和灵活度**：很明显ReenTrantLock优于Synchronized
+
+2. **ReenTrantLock独有的能力**
+
+   1. ReenTrantLock可以指定是公平锁还是非公平锁。而synchronized只能是非公平锁。所谓的公平锁就是先等待的线程先获得锁。
+
+   2. ReenTrantLock提供了一个Condition（条件）类，用来实现分组唤醒需要唤醒的线程们，而不是像synchronized要么随机唤醒一个线程要么唤醒全部线程。
+
+   3. ReenTrantLock提供了一种能够中断等待锁的线程的机制，通过**lock.lockInterruptibly()**来实现这个机制。
+
+3. **ReenTrantLock实现的原理**
+
+   在网上看到相关的源码分析，本来这块应该是本文的核心，但是感觉比较复杂就不一一详解了，简单来说，ReenTrantLock的实现是一种自旋锁，通过循环调用CAS操作来实现加锁。它的性能比较好也是因为避免了使线程进入内核态的阻塞状态。**想尽办法避免线程进入内核的阻塞状态是我们去分析和理解锁设计的关键钥匙。**
+
+4. **什么情况下使用ReenTrantLock**
+
+   答案是，如果你需要实现ReenTrantLock的三个独有功能时。
+
+5. **是否要放弃synchronized**
+
+   synchronized能做的，ReentrantLock都能做；而ReentrantLock能做的，而synchronized却不一定做得了。性能方面，ReentrantLock不比synchronized差，那么要放弃使用synchronized？
+
+   * J.U.C包中的锁定类是用于高级情况和高级用户的工具，除非说你对Lock的高级特性有特别清楚的了解以及有明确的需要，或这有明确的证据表明同步已经成为可伸缩性的瓶颈的时候，否则我们还是继续使用synchronized
+   * 相比较这些高级的锁定类，synchronized还是有一些优势的，比如synchronized不可能忘记释放锁。 在退出synchronized块时，JVM会自动释放锁，会很容易忘记要使用finally释放锁，这对程序非常有害。
+   * 还有当JVM使用synchronized管理锁定请求和释放时，JVM在生成线程转储时能够包括锁定信息，这些信息对调试非常有价值，它们可以标识死锁以及其他异常行为的来源。 而Lock类只是普通的类，JVM不知道哪个线程具有Lock对象，而且几乎每个开发人员都是比较熟悉synchronized。
+
+6. 实践
+
+   1. ReenTrantLock的简单使用：com.bravedawn.concurrency.example.lock.LockExample2
+
+### 7-6 J.U.C之AQS-ReentrantLock与锁-2
+
+1. 读写锁-ReentrantReadWriteLock
+
+   1. 简介
+
+      对共享资源有读和写的操作，且写操作没有读操作那么频繁。在没有写操作的时候，多个线程同时读一个资源没有任何问题，所以应该允许多个线程同时读取共享资源；但是如果一个线程想去写这些共享资源，就不应该允许其他线程对该资源进行读和写的操作了。
+
+      **JAVA的并发包提供了读写锁ReentrantReadWriteLock，它表示两个锁，一个是读操作相关的锁，称为共享锁；一个是写相关的锁，称为排他锁**
+
+      **ReentrantReadWriteLock是悲观读取。**
+
+   2. 读写锁条件
+
+      * 线程进入读锁的前提条件：
+
+        没有其他线程的写锁，
+
+        没有写请求或者**有写请求，但调用线程和持有锁的线程是同一个。**
+
+      * 线程进入写锁的前提条件：
+
+        没有其他线程的读锁
+
+        没有其他线程的写锁
+
+   3. 读写锁有以下三个重要的特性：
+
+      （1）公平选择性：支持非公平（默认）和公平的锁获取方式，吞吐量还是非公平优于公平。
+
+      （2）重进入：读锁和写锁都支持线程重进入。
+
+      （3）锁降级：遵循获取写锁、获取读锁再释放写锁的次序，写锁能够降级成为读锁。
+
+   4. 实践
+
+      1. 实现一个简单的并发Map：com.bravedawn.concurrency.example.lock.LockExample3
+
+2. StampedLock
+
+   1. 参考博客：
+
+      https://www.cnblogs.com/fanhaiping/p/9577486.html
+
+      https://segmentfault.com/a/1190000015808032?utm_source=tag-newest
+
+   2. 实践
+
+      1. JDk官网的一个例子：com.bravedawn.concurrency.example.lock.LockExample4
+      2. 线程安全的计数：com.bravedawn.concurrency.example.lock.LockExample
+
+3. 两条锁的使用建议
+
+   * 当只有少量竞争者的时候，**synchronized**是一个很好的通用的锁实现，JVM会控制死锁的情况。
+   * 竞争者不少，但是线程增长的趋势可以预估。**ReentrantLock**是一个很好的通用的锁实现，死锁情况需自己控制。
+
+4. Condition的使用
+
+  1. Condition接口常用方法
+
+        Condition可以通俗的理解为条件队列。当一个线程在调用了await方法以后，直到线程等待的某个条件为真的时候才会被唤醒。这种方式为线程提供了更加简单的等待/通知模式。Condition必须要配合锁一起使用，因为对共享状态变量的访问发生在多线程环境下。一个Condition的实例必须与一个Lock绑定，因此Condition一般都是作为Lock的内部实现。
+  
+     Condition是通过AQS等待队列和Condition的等待队列实现多线程之间交互的工具类。
+     
+     * **await()** ：造成当前线程在接到信号或被中断之前一直处于等待状态。
+     * **signalAll()** ：唤醒所有等待线程。能够从等待方法返回的线程必须获得与Condition相关的锁。
+     
+  2. 实践
+  
+        * Condition类的使用：com.bravedawn.concurrency.example.lock.LockExample6
+  
+  
+  
+  
+  
+   
+  
+   
