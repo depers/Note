@@ -1451,6 +1451,8 @@ FutureTask实现了Runnable和Future的接口，它既可以作为Runnable被线
 
 ### 9-1 线程池-1
 
+参考博文：https://www.jianshu.com/p/c41e942bcd64
+
 #### 1.new Thread弊端
 
 * 每次new Thread新建对象，性能差
@@ -1463,7 +1465,109 @@ FutureTask实现了Runnable和Future的接口，它既可以作为Runnable被线
 * 可有效控制最大并发线程数，提高系统资源利用率，同时可以避免过多资源竞争，避免阻塞
 * 提供定时执行、定期执行、单线程、并发数控制等功能
 
-#### 3.
+#### 3.线程池-ThreadPoolExecutor
+
+* ThreadPoolExecutor是线程池中最核心的一个类
+
+* ThreadPoolExecutor构造方法核心参数
+
+  * **corePoolSize**： 线程池核心线程数
+  * **maximumPoolSize**：线程池最大线程数
+  * **workQueue**： 线程池所使用的缓冲队列。阻塞队列，存储等待执行的任务，很重要。会对线程池运行过程产生重大影响
+  * **keepAliveTime**：线程没有任务执行时最多保持多久时间终止
+  * **unit**：keepAliveTime的时间单位
+  * **threadFactory**：线程工厂，用来创建线程
+  * **rejectHandler**：当拒绝处理任务是的策略
+
+* 核心参数**corePoolSize**和**maximumPoolSize**的作用关系
+
+  1. **poolSize < corePoolSize时：**当池中正在运行的线程数（包括空闲线程）小于corePoolSize时，直接新建线程执行任务，而不管是否有空闲的线程
+
+  2. **corePoolSize < poolSize < maximumPoolSize时：**
+
+     1. **poolSize < maximumPoolSize：**如果有多于corePoolSize但小于maximumPoolSize线程正在运行，则仅当队列已满时才会创建新线程。
+     2. **poolSize = maximumPoolSize：**那么意味着线程池的处理能力已经达到了极限，此时需要拒绝新增加的任务。至于如何拒绝处理新增的任务，取决于线程池的饱和策略RejectedExecutionHandler。
+
+  3. **corePoolSize = maximumPoolSize**通过设置corePoolSize和maximumPoolSize相同，您可以创建一个固定大小的线程池。 
+
+  4. 通过将maximumPoolSize设置为基本上无界的值，例如Integer.MAX_VALUE，您可以允许池容纳任意数量的并发任务。
+
+  5. 通常，核心和最大池大小仅在构建时设置，但也可以使用`setCorePoolSize`和`setMaximumPoolSize`进行动态更改。
+
+     **这段话详细了描述了线程池对任务的处理流程，这里用个图总结一下**
+
+     ![img](https://upload-images.jianshu.io/upload_images/11183270-a01aea078d7f4178.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+
+  6. 这两个参数设置项一般经验：**待补充**
+
+  7. 拒绝策略
+
+     拒绝任务有两种情况：1. 线程池已经被关闭；2. 任务队列已满且maximumPoolSizes已满；无论哪种情况，都会调用RejectedExecutionHandler的rejectedExecution方法。预定义了四种处理策略：
+
+     1. **AbortPolicy**：默认测策略，抛出RejectedExecutionException运行时异常；
+     2. **CallerRunsPolicy**：这提供了一个简单的反馈控制机制，可以减慢提交新任务的速度；
+     3. **DiscardPolicy**：直接丢弃新提交的任务；
+     4. **DiscardOldestPolicy**：如果执行器没有关闭，队列头的任务将会被丢弃，然后执行器重新尝试执行任务（如果失败，则重复这一过程）；
 
 
+### 9-2 线程池-2
 
+#### 1.线程池的状态
+
+参考博文：https://www.cnblogs.com/-wyl/p/9760670.html
+
+线程池的5种状态：Running、ShutDown、Stop、Tidying、Terminated。
+
+![](E:\markdown笔记\笔记图片\8\42.jpg)
+
+* **RUNNING**：
+
+  1. 状态说明：线程池处在RUNNING状态时，能够接收新任务，以及对已添加的任务（阻塞队列中的任务）进行处理。
+  2. 状态切换：线程池的初始化状态是RUNNING。换句话说，线程池被一旦被创建，就处于RUNNING状态，并且线程池中的任务数为0
+
+*  **SHUTDOWN**：
+
+  1. 状态说明：线程池处在SHUTDOWN状态时，不接收新任务，但能处理已添加的任务。
+
+  2. 状态切换：调用线程池的shutdown()接口时，线程池由RUNNING -> SHUTDOWN。
+
+* **STOP**：
+
+  1. 状态说明：线程池处在STOP状态时，不接收新任务，不处理已添加的任务，并且会中断正在处理的任务。
+  2. 状态切换：调用线程池的shutdownNow()接口时，线程池由(RUNNING or SHUTDOWN ) -> STOP。
+
+* **TIDYING**：
+
+  1. 状态说明：当所有的任务已终止，线程池中记录的”任务数量”为0，线程池会变为TIDYING状态。当线程池变为TIDYING状态时，会执行钩子函数terminated()。terminated()在ThreadPoolExecutor类中是空的，若用户想在线程池变为TIDYING时，进行相应的处理；可以通过重载terminated()函数来实现。
+  2. 状态切换：当线程池在SHUTDOWN状态下，阻塞队列为空并且线程池中执行的任务也为空时，就会由 SHUTDOWN -> TIDYING。
+     当线程池在STOP状态下，线程池中执行的任务为空时，就会由STOP -> TIDYING。
+
+* **TERMINATED**：
+
+  1. 状态说明：线程池彻底终止，就变成TERMINATED状态。
+  2. 状态切换：线程池处在TIDYING状态时，执行完terminated()之后，就会由 TIDYING -> TERMINATED。
+
+#### 2.ThreadPoolExecutor基础方法
+
+* execute()：提交任务，交给线程池执行
+* submit()：提交任务，能够返回执行结果（相当于execute + Future）
+* shutdown()：关闭线程池，等待任务执行完
+* shutdownNow()：关闭线程池，不等待任务执行完
+
+#### 3.ThreadPoolExecutor监控的方法
+
+* getTaskCount()：线程池已执行和未执行的任务总数
+* getCompletedTaskCount()：已完成的任务数量
+* getPoolSize()：线程池当前的线程数量
+* getActiveCount()：当前线程池中正在执行任务的线程数量
+
+#### 4.线程池类图
+
+![](E:\markdown笔记\笔记图片\8\42.png)
+
+#### 5.Executor框架接口
+
+* Executors.newCachedThreadPool
+* Executors.newFixedThreadPool
+* Executors.newScheduledThreadPool
+* Executors.newSingleThreadExceutor
