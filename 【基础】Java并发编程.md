@@ -1567,7 +1567,32 @@ FutureTask实现了Runnable和Future的接口，它既可以作为Runnable被线
 
 #### 5.Executor框架接口
 
-* Executors.newCachedThreadPool
-* Executors.newFixedThreadPool
-* Executors.newScheduledThreadPool
-* Executors.newSingleThreadExceutor
+* Executors.newCachedThreadPool：创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。
+* Executors.newFixedThreadPool： 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。
+* Executors.newScheduledThreadPool：创建一个定长线程池，支持定时及周期性任务执行。
+* Executors.newSingleThreadExceutor：创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。
+
+### 9-3 线程池-3
+
+关于9-2第5点中提到的四种不同的线程池，其实现方法都在java.util.concurrent.Executors类中，其核心都是通过ThreadPoolExecutor类实现的。
+
+#### 1.线程池的使用
+
+* Executors.newCachedThreadPool：参见com.bravedawn.concurrency.example.threadPool.ThreadPoolExample1
+* Executors.newFixedThreadPool：参见com.bravedawn.concurrency.example.threadPool.ThreadPoolExample2
+* Executors.newSingleThreadExecutor：参见com.bravedawn.concurrency.example.threadPool.ThreadPoolExample3
+* Executors.newScheduledThreadPool：参见
+  * schedule：com.bravedawn.concurrency.example.threadPool.ThreadPoolExample4
+  * scheduleAtFixedRate与Timer：com.bravedawn.concurrency.example.threadPool.ThreadPoolExample5
+  * scheduleWithFixedDelay：com.bravedawn.concurrency.example.threadPool.ThreadPoolExample6
+
+#### 2.线程池的合理配置
+
+线程池大小的设置：
+
+1. CPU密集型任务，就需要尽量压榨CPU，参考值可以设置为**CPU数量+1**
+2. IO密集型任务，参考值可以设置为**2*CPU数量**
+
+#### 3.JUC总览
+
+![](E:\markdown笔记\笔记图片\8\43.png)
