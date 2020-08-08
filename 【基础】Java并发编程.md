@@ -10,7 +10,7 @@ ForkJointypora-root-url: 笔记图片
 
 ![](E:\markdown笔记\笔记图片\8\1.png)
 
-![2](E:\markdown笔记\笔记图片\8\2.png)
+![2](E:\markdown笔记\笔记图片\8\2.png)   
 
 ![3](E:\markdown笔记\笔记图片\8\3.png)
 
