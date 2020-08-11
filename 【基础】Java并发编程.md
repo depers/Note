@@ -10,7 +10,7 @@ ForkJointypora-root-url: 笔记图片
 
 ![](E:\markdown笔记\笔记图片\8\1.png)
 
-![2](E:\markdown笔记\笔记图片\8\2.png)
+![2](E:\markdown笔记\笔记图片\8\2.png)   
 
 ![3](E:\markdown笔记\笔记图片\8\3.png)
 
@@ -40,7 +40,7 @@ ForkJointypora-root-url: 笔记图片
 
    当同时并发的线程数修改为1时，计数器每次都能到达5000。
 
-### 1-3 并发与高并发基本概念
+### 1-3 并发与高并发基本概念   
 
 ![](E:\markdown笔记\笔记图片\8\9.png)
 
@@ -1318,7 +1318,7 @@ Java中提供的两种锁，**synchronized**和**ReentrantLock**。
   2. 实践
   
         * Condition类的使用：com.bravedawn.concurrency.example.lock.LockExample6
-  
+
 ## 第8章 J.U.C组件拓展
 
    ### 8-1 J.U.C-FutureTask-1
@@ -1406,9 +1406,9 @@ FutureTask实现了Runnable和Future的接口，它既可以作为Runnable被线
   ForkjoinPool是实现了ExecutorService和work-stealing(工作窃取)算法。管理工作线程和提供关于任务的状态和执行信息。
 
   ForkJoinTask主要是任务中执行Fork和join的机制。
-  
+
 7. Fork/Join框架的实践，计算1-100的加法：com.bravedawn.concurrency.example.aqs.ForkJoinTaskExample
-  
+
 ### 8-4 J.U.C-BlockingQueue
 
 1. 简介
@@ -1646,27 +1646,27 @@ FutureTask实现了Runnable和Future的接口，它既可以作为Runnable被线
 3. **最小化锁的作用域范围：S=1/(1-a+a/n)**
 
   a：并行计算部分所占比例
-  
+
   n：并行处理结点个数
-  
+
   S：加速比
-  
+
   当1-a等于0时，没有串行只有并行，最大加速比 S=n
-  
+
   当a=0时，只有串行没有并行，最小加速比 S = 1
-  
+
   当n→∞时，极限加速比 s→ 1/（1-a）
-  
+
   例如，若串行代码占整个代码的25%，则并行处理的总体性能不可能超过4。
-  
+
   该公式称为："阿姆达尔定律"或"安达尔定理"。
-  
+
   任何在锁中的代码将不能被并发执行，如果你有5%代码在锁中，那么根据Amdahl's law，你的应用形象就不可能提高超过20倍，因为锁中这些代码只能顺序执行，降低锁的涵括范围，上锁和解锁之间的代码越少越好。
-  
+
 4. **使用线程池的Executor，而不是直接new  Thread 执行**
-  
+
   创建一个线程的代价是昂贵的，如果你要得到一个可伸缩的Java应用，你需要使用线程池，使用线程池管理线程。JDK提供了各种ThreadPool线程池和Executor。
-  
+
 5. **宁可使用同步也不要使用线程的wait和notify**
 
    从Java 1.5以后增加了需要同步工具如CycicBariier, CountDownLatch 和 Sempahore，你应当优先使用这些同步工具，而不是去思考如何使用线程的wait和notify，通过BlockingQueue实现生产-消费的设计比使用线程的wait和notify要好得多，也可以使用CountDownLatch实现多个线程的等待。
