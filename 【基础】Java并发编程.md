@@ -2517,3 +2517,28 @@ Hystrix，该库旨在通过控制那些访问远程系统、服务和第三方�
 （3）mybatis分表插件shardbatis2.0
 
 具体实现：[http://www.imooc.com/article/25256](利用mybatis插件实现数据库分表)
+
+## 第18章 高并发之高可用手段介绍
+
+### 18-1 高并发之高可用一些手段
+
+![](E:\markdown笔记\笔记图片\8\86.png)
+
+* elastic-job：https://gitee.com/elasticjob/elastic-job
+* zookeeper：https://zookeeper.apache.org/
+* apache curator：http://curator.apache.org/
+* 监控报警机制：http://www.imooc.com/article/20891
+
+## 第19章 课程总结
+
+### 19-1 课程总结
+
+![](E:\markdown笔记\笔记图片\8\87.png)
+
+![88](E:\markdown笔记\笔记图片\8\88.png)
+
+![89](E:\markdown笔记\笔记图片\8\89.png)
+
+![90](E:\markdown笔记\笔记图片\8\90.png)
+
+![91](E:\markdown笔记\笔记图片\8\91.png)
