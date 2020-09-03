@@ -200,7 +200,7 @@
 
 设计原则的使用不是必须要遵守的，我是要有度，掌握平衡
 
-### 1、开闭原则（基础）
+### 1. 开闭原则（基础）
 
 * 定义：一个软件实体如类、模块和函数应该对扩展开放，对修改关闭
 * 用抽象构建框架，用实现扩展细节
@@ -246,4 +246,12 @@ git commit：https://github.com/depers/design_pattern/commit/34108fed9ce6e42e074
 
   这样我们就可以在**不改变接口和基类的情况下**去做业务的拓展了。
 
+### 2. 依赖倒置原则
 
+* 定义：高层模块不应该依赖低层模块，二者都应该依赖其抽象
+
+* 抽象不应该依赖细节；细节应该依赖抽象
+* 针对接口编程，不要针对实现编程
+* 优点：可以减少类间的耦合性，提高系统稳定性，提高代码可读性和可维护性，可降低修改程序所造成的风险
+* 具体实现参见：cn.bravedawn.design.principle.dependenceinversion，推荐v2和v4
+* Git commit：https://github.com/depers/design_pattern/commit/6018afdf1e921bded0c9ed785b54bfa5a072836c
