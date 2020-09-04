@@ -255,3 +255,6 @@ git commit：https://github.com/depers/design_pattern/commit/34108fed9ce6e42e074
 * 优点：可以减少类间的耦合性，提高系统稳定性，提高代码可读性和可维护性，可降低修改程序所造成的风险
 * 具体实现参见：cn.bravedawn.design.principle.dependenceinversion，推荐v2和v4
 * Git commit：https://github.com/depers/design_pattern/commit/6018afdf1e921bded0c9ed785b54bfa5a072836c
+
+### 3. 单一职责原则
+
