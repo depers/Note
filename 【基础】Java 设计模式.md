@@ -258,3 +258,43 @@ git commit：https://github.com/depers/design_pattern/commit/34108fed9ce6e42e074
 
 ### 3. 单一职责原则
 
+* 定义：不要存在多于一个导致类变更的原因
+* 一个类/接口/方法只负责一项职责
+* 优点：降低类的复杂度，提高类的可读性，提高系统的可维护性，降低变更引起的风险
+* 使用：在实际的项目的开发中，尽量保证接口和方法的单一职责，类的单一职责原则会导致类的很多，这个根据具体情况对待。
+* Coding
+  * 类的单一职责原则实现
+    * cn.bravedawn.design.principle.singleresponsibility.bird
+    * 一个类只提供一个功能
+  * 接口的单一职责原则实现
+    * cn.bravedawn.design.principle.singleresponsibility.course
+    * 一个接口只声明和定义一个功能
+  * 方法的单一职责原则实现
+    * cn.bravedawn.design.principle.singleresponsibility.method
+    * 一个方法中只做一件事情
+* Git commit：https://github.com/depers/design_pattern/commit/d70351f6915c8bc2afa2f6e78dc259349877ec9f
+
+### 4. 迪米特原则
+
+* 定义：一个对象应该对其他对象保持最少的了解，又叫最少知道原则。
+
+* 尽量降低类与类之间的耦合
+
+* 优点：降低类之间的耦合
+
+* 特点：
+
+  * 强调只和朋友交流，不和陌生人说话
+  * 朋友：出现在**成员变量**、**方法输入参数**、**方法输出参数**中的类称为成员**朋友类**。而出现在方法体内部的类不属于朋友类。
+
+* Coding
+
+  * v1版本的UML图，根据迪米特法则，Boss不应该接触Course
+
+    ![](E:\markdown笔记\笔记图片\11\17.png)
+
+  * v2版本的UML图，我们解除了Boss与Course之间的关系，转而让TeamLeader去接触
+
+    ![](E:\markdown笔记\笔记图片\11\18.png)
+
+* Git commit：https://github.com/depers/design_pattern/commit/fb1e9f3e64085c065418d0693f8ebf2a6b467bd5
