@@ -334,7 +334,9 @@ git commit：https://github.com/depers/design_pattern/commit/34108fed9ce6e42e074
 * 优点
 
   * 约束继承泛滥，开闭原则的一种体现。里式替换原为实现开闭原则的提供了步骤规范。
-  * 加强程序的健壮性，同时变更时也可以做到非常好的兼容性，提高程序的维护性、扩展性。降低需求变更时引入的风险。
-
-  
-
+  * 加强程序的健壮性，同时变更时也可以做到非常好的兼容性，提高程序的维护性、扩展性。降低需求变更时引入的风险。 
+* Coding
+  * 里式替换原则的演示：cn.bravedawn.design.principle.liskovsubstitution.inheritandimplement
+  * 含义3的解释：cn.bravedawn.design.principle.liskovsubstitution.methodinput
+  * 含义4的解释：cn.bravedawn.design.principle.liskovsubstitution.methodoutput
+* Git commit：https://github.com/depers/design_pattern/commit/29cf7696d2c1ccecfa732dddbae65dbc7a749c23
