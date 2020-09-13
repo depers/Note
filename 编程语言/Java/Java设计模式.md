@@ -12,7 +12,7 @@
 
 ![](E:\markdown笔记\笔记图片\11\11-5.png)
 
-## 第一章 UML入门
+## 第1章 UML入门
 
 ![](E:\markdown笔记\笔记图片\11\11-6.png)
 
@@ -188,7 +188,7 @@
 
 ![](E:\markdown笔记\笔记图片\11\16.jpg)
 
-## 第二章 设计原则（七大原则）
+## 第3章 设计原则（七大原则）
 
 * 开闭原则
 * 依赖倒置原则
@@ -340,3 +340,84 @@ git commit：https://github.com/depers/design_pattern/commit/34108fed9ce6e42e074
   * 含义3的解释：cn.bravedawn.design.principle.liskovsubstitution.methodinput
   * 含义4的解释：cn.bravedawn.design.principle.liskovsubstitution.methodoutput
 * Git commit：https://github.com/depers/design_pattern/commit/29cf7696d2c1ccecfa732dddbae65dbc7a749c23
+
+### 7.  合成复用原则（聚合复用原则）
+
+* 定义：尽量使用对象组合/聚合，而不是继承关系达到软件复用的目的
+* 优点：可以使系统更加灵活，降低类与类之间的耦合度，一个类的变化对其他类造成的影响相对较少
+* 分类：通常类的复用分为**继承复用**和**合成复用**两种
+* 继承复用
+  * 定义：子类通过继承从而实现对父类功能的复用
+  * 继承复用虽然有简单和易实现的优点，但它也存在以下缺点：
+    * 继承复用破坏了类的封装性。因为继承会将父类的实现细节暴露给子类，父类对子类是透明的，所以这种复用又称为**“白箱”复用**（白箱复用指的父类的实现细节全都暴露给子类了）。
+    * 子类与父类的耦合度高。父类的实现的任何改变都会导致子类的实现发生变化，这不利于类的扩展与维护。
+    * 它限制了复用的灵活性。从父类继承而来的实现是静态的，在编译时已经定义，所以在运行时不可能发生变化。
+* 合成复用
+  * 定义：合成复用原则是通过将已有的对象纳入新对象中，作为新对象的成员对象来实现的，新对象可以调用已有对象的功能，从而达到复用。
+  * 优点：
+    * 它维持了类的封装性。因为成分对象的内部细节是新对象看不见的，所以这种复用又称为**“黑箱”复用**。
+    * 新旧类之间的耦合度低。这种复用所需的依赖较少，新对象存取成分对象的唯一方法是通过成分对象的接口。
+    * 复用的灵活性高。这种复用可以在运行时动态进行，新对象可以动态地引用与成分对象类型相同的对象。
+* 何时使用组合、继承复用
+  * 聚合是has-A的关系，组合是contains-A的关系，继承是is-A的关系
+* Coding:
+  * v1：演示了不使用组合复用原则的实现
+  * v2：演示了使用组合复用原则的实现
+* Git commit：https://github.com/depers/design_pattern/commit/f43111c4b4f80d1873dce4882d105b822fa9aac4
+
+##  第3章 简单工厂
+
+### 1. 简单工厂讲解
+
+* 定义：由一个工厂对象决定创建出哪一种产品类的实例
+* 类型：创建型，但不属于GOF23种设计模式。他更像一种编码的风格和格式
+* 适用场景
+  * 工厂类负责创建的对象比较少
+  * 客户端（应用层）只知道传入工厂类的参数，对于如何创建对象（逻辑）不关心
+* 优点：只需要传入一个正确的参数，就可以获取你所需要的对象，而无需知道其创建细节
+* 缺点：
+  * 工厂类的职责相对过重，增加新的产品需要修改工厂类的判断逻辑，违背开闭原则
+  * 无法形成基于继承的等级结构
+
+### 2. 简单工厂coding
+
+* v1：没有采用简单工厂模式，缺点：如果不在本包内使用PythonVideo或是JavaVideo，类一定会被import进来
+* v2：采用了简单工厂模式和抽象工厂方法
+* Git commit：https://github.com/depers/design_pattern/commit/ff7d2f3d10f7fb8c2f203ea6771efaf35795909d
+
+### 3. 简单工厂JDK源码解析
+
+* Calendar
+
+  * 该方法采用了简单工厂模式：java.util.Calendar#createCalendar
+
+  * 类图，实现了序列化接口，克隆接口、比较接口。Calendar是一个抽象类，子类JapaneseImperialCalendar是default权限
+
+    ![](E:\markdown笔记\笔记图片\11\19.png)
+
+* DriverManager
+  * 分析驱动包mysql-connector-java
+  * Class.forName(com.mysql.jdbc.Driver)加载MySQL的驱动，就会调用Driver的静态代码块
+  * com.mysql.jdbc.Driver的静态代码块
+    * java.sql.DriverManager#registerDriver注册驱动
+  * java.sql.DriverManager#getConnection
+* LoggerFactory
+  * 分析Logback
+  * 阅读org.slf4j.LoggerFactory#getLogger(java.lang.String)的实现类：ch.qos.logback.classic.LoggerContext#getLogger(java.lang.String)该方法使用了简单工厂模式
+
+## 第4章 工厂方法模式
+
+### 1. 工厂方法讲解
+
+* 定义：定义一个创建对象的接口，但让实现这个接口的类来决定实例化哪个类。工厂方法让类的实例化推迟到子类中进行。
+* 类型：创建型
+* 适用场景
+  * 创建对象需要大量重复的代码
+  * 客户端（应用层）不依赖与产品类实例如何被创建、实现等细节
+  * 一个类通过其子类来指定创建哪个对象
+* 优点
+  * 用户只需要关心所需产品对应的工厂，无需关心创建细节
+  * 加入新产品符合开闭原则，提高可扩展性
+* 缺点
+  * 类的个数容易过多，增加复杂度
+  * 增加了系统抽象性和理解难度
