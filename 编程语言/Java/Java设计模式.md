@@ -384,6 +384,7 @@ git commit：https://github.com/depers/design_pattern/commit/34108fed9ce6e42e074
 * v1：没有采用简单工厂模式，缺点：如果不在本包内使用PythonVideo或是JavaVideo，类一定会被import进来
 * v2：采用了简单工厂模式和抽象工厂方法
 * Git commit：https://github.com/depers/design_pattern/commit/ff7d2f3d10f7fb8c2f203ea6771efaf35795909d
+* 参考文章：http://www.hollischuang.com/archives/1391
 
 ### 3. 简单工厂JDK源码解析
 
@@ -405,19 +406,68 @@ git commit：https://github.com/depers/design_pattern/commit/34108fed9ce6e42e074
   * 分析Logback
   * 阅读org.slf4j.LoggerFactory#getLogger(java.lang.String)的实现类：ch.qos.logback.classic.LoggerContext#getLogger(java.lang.String)该方法使用了简单工厂模式
 
-## 第4章 工厂方法模式
+## 第4章 工厂方法模式（工厂模式）
 
 ### 1. 工厂方法讲解
 
-* 定义：定义一个创建对象的接口，但让实现这个接口的类来决定实例化哪个类。工厂方法让类的实例化推迟到子类中进行。
+* 定义：定义一个创建对象的接口，但让实现这个接口的类来决定实例化哪个类。**工厂方法让类的实例化推迟到子类中进行**。
+
 * 类型：创建型
+
 * 适用场景
   * 创建对象需要大量重复的代码
   * 客户端（应用层）不依赖与产品类实例如何被创建、实现等细节
   * 一个类通过其子类来指定创建哪个对象
+  
 * 优点
   * 用户只需要关心所需产品对应的工厂，无需关心创建细节
   * 加入新产品符合开闭原则，提高可扩展性
+  
 * 缺点
   * 类的个数容易过多，增加复杂度
   * 增加了系统抽象性和理解难度
+  
+* 参考文章：http://hollischuang.gitee.io/tobetopjavaer/#/advance/design-patterns/factory-method-pattern
+
+* 工厂方法模式包含如下角色：
+
+  * Product：抽象产品（`Operation`）
+
+  * ConcreteProduct：具体产品(`OperationAdd`)
+
+  * Factory：抽象工厂(`IFactory`)
+
+  * ConcreteFactory：具体工厂(`AddFactory`)
+
+### 2. 工厂方法coding
+
+* Git Commit：https://github.com/depers/design_pattern/commit/e56072e129b6b2bbc0165cf93f86683de54ffa63
+
+* UML图：
+
+  ![](E:\markdown笔记\笔记图片\11\20.png)
+
+### 3. 工厂方法源码解析(jdk+logback)
+
+* Collection（jdk）
+
+  * Collection接口作为**抽象工厂**的角色，他声明了iterator方法
+
+  * ArrayList类作为**具体工厂**的角色，实现了Collection接口的iterator方法，并产生对象Itr
+
+  * Iterator接口作为**抽象产品**
+
+  * Itr是一个内部类，他实现了Iterator接口，作为**具体产品**
+
+* URLStreamHandlerFactory（jdk）
+  * 该类主要是解决URL协议拓展使用的
+  * URLStreamHandlerFactory接口作为**抽象工厂**的角色，他声明了createURLStreamHandler方法
+  * sun.misc.Launcher.Factory类作为**具体工厂**的角色，实现了createURLStreamHandler方法，并返回URLStreamHandler
+  * URLStreamHandler类作为**抽象产品**的角色，是一个抽象类。
+  * URLStreamHandler类的子类都是**具体产品**的角色
+
+* org.slf4j.LoggerFactory（logback）
+  * org.slf4j.ILoggerFactory接口作为**抽象工厂**的角色，声明了getLogger方法。他的实现类有三个，分别是LoggerContext、NOPLoggerFactory、SubstituteLoggerFactory
+  * org.slf4j.helpers.NOPLoggerFactory类作为**具体工厂**的角色，实现了getLogger方法，并返回了org.slf4j.Logger
+  * org.slf4j.Logger类作为**抽象产品**的角色，是一个抽象类
+  * org.slf4j.helpers.NOPLogger类的子类都是**具体产品**的角色
