@@ -84,7 +84,7 @@
 
 在PDMan中的模型版本设置中，有一个选项是同步配置，在这里有两个选项一个是全量脚本迭代(重建数据表)，另一个是增量脚本迭代（字段增量）。推荐使用增量脚本迭代，因为全量脚本迭代耗时过多。
 
-<img src="E:\markdown笔记\笔记图片\20\1\4.png" style="zoom:70%;" />
+<img src="../../../笔记图片/20/1/4.png" style="zoom:70%;" />
 
 #### 2.9 数据库物理外键移除原因讲解
 
@@ -315,7 +315,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
 #### 2.17 通用Mapper接口所封装的常用方法
 
-![](E:\markdown笔记\笔记图片\20\1\5.jpg)
+![](../../../笔记图片/20/1/5.jpg)
 
 #### 2.18 关于Restful webservice的那些事儿
 
@@ -348,7 +348,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
    
 2. 注入Mapper实例时IDEA红色下划线的错误，解决方法：
 
-   ![](E:\markdown笔记\笔记图片\20\1\6.png)
+   ![](../../../笔记图片/20/1/6.png)
 
    去掉图中红色框中的对勾。
 
@@ -447,7 +447,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    4. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\5.PNG)
+      ![](../../../笔记图片/20/1/5.PNG)
 
       如上图所示，测试案例只插入了parent和child-1，但是没有插入child-2。因为程序cn.bravedawn.service.Impl.StuServiceImpl中的saveChildren()执行出现了除0错误。
 
@@ -500,7 +500,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\7.png)
+      ![](../../../笔记图片/20/1/7.png)
 
       从图中我们可以看出，子方法声明了事务，父方法未声明事务，则子方法有事务特性，而父方法没有。
 
@@ -578,7 +578,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\8.png)
+      ![](../../../笔记图片/20/1/8.png)
 
       可以看到数据库中有两条数据，和父子都没有添加任何事务的效果一致。
 
@@ -656,7 +656,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    4. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\7.png)
+      ![](../../../笔记图片/20/1/7.png)
 
       只执行了saveParent()，并未执行声明了mandatory事务的saveChildren()方法。
 
@@ -727,7 +727,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\7.png)
+      ![](../../../笔记图片/20/1/7.png)
 
       此时，子方法有事务，而父方法没有事务。
 
@@ -797,7 +797,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\9.png)
+      ![](../../../笔记图片/20/1/9.png)
 
       这下就有意思了，子方法会顺利执行，而父方法抛出除0异常，导致saveParent()方法回滚，却没有影响到saveChildren()子方法。
 
@@ -844,7 +844,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\8.png)
+      ![](../../../笔记图片/20/1/8.png)
 
       和没有添加任何事务的情况是相同的。
 
@@ -878,7 +878,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\10.png)
+      ![](../../../笔记图片/20/1/10.png)
 
       父方法由于事务的原因，他的数据并没有成功的插入数据库中；而子方法由于不支持事务，所以插入了一条数据。
 
@@ -1020,7 +1020,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
    3. 数据库的保存效果，select * from stu：
 
-      ![](E:\markdown笔记\笔记图片\20\1\11.png)
+      ![](../../../笔记图片/20/1/11.png)
 
       此时数据库中插入一条数据，子方法的异常被父方法捕获。父事务可以不随子事务进行回滚。
 
@@ -1037,7 +1037,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
  #### 2.28 复习总结
 
-![](E:\markdown笔记\笔记图片\20\1\12.jpg)
+![](../../../笔记图片/20/1/12.jpg)
 
 ### 第3章 用户登录注册模块开发
 
@@ -1481,15 +1481,15 @@ mybatis:
 
 * 订单状态流转
 
-  ![](E:\markdown笔记\笔记图片\20\1\13.png)
+  ![](../../../笔记图片/20/1/13.png)
 
 * 复杂订单状态设计
 
-  ![](E:\markdown笔记\笔记图片\20\1\12.png)
+  ![](../../../笔记图片/20/1/12.png)
 
 * 聚合支付中心
 
-  ![](E:\markdown笔记\笔记图片\20\1\14.png)
+  ![](../../../笔记图片/20/1/14.png)
 
 ### 第4章 微信支付功能集成
 
@@ -1608,11 +1608,11 @@ mybatis:
 
 1. 查看父级项目的pom文件，点击Show Dependencies...查看依赖关系，其中hibernate-validator是项目spring-boot-starter-web引入的依赖
 
-   ![](E:\markdown笔记\笔记图片\20\1\15.png)
+   ![](../../../笔记图片/20/1/15.png)
 
 2. hibernate-validator的用法
 
-   ![](E:\markdown笔记\笔记图片\20\1\16.jpg)
+   ![](../../../笔记图片/20/1/16.jpg)
 
 3. 具体代码提交参见：https://github.com/depers/mall/commit/30abaaf2a3ba6f77ce72e7c01be3e5383af9b263
 
@@ -2009,7 +2009,7 @@ ORDER BY
 
 在用户注册之后，我们会将用户信息写入cookie中，但是后端会报这个错
 
-![](E:\markdown笔记\笔记图片\20\1\18.png)
+![](../../../笔记图片/20/1/18.png)
 
 其中Rfx6265CookieProcessor.java是tomcat8新增的Cookie处理器。具体请参见https://tomcat.apache.org/tomcat-8.0-doc/config/cookie-processor.html
 
