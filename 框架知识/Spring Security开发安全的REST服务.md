@@ -540,7 +540,7 @@ hibernate.validator校验框架的学习：
 3. 切片（Aspect）
 
   **切片正好弥补了拦截器（Interceptor）的不足，它可以获取请求调用方法的具体参数。**但是他却**拿不到http请求和响应的信息。**
-  
+
   1. 在security-demo引入AOP依赖
   
      ```
@@ -557,7 +557,7 @@ hibernate.validator校验框架的学习：
      * 切片类
      * 切入点
      * 编写增强方法
-  
+
 ### 8.Filter、Inteceptor、ControllerAdvice、Aspect和Controller的关系
 
 ![](E:\markdown笔记\笔记图片\19\10.png)
