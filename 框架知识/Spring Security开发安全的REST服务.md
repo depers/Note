@@ -8,15 +8,15 @@
 
 * 企业级安全认证和授权模块考虑的问题和实现的特性
 
-  ![](.\笔记图片\19\1.png)
+  ![](../笔记图片/19/1.png)
 
 * 企业级认证和授权的组成
 
-  ![](.\笔记图片\19\2.png)
+  ![](../笔记图片/19/2.png)
 
 * 课程目标
 
-  ![](.\笔记图片\19\3.png)
+  ![](../笔记图片/19/3.png)
 
 ## 第2章 开始开发
 
@@ -30,7 +30,7 @@
 
 *  代码结构
 
-  ![](.\笔记图片\19\4.png)
+  ![](../笔记图片/19/4.png)
 
 * 分别在IDEA中新建spring-security、security-core、security-broewer、security-app和security-demo项目，按照项目示例代码的pom文件对上述的几个项目进行配置。
 
@@ -91,9 +91,9 @@
 
 ### 1 Restful简介
 
-![](.\笔记图片\19\5.png)
+![](../笔记图片/19/5.png)
 
-![6](.\笔记图片\19\6.png)
+![6](../笔记图片/19/6.png)
 
 ### 2.查询请求
 
@@ -540,7 +540,7 @@ hibernate.validator校验框架的学习：
 3. 切片（Aspect）
 
   **切片正好弥补了拦截器（Interceptor）的不足，它可以获取请求调用方法的具体参数。**但是他却**拿不到http请求和响应的信息。**
-  
+
   1. 在security-demo引入AOP依赖
   
      ```
@@ -557,7 +557,7 @@ hibernate.validator校验框架的学习：
      * 切片类
      * 切入点
      * 编写增强方法
-  
+
 ### 8.Filter、Inteceptor、ControllerAdvice、Aspect和Controller的关系
 
 ![](E:\markdown笔记\笔记图片\19\10.png)
