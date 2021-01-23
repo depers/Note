@@ -156,7 +156,9 @@
 
 2. 解压Nginx：`tar -zxvf nginx`
 
-3. 创建Makefile文件：`./configure --prefix=/usr/local/webapp/`
+3. 创建nginx临时目录：`mkdir -p /var/temp/nginx `
+
+4. 创建Makefile文件：`./configure --prefix=/usr/local/myapp/program/nginx`
 
    下面是更加具体的配置：
 
@@ -172,7 +174,8 @@
    --http-proxy-temp-path=/var/temp/nginx/proxy \
    --http-fastcgi-temp-path=/var/temp/nginx/fastcgi \
    --http-uwsgi-temp-path=/var/temp/nginx/uwsgi \
-   --http-scgi-temp-path=/var/temp/nginx/scgi
+   --http-scgi-temp-path=/var/temp/nginx/scgi \
+   --add-module=/usr/local/myapp/software/fastdfs/fastdfs-nginx-module-1.22/src
    ```
 
    配置命令：
@@ -190,12 +193,13 @@
    | --http-fastcgi-temp-path       | 设定fastcgi临时目录                  |
    | --http-uwsgi-temp-path         | 设定uwsgi临时目录                    |
    | --http-scgi-temp-path          | 设定scgi临时目录                     |
+   | --add-module                   | 添加拓展模块                         |
 
-4. 编译：`make`
+5. 编译：`make`
 
-5. 安装：`make install`
+6. 安装：`make install`
 
-6. Nginx常用命令：
+7. Nginx常用命令：
    * 测试配置文件：`./nginx -t`
    * 启动：`./nginx`
    * 停止：`./nginx -s stop`或`./nginx -s quit`
