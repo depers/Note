@@ -1,6 +1,6 @@
 # Java web环境配置
 
-## Java配置
+## 1. Java配置
 
 1. 清除系统默认自带jdk
 
@@ -28,7 +28,7 @@
 
 4. 验证安装成功：`java -version`
 
-## Tomcat配置(以两个tomcat的配置为例)
+## 2. Tomcat配置(以两个tomcat的配置为例)
 
 1. 解压：`tar -zxvf apache-tomcat-8.5.24.tar.gz -C ./../javaweb/`
 
@@ -53,7 +53,7 @@
 
 4. 分别进入两个tomcat的bin目录，启动tomcat，即进入${tomcat}/bin/，执行start.sh。访问[http://localhost:8080]()，[http://localhost:9080]()可以打开tomcat部署的webapps的ROOT项目首页
 
-## MySQL安装（Centos6）
+## 3. MySQL安装（Centos6）
 
 1. 检查是否安装了MySQL：`rpm -qa|grep mysql-server`
 
@@ -150,7 +150,7 @@
    # service mysqld start
    ```
 
-## Nginx配置
+## 4. Nginx配置
 
 1. 安装Nginx依赖：`yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel`
 
@@ -207,11 +207,11 @@
    * 查看进程：`ps -ef|grep nginx`
    * 平滑重启：`kill -HUP [Nginx主进程号（即查看到进程命令查到的PID）]`
 
-## Redis配置
+## 5. Redis配置
 
 修改第二个redis的redis.conf文件的端口为6380
 
-## MariaDB安装
+## 6. MariaDB安装
 
 * 官网安装文档：https://mariadb.com/kb/en/mariadb-installation-version-10121-via-rpms-on-centos-7/
 
@@ -220,6 +220,85 @@
   ![](E:\markdown笔记\笔记图片\20\1\17.png)
 
 * 其中赋予root用户远程连接权限时，输入小写的grant命令时不起作用不知道为什么。若出现这种情况请输入：`GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'IDENTIFIED BY 'fx1212' WITH GRANT OPTION;`
+
+## 7. RabbitMQ安装 
+
+1. 安装基础软件包
+
+   ```
+   yum -y install build-essential openssl openssl-devel unixODBC unixODBC-devel make gcc gcc-c++ kernel-devel
+   ```
+
+2. 安装Erlang，这里我们使用Zero-dependency Erlang RPM for RabbitMQ
+
+    ```
+   rpm -ivh erlang-23.2.3-1.el7.x86_64.rpm
+    ```
+
+3. 安装socat和logrotate
+
+   ```
+   rpm -ivh socat-1.7.3.2-2.el7.x86_64.rpm
+   rpm -ivh socat-1.7.3.2-2.el7.x86_64.rpm
+   ```
+
+4. 安装rabbitmq
+
+   ```
+   rpm -ivh rabbitmq-server-3.8.11-1.el7.noarch.rpm
+   ```
+
+5. 创建/etc/rabbitmq/rabbitmq.conf文件，修改用户登录与连接心跳检测，注意修改
+
+   * 修改点1：设置loopback_users.guest为none，允许guest账户非本地登录
+   * 修改点2：heartbeat 为10（用于心跳连接）
+
+   ```
+   # DANGER ZONE!
+   #
+   # allowing remote connections for default user is highly discouraged
+   # as it dramatically decreases the security of the system. Delete the user
+   # instead and create a new one with generated secure credentials.
+   loopback_users.guest = none
+   
+   ## Set the default AMQP 0-9-1 heartbeat interval (in seconds).
+   ## Related doc guides:
+   ##
+   ## * https://rabbitmq.com/heartbeats.html
+   ## * https://rabbitmq.com/networking.html
+   ##
+   heartbeat = 10
+   ```
+
+6. 首先启动服务(后面 | 包含了停止、查看状态以及重启的命令)
+
+   ```
+   /etc/init.d/rabbitmq-server start | stop | status | restart
+   
+   service rabbitmq-server start
+   ```
+
+7. 开启web界面管理插件
+
+   ```
+   rabbitmq-plugins enable rabbitmq_management
+   ```
+
+   这里会报一个错：`{:query, :"rabbit@app-fastdfs_tracker-rabbitmq", {:badrpc, :timeout}}`，这里是因为我的hostname没有在/etc/hosts中进行配置，这里添加：
+
+   ```
+   127.0.0.1   app-fastdfs_tracker-rabbitmq
+   ```
+
+8. 查看服务有没有启动：`lsof -i:5672` （5672是Rabbit的默认端口）
+
+9. 可查看管理端口有没有启动： 
+
+   ```
+   lsof -i:15672 或者 netstat -tnlp | grep 15672
+   ```
+
+10. 在浏览器登录web管理端，`http://192.168.156.135:15672/`
 
 ## Centos自启动配置
 

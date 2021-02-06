@@ -731,7 +731,7 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
 
       此时，子方法有事务，而父方法没有事务。
 
-2. **测试案例2**-给子方法添加Propagation.REQUIRES_NEW声明，给父方法添加Propagation.REQUIRES声明：
+2. **测试案例2**-给子方法添加Propagation.REQUIRES_NEW声明，给父方法添加Propagation.REQUIRED声明：
 
    1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
 
@@ -745,12 +745,10 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
       }
       ```
 
-      去掉该父方法的事务声明。
-
    2. （mall-service）此时的cn.bravedawn.service.Impl.StuServiceImpl文件:
 
       ```java
-      @Transactional(propagation = Propagation.REQUIRES_NEW)
+   @Transactional(propagation = Propagation.REQUIRES_NEW)
       // 子方法
       public void saveChildren() {
       	saveChild1();
@@ -758,14 +756,14 @@ MyBatis数据库你像生成工具——MyBatis-Generator（内置MyMapper插件
       	saveChild2();
       }
       ```
-
+   
       给子方法添加事务声明。
 
    3. 数据库的保存效果，select * from stu：没有插入任何数据。
 
       此时，父方法和子方法各有一个事务。
 
-3. **测试案例3**-给子方法添加Propagation.REQUIRES_NEW声明，给父方法添加Propagation.REQUIRES声明，并修改父子方法：
+3. **测试案例3**-给子方法添加Propagation.REQUIRES_NEW声明，给父方法添加Propagation.REQUIRED声明，并修改父子方法：
 
    1. （mall-service）此时的cn.bravedawn.service.Impl.TestTransServiceImpl文件：
 
