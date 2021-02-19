@@ -16,8 +16,12 @@
 #### 2. 拓展知识
 
 * Slf4j和log4j，logback，java.util.logging等日志框架的区别，可以参考博文：https://www.cnblogs.com/hanszhao/p/9754419.html
+
 * Slf4j有一个基本要求：**嵌入式组件(如库或框架)不应该声明对任何SLF4J绑定的依赖，而应该仅依赖于SLF4J -api。**正因如此你可以看到mybatis中的第三方绑定日志组件的maven依赖都是`<optional>true</optional>`。
+
 * log4j和log4j2的区别，他两是否都用slf4j-log412.jar来进行适配？
+
+  Apache Log4j 2是apache开发的一款Log4j的升级产品。
 
 #### 3. mybatis项目pom依赖中的日志组件
 
@@ -30,17 +34,45 @@
       <version>1.2.17</version>
       <optional>true</optional>
   </dependency>
+  <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.7.30</version>
+      <optional>true</optional>
+  </dependency>
   ```
 
   这里引入了log4j 1.x版本，目前1.2.17版本是1.x版本的最后一个版本。目前看这个包是在org.apache.ibatis.logging.log4j这个里面用到的它的api。
 
-* log4j-core
+* log4j2
 
+  ```xml
+  <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-core</artifactId>
+      <version>2.13.3</version>
+      <optional>true</optional>
+  </dependency>
   ```
   
+  这里引入的是log4j2.x版本
+  
+* commons-logging
+
+  ```xml
+  <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
+      <optional>true</optional>
+  </dependency>
   ```
 
-  
+  这里引入了commons-logging，按照官网的介绍，commons-logging既可以作为上层的日志抽象，也可以作为底层日志组件。既可以作为库的日志记录组件，也可作为应用程序的日志组件。
+
+* java.util.logging
+
+* 
 
 ## 2. slf4j包
 
