@@ -72,13 +72,30 @@
 
 * java.util.logging
 
-* 
 
 ## 2. slf4j包
 
-#### 1. org.apache.ibatis.logging.slf4j.Slf4jImpl
+#### 1.org.apache.ibatis.logging.slf4j.Slf4jImpl
 
 这个类我一直在考虑它用的是什么设计模式，目前锁定的三种设计模式，分别是代理模式、适配器模式和装修器模式。根据反复分析这三种设计模式，我认为都不是这三种模式，而是**合成复用原则**。
+
+
+
+#### 2.org.apache.ibatis.logging.slf4j.Slf4jLocationAwareLoggerImpl
+
+这个类对slf4j的`org.slf4j.spi.LocationAwareLogger`做了封装，该类的说明是：
+
+>可选接口，帮助与能够提取位置信息的日志系统集成。 此接口主要供SLF4J桥使用，例如jcl-over-slf4j，jul-to-slf4j和log4j-over-slf4j或Logger包装器，它们需要提供提示，以便基础日志系统可以提取正确的位置信息（方法名称， 行号）。
+
+#### 3.org.apache.ibatis.logging.slf4j.Slf4jLoggerImpl
+
+这个类是对slf4j的`org.apache.ibatis.logging.slf4j.Slf4jLoggerImpl`做了封装，这个类的说明是：
+
+> org.slf4j.Logger接口是SLF4J API的主要用户入口点。期望通过该接口的具体实现进行日志记录。
+
+
+
+
 
 
 
