@@ -233,7 +233,7 @@
 
     ```
    rpm -ivh erlang-23.2.3-1.el7.x86_64.rpm
-    ```
+   ```
 
 3. 安装socat和logrotate
 
@@ -300,6 +300,34 @@
 
 10. 在浏览器登录web管理端，`http://192.168.156.135:15672/`
 
+## 8. Kafka的安装
+
+1. 下载Kafka：http://kafka.apache.org/downloads
+
+2. 解压命令：`tar -zxvf kafka_2.12-2.1.0.tgz -C /usr/local/`
+
+3. 改名命令：`mv kafka_2.12-2.1.0/ kafka_2.12`
+
+4. 进入解压后的目录，修改server.properties文件：`vim /usr/local/kafka_2.12/config/server.properties`
+
+5. 修改server.properties文件：
+
+   ```
+   broker.id=0
+   listeners=PLAINTEXT://9092
+   host.name=192.168.156.135
+   advertised.host.name=192.168.156.135
+   log.dirs=/usr/local/kafka_2.12/kafka-logs
+   num.partitions=2
+   zookeeper.connect=192.168.11.111:2181,192.168.11.112:2181,192.168.11.113:2181
+   ```
+
+6. 建立日志文件夹：`mkdir /usr/local/kafka_2.12/kafka-logs`
+
+7. 启动Kafka之前需要启动Zookeeper
+
+8. 启动Kafka：`/usr/local/kafka_2.12/bin/kafka-server-start.sh /usr/local/kafka_2.12/config/server.properties &`
+
 ## Centos自启动配置
 
 修改/etc/rc.local文件
@@ -326,7 +354,6 @@ export JAVA_HOME=/usr/local/webapp/software/jdk1.8.0_211
 
 # 3.nginx start
 /usr/local/webapp/nginx/sbin/nginx
-
 ```
 
 
