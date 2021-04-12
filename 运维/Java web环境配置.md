@@ -327,12 +327,14 @@
 7. 启动Kafka之前需要启动Zookeeper
 
 8. 启动Kafka：`/usr/local/kafka_2.12/bin/kafka-server-start.sh /usr/local/kafka_2.12/config/server.properties &`
-
-### 9. FileBeat的安装
+## 9. FileBeat的安装
 
 1. 解压：`tar -zxvf filebeat-7.8.1-linux-x86_64.tar.gz -C ../program/`
 2. 重命名：`mv filebeat-7.8.1-linux-x86_64/ filebeat-7.8.1`
 3. 配置filebeat，可以参考filebeat.full.yml中的配置
+4. 测试配置文件是否正常：`./filebeat test config -c filebeat.yml`
+5. 启动filebeat：`/usr/local/filebeat-6.6.0/filebeat &`
+6. 查看线程：`ps -ef | grep filebeat`
 
 ## Centos自启动配置
 
