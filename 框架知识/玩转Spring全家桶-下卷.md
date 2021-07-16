@@ -378,7 +378,6 @@ RestTemplate支持的http库中，目前只有OkHttp是支持Http/2的。所以�
   
   1. 编辑org.springframework.http.client.ClientHttpRequestFactory，将httpComponent换成OKhttp。
   2. 启动项目，效果与上一节相同。
-  
 ### 82.如何编写命令行运行的程序
 
   ![](E:\markdown笔记\笔记图片\13-2\41.png)
@@ -712,7 +711,6 @@ CNCF官网： https://www.cncf.io/
   9. 还有新的服务被发现
   
   ![](E:\markdown笔记\笔记图片\13-2\91.png)
-  
 ### 93.使用Feign访问服务
 
 ![](E:\markdown笔记\笔记图片\13-2\93.png)
@@ -771,7 +769,6 @@ CNCF官网： https://www.cncf.io/
        * name：服务名，用于请求url
        * contextId：标识FeignClient并作以区分
        * path：为请求的路径，注意不要在接口上加@RequestMapping
-     
 4. 编辑geektime.spring.springbucks.customer.CustomerRunner，通过调用FeignClient实现
   
   6. 在geektime.spring.springbucks.customer.CustomerServiceApplication中添加@EnableDiscoveryClient和@EnableFeignClients
@@ -779,7 +776,6 @@ CNCF官网： https://www.cncf.io/
   7. 编辑org.apache.http.impl.client.CloseableHttpClient
   
   8. 启动项目，还有新的服务注册
-  
 ### 94.深入理解服务发现背后的DiscoveryClient
 
 ![](E:\markdown笔记\笔记图片\13-2\97.png)
@@ -1177,7 +1173,6 @@ docker run --name nacos -d -p 8848:8848 -e MODE=standalone nacos/nacos-server
     8. 启动consul-waiter-service，然后在postman中再去请求http://localhost:8090/customer/menu ：
   
       ![](E:\markdown笔记\笔记图片\13-2\131.png)
-  
 ### 101.使用Hystrix实现服务熔断（下）
 
    ![](E:\markdown笔记\笔记图片\13-2\132.png)
@@ -1296,7 +1291,6 @@ docker run --name nacos -d -p 8848:8848 -e MODE=standalone nacos/nacos-server
   3. 在主程序HystrixDashboardDemoApplication添加注解@EnableHystrixDashboard，开启SpringCloud断路器监控面板。
   
 * hystrix-stream-customer-service项目
-  
 1. 编辑pom文件
   
      ```xml
@@ -1482,7 +1476,6 @@ netflix已经放弃了对Hystrix的维护工作，推荐我们使用Resilience4j
      resilience4j.circuitbreaker.backends.order.ring-buffer-size-in-half-open-state=3
      resilience4j.circuitbreaker.backends.order.event-consumer-buffer-size=10
      ```
-     
 4. 在geektime.spring.springbucks.customer.controller.CustomerController中通过**CircuitBreakerRegistry**方式配置断路：
   
        ```java
@@ -1640,7 +1633,7 @@ netflix已经放弃了对Hystrix的维护工作，推荐我们使用Resilience4j
   
      从上图中可以看到Failed requests: 0，说明请求失败的次数是0。
      
-  7. 使用ab命令进行压测，命令`ab -c 10 -n 100 http://localhost:8090/customer/menu`，共20个请求，并发是10。可以看到效果如下图所示，从图中我们可以看到有3个请求是失败的：
+  7. 使用ab命令进行压测，命令`ab -c 10 -n 20 http://localhost:8090/customer/menu`，共20个请求，并发是10。可以看到效果如下图所示，从图中我们可以看到有3个请求是失败的：
      ![](E:\markdown笔记\笔记图片\13-2\162.png)
      
   8. 我们可以在浏览器中访问http://localhost:8090/actuator/bulkheads，就可以看到我们设置的舱壁了。
@@ -2170,7 +2163,6 @@ zookeeper通过注册ConfigWatcher来实现对节点配置的监控，如果配�
   6. 除此之外，nacos还有监听查询的功能。他会监听我们的配置文件，从而当修改配置时，自动刷新配置。
   
      ![](E:\markdown笔记\笔记图片\13-2\212.png)
-  
 #### 2.源码分析
 
 * org.springframework.cloud.alibaba.nacos.NacosConfigAutoConfiguration
