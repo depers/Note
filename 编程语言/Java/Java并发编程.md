@@ -733,7 +733,7 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
             System.out.println(getInstance().hashCode());
           System.out.println(getInstance().hashCode());
         }
-}
+  }
     ```
   
   * singleton.SingletonExample7
@@ -1456,7 +1456,7 @@ FutureTask实现了Runnable和Future的接口，它既可以作为Runnable被线
 #### 1.new Thread弊端
 
 * 每次new Thread新建对象，性能差
-* 线程缺乏统一管理，可能无限制的新建线程，相互竞争，有坑内占用过多系统资源导致司机或OOM
+* 线程缺乏统一管理，可能无限制的新建线程，相互竞争，有坑内占用过多系统资源导致死机或OOM
 * 缺少更多功能，比如更多执行、定期执行、线程中断
 
 #### 2.线程池的好处
