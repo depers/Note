@@ -1134,7 +1134,7 @@ User currentUser = JsonUtil.string2Obj(userJsonStr, User.class);
 
 ![4-35](E:\markdown笔记\笔记图片\4\4-35.png)
 
-在下图中我们将三个Cache也映射到hash空间中，其中数据对象object1沿着顺时针找到CaheA，映射到CacheA上；object2和object3映射到Cache映射到CacheC上；object4映射到CacheB上。这样四个数据对象就找到了所要存储的Cache节点。
+在下图中我们将三个Cache也映射到hash空间中，其中数据对象object1沿着顺时针找到CaheA，映射到CacheA上；object2和object3映射到CacheC上；object4映射到CacheB上。这样四个数据对象就找到了所要存储的Cache节点。
 
 ![4-36](E:\markdown笔记\笔记图片\4\4-36.png)
 
@@ -1877,5 +1877,4 @@ slaveof 127.0.0.1 6379
   * `ps -ef|grep tomcat`
 
 * [less命令](http://www.runoob.com/linux/linux-comm-less.html)
-
 
