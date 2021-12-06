@@ -375,3 +375,83 @@ status：eureka服务端状态
 
   ![](../../../笔记图片/20/4/4-1/39.jpg)
 
+### 3-8 服务注册知多少
+
+![](../../../笔记图片/20/4/4-1/3-8.jpg)
+
+### 3-9 【源码品读】服务注册源码探秘
+
+Debug流程：
+
+* org.springframework.cloud.client.discovery.EnableDiscoveryClient
+
+* org.springframework.cloud.client.discovery.EnableDiscoveryClientImportSelector#selectImports
+
+* org.springframework.cloud.client.serviceregistry.AutoServiceRegistrationConfiguration
+
+* org.springframework.cloud.client.serviceregistry.AutoServiceRegistrationProperties，这里使用Find Usages
+
+* org.springframework.cloud.client.serviceregistry.AbstractAutoServiceRegistration
+
+* org.springframework.cloud.client.serviceregistry.ServiceRegistry
+
+* org.springframework.cloud.netflix.eureka.serviceregistry.EurekaServiceRegistry#register
+
+* org.springframework.cloud.netflix.eureka.serviceregistry.EurekaServiceRegistry#maybeInitializeClient
+
+* com.netflix.appinfo.ApplicationInfoManager#getInfo
+
+  ![](../../../笔记图片/20/4/4-1/40.jpg)
+
+* org.springframework.cloud.netflix.eureka.serviceregistry.EurekaAutoServiceRegistration#start，这里的
+
+  ```
+  this.context.publishEvent(new InstanceRegisteredEvent<>(this,
+        this.registration.getInstanceConfig()));
+  ```
+
+  这句代码需要好好探究下。
+
+* com.netflix.discovery.DiscoveryClient#register
+
+* com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator#register
+
+* com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient
+
+  ```java
+  eurekaHttpClient = TransportUtils.getOrSetAnotherClient(eurekaHttpClientRef, clientFactory.newClient());
+  ```
+
+* com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient#execute
+
+* com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient#getHostCandidates
+
+* java.util.concurrent.atomic.AtomicReference#compareAndSet
+
+* 这个中间还有几层装饰器，等待大家挖掘。
+
+* com.netflix.discovery.shared.transport.jersey.JerseyApplicationClient
+
+* com.netflix.discovery.shared.transport.jersey.AbstractJerseyEurekaHttpClient#register
+
+看不懂的地方：
+
+1. org.springframework.context.annotation.Import
+2. org.springframework.boot.context.properties.ConfigurationProperties
+3. org.springframework.boot.context.properties.EnableConfigurationProperties
+
+### 3-10 基于客户端/服务端的服务发现
+
+![](../../../笔记图片/20/4/4-1/3-12.jpg)
+
+### 3-11 创建服务消费者
+
+* 创建eureka-consumer子项目
+
+  项目的具体内容，参考：https://github.com/depers/mall/tree/master/mall/spring-cloud-demo/eureka/eureka-consumer
+
+* 添加pom依赖
+
+* 创建启动类和Controller
+
+* 向eureka-client发起调用，参见：cn.bravedawn.Controller
