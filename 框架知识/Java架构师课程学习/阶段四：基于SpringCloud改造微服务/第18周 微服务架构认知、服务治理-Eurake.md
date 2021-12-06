@@ -412,7 +412,7 @@ Debug流程：
 
   这句代码需要好好探究下。
 
-* com.netflix.discovery.DiscoveryClient#register
+* com.netflix.discovery.**DiscoveryClient**#register
 
 * com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator#register
 
@@ -455,3 +455,24 @@ Debug流程：
 * 创建启动类和Controller
 
 * 向eureka-client发起调用，参见：cn.bravedawn.Controller
+
+### 3-12 心跳和续约源码探秘
+
+* 客户端源码debug
+  * com.netflix.discovery.DiscoveryClient#DiscoveryClient(com.netflix.appinfo.ApplicationInfoManager, com.netflix.discovery.EurekaClientConfig, com.netflix.discovery.AbstractDiscoveryClientOptionalArgs, javax.inject.Provider<com.netflix.discovery.BackupRegistry>)
+  * com.netflix.discovery.DiscoveryClient#initScheduledTasks
+  * com.netflix.discovery.DiscoveryClient#renew
+  * 中间又嵌套了好几层。。。
+  * com.netflix.discovery.shared.transport.jersey.AbstractJerseyEurekaHttpClient#sendHeartBeat
+* 服务端源码debug
+  * com.netflix.eureka.resources.InstanceResource#renewLease
+  * org.springframework.cloud.netflix.eureka.server.InstanceRegistry#renew
+  * com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl#renew
+  * com.netflix.eureka.registry.AbstractInstanceRegistry#renew
+
+客户端心跳发送内容是什么
+
+客户端续约流程
+
+服务端租约更新流程
+
