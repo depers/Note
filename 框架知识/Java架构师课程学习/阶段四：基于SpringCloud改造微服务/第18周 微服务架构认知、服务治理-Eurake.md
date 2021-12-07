@@ -456,7 +456,17 @@ Debug流程：
 
 * 向eureka-client发起调用，参见：cn.bravedawn.Controller
 
-### 3-12 心跳和续约源码探秘
+### 3-12 心跳监测与服务剔除
+
+![](../../../笔记图片/20/4/4-1/3-14.jpg)
+
+### 3-13 服务续约
+
+这里有几张图显示不清楚，这里补充一篇博客：https://blog.csdn.net/kuangxie4668/article/details/106420384
+
+![](../../../笔记图片/20/4/4-1/3-15.jpg)
+
+### 3-14 心跳和续约源码探秘
 
 * 客户端源码debug
   * com.netflix.discovery.DiscoveryClient#DiscoveryClient(com.netflix.appinfo.ApplicationInfoManager, com.netflix.discovery.EurekaClientConfig, com.netflix.discovery.AbstractDiscoveryClientOptionalArgs, javax.inject.Provider<com.netflix.discovery.BackupRegistry>)
@@ -469,6 +479,9 @@ Debug流程：
   * org.springframework.cloud.netflix.eureka.server.InstanceRegistry#renew
   * com.netflix.eureka.registry.PeerAwareInstanceRegistryImpl#renew
   * com.netflix.eureka.registry.AbstractInstanceRegistry#renew
+  * com.netflix.eureka.lease.Lease#renew
+  * com/netflix/eureka/eureka-core/1.9.8/eureka-core-1.9.8-sources.jar!/com/netflix/eureka/resources/InstanceResource.java:122，这里有一个变量`lastDirtyTimestamp`，指的是上一次客户端与服务端产生脏数据的时间戳，也就是客户端与注册之间数据不同步的时间戳。
+  * com.netflix.eureka.resources.InstanceResource#validateDirtyTimestamp
 
 客户端心跳发送内容是什么
 
