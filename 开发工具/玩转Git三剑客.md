@@ -529,5 +529,30 @@ $ git cat-file -p b21693805
 
 ![](../笔记图片/9/44.jpg)
 
+### 49.如何挑选合适的分支集成策略？
 
+github提供的三种分支合并策略，如下图，分别是merge commits、squash merging、rebase merging。
 
+![](../笔记图片/9/45.jpg)
+
+在视频中，作者演示项目的git提交的原本时间线如下：
+
+![](../笔记图片/9/46.jpg)
+
+#### merge commits
+
+创建一个pr，在分支合并的时候采取的策略选择merge commits，该种策略会直接将Beijing这个分支合并到master分支上去，效果如下：
+
+![](../笔记图片/9/47.jpg)
+
+#### squash merging
+
+新建一个pr，策略选择squash merging，该策略不改变原有分支，将Beijing分支的三次提交合并成一次提交，然后直接将这一次提交挂到master分支上去。这样做的话，master分支看上去就是一条直线。
+
+![](../笔记图片/9/48.jpg)
+
+#### rebase merging
+
+新建一个pr，策略选择rebase merging，该策略不改变原有分支，他会将Beijing这个分支的三次提交直接挂载到master分支上去。这样做的话，master分支看上去就是一条直线。
+
+![](../笔记图片/9/49.jpg)
