@@ -82,9 +82,9 @@
 
 * git的方法（推荐）
 
-  在进行这次操作之前，我们需要将刚才做的操作撤销，即将暂存区中的数据清除。执行`git reset --hard`
+  在进行这次操作之前，我们需要将刚才做的操作撤销，即将**暂存区**中的数据清除。执行`git reset --hard`
 
-  * 只需执行`git mv readme readme.md`，就可以见重命名的操作添加到暂存区
+  * 只需执行`git mv readme readme.md`，就可以见重命名的操作添加到**暂存区**
 
   然后`git commit -m 'Move readme to readme.md'`
 
