@@ -556,3 +556,9 @@ github提供的三种分支合并策略，如下图，分别是merge commits、s
 新建一个pr，策略选择rebase merging，该策略不改变原有分支，他会将Beijing这个分支的三次提交直接挂载到master分支上去。这样做的话，master分支看上去就是一条直线。
 
 ![](../笔记图片/9/49.jpg)
+
+# 其他
+
+## 1. cherry pick的用法
+
+参考：https://ruanyifeng.com/blog/2020/04/git-cherry-pick.html
