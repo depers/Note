@@ -626,6 +626,12 @@ test2到test5都是使用模板新建的，每一种模板的都有自己的特�
 
 他的一些流程的自动化的，在TODO那一栏除了可以管理issue和pull request，还可以书写一些笔记在里面。
 
+### 52.项目内部怎么实施code review的
+
+这节视频主要讲了通过github进行branch的设置，要求pr必须被审核人review之后才能被合并进入受保护的分支。
+
+目前这个功能对于普通的github用户是关闭的。
+
 # 其他
 
 ## 1. cherry pick的用法
