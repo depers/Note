@@ -198,7 +198,7 @@
 
   ![](../笔记图片/9/61.jpg)
 
-  从上面的实验中我们学习了git的三种文件类型，分别是commit、tree和blob。
+  从上面的实验中我们学习了git的三种文件类型，分别是**commit**、**tree**和**blob**。
 
   **彩蛋：** 在git中如果文件的内容相同，那么他就是一个唯一的blob。
 
@@ -208,7 +208,7 @@
 
 在上面这幅图中，我们通过`git cat-file -p 415c5c`可以看到这个commit下面的内容，这里面有一棵树tree 912fa6，然后我们`git cat-file -p 912fa6`。我们可以看到图中黄色的部分的第一个区域，里面有两个tree和两个blob。接着我们通过`git cat-file -p 6ad4c6`查看这个blob，发现他是一个我们曾经提交的html文件。
 
-在git中如果文件的内容一样，那么他就是被唯一存储的blob。
+在git中如果文件的内容一样，那么相同的文件内容就是被唯一存储的blob。
 
 以上图片和描述就是commit，tree和blob三个对象之间的关系。
 
@@ -576,13 +576,13 @@ github提供的三种分支合并策略，如下图，分别是merge commits、s
 
 ![](../笔记图片/9/45.jpg)
 
-在视频中，作者演示项目的git提交的原本时间线如下：
+在视频中，作者演示项目的git提交的原本时间线如下（下面这个图在github的Insights中的Network菜单中）：
 
 ![](../笔记图片/9/46.jpg)
 
 #### merge commits
 
-创建一个pr，在分支合并的时候采取的策略选择merge commits，该种策略会直接将Beijing这个分支合并到master分支上去，效果如下：
+创建一个pr，在分支合并的时候采取的策略选择merge commits，该种策略会直接将Beijing这个分支合并到master分支上去。采用这种方式git会将多次commit合并成一个change（一个merge的commit）合并到目标分支上去，你只需要解决一次冲突。效果如下：
 
 ![](../笔记图片/9/47.jpg)
 
@@ -631,6 +631,51 @@ test2到test5都是使用模板新建的，每一种模板的都有自己的特�
 这节视频主要讲了通过github进行branch的设置，要求pr必须被审核人review之后才能被合并进入受保护的分支。
 
 目前这个功能对于普通的github用户是关闭的。
+
+### 53. 在github上团队协作时如何做多分支的集成
+
+1. 使用merge commits策略将北京和上海两个分支合并到master分支，这两个分支生成的分支图如下：
+
+   ![](../笔记图片/9/62.jpg)
+
+   * 将北京合并到master上时，创建pr没有冲突，采用merge commits会生成一个merge commit合并到master。
+
+   * 将上海合并到master上时，创建pr遇到了冲突，解决完冲突之后github会生成一个将master合并到上海的merge commit（如下图），接着采用merge commits策略生成一个merge commit合并到master。
+
+     ![](../笔记图片/9/63.jpg)
+
+   * 小知识点
+
+     将master和上海分支回退采用如下命令：
+
+     * 将远端的分支回退到b3bf003：`git push -f origin b3bf033:master`
+     * 将远端的分支回退到6ac0f：`git push -f origin 6ac0f:Shanghai`
+
+2. 使用squash merging策略将北京和上海两个分支合并到master分支，这两个分支生成的分支图如下：
+
+   ![](../笔记图片/9/67.jpg)
+
+   * 将北京合并到master上时，创建pr没有冲突，采用squash merging策略会生成一个统一的commit合并到master。
+
+     ![](../笔记图片/9/64.jpg)
+
+     commit的记录如下：
+
+     ![](../笔记图片/9/65.jpg)
+
+   * 将上海合并到master上时，创建pr遇到了冲突，解决完冲突之后github会生成一个将master合并到上海的merge commit（如下图）
+
+     ![](../笔记图片/9/63.jpg)
+
+     分支合并的路线图如下：
+
+     ![](../笔记图片/9/68.jpg)
+
+     接着采用squash merging策略生成一个统一的commit合并到master，如下图：
+
+     ![](../笔记图片/9/66.jpg)
+
+
 
 # 其他
 
