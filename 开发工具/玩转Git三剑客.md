@@ -674,11 +674,34 @@ test2到test5都是使用模板新建的，每一种模板的都有自己的特�
      接着采用squash merging策略生成一个统一的commit合并到master，如下图：
 
      ![](../笔记图片/9/66.jpg)
+   
+3. 采用rebase merging策略将北京和上海两个分支合并到master分支，合并后的情况如下：
 
+   合并前：
 
+   ![](../笔记图片/9/69.jpg)
+
+   合并后：
+
+   ![]()
+
+   * 将北京合并到master上时，创建pr没有冲突，采用rebase merging策略将北京的三个commit合并到master分支上，相当于使用cherry pick的方式将三个commit挑拣到master分支上面。
+
+     ![](../笔记图片/9/70.jpg)
+
+   * 将上海分支合并到master上时，创建pr会产生冲突，这里github会让我们先去将master分支merge到上海分支上面，合并完之后，github上的页面是这样的：
+
+     ![](../笔记图片/9/72.jpg)
+
+     
 
 # 其他
 
 ## 1. cherry pick的用法
 
 参考：https://ruanyifeng.com/blog/2020/04/git-cherry-pick.html
+
+## 2. 一些命令
+
+* `git fetch origin`：将远程主机的最新内容拉到本地，用户在检查了以后决定是否合并到工作本机分支中
+* `git pull`：是将远程主机的最新内容拉下来后直接合并，即：`git pull = git fetch + git merge`，这样可能会产生冲突，需要手动解决。
