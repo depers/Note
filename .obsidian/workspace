@@ -1,0 +1,94 @@
+{
+  "main": {
+    "id": "86cf572cf0e31e93",
+    "type": "split",
+    "children": [
+      {
+        "id": "f57317268151c654",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "计算机基础/数据结构与算法/树.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "fde88b3d8a4da2d2",
+    "type": "split",
+    "children": [
+      {
+        "id": "56c1cfbc95fecc4c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8f265655970ad9df",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "076dd79b2eab8262",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "2e029b6c0340fdf7",
+    "type": "split",
+    "children": [
+      {
+        "id": "1104ee6f914ce2e4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "afa29731c94b5420",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "计算机基础/数据结构与算法/树.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "f57317268151c654",
+  "lastOpenFiles": [
+    "计算机基础/数据结构与算法/树.md"
+  ]
+}
