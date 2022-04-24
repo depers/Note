@@ -1,4 +1,4 @@
-# 玩转Git三剑客——极客时间
+玩转Git三剑客——极客时间
 
 ## 第一章 Git基础
 
@@ -675,13 +675,11 @@ test2到test5都是使用模板新建的，每一种模板的都有自己的特�
 
      ![](../笔记图片/9/66.jpg)
    
-3. 采用rebase merging策略将北京和上海两个分支合并到master分支，合并后的情况如下：
+3. 采用**rebase merging**策略将北京和上海两个分支合并到master分支，合并后的情况如下：
 
    合并前：
 
    ![](../笔记图片/9/69.jpg)
-
-   合并后：
 
    ![]()
 
@@ -689,11 +687,61 @@ test2到test5都是使用模板新建的，每一种模板的都有自己的特�
 
      ![](../笔记图片/9/70.jpg)
 
-   * 将上海分支合并到master上时，创建pr会产生冲突，这里github会让我们先去将master分支merge到上海分支上面，合并完之后，github上的页面是这样的：
+   * 将上海分支合并到master上时，创建pr会产生冲突，github会让我们去解决冲突，解决完之后这里github会先去将master分支merge到上海分支上面，合并完之后，github上的页面是这样的：
 
      ![](../笔记图片/9/72.jpg)
 
+     GitGarden是这样的：
      
+     ![](../笔记图片/9/71.jpg)
+     
+     此时github已经没有办法帮我们将上海分支合并到master分支上面了，如下图：
+     
+     ![](../笔记图片/9/72.jpg)
+
+#### 自己rebase分支实现将上海分支合并到master
+
+下面的流程还是基于这幅图来做：
+
+![](../笔记图片/9/70.jpg)
+
+
+
+下面我们将shanghai基于master进行rebase操作：
+
+1. 切换到shanghai分支
+
+2. 执行`git rebase origin/master`：
+
+   ![](../笔记图片/9/73.jpg)
+
+3. 上面的报错告诉我们是readme文件冲突了，下面执行`vi readme`解决冲突，解决完之后执行`git add .`。
+
+4. 接着执行`git rebase --continue`，此时还会报冲突，下面接着重复第三步：
+
+   ![](../笔记图片/9/74.jpg)
+
+5. 这个地方会让我们解决三次冲突问题，正好对于变基的三次beijing分支的commit，下面图中圈绿的是shanghai分支的四次commit，标红的是shanghai分支执行变基之后beijing的三次commit。
+
+   ![](../笔记图片/9/75.jpg)
+
+6. 此时我们在本地做完rebase之后，执行`git push -f origin Shanghai`将上海分支的代码提交到远端。此时的GitGarden是这样的：
+
+   ![](../笔记图片/9/76.jpg)
+
+7. 原来已经走不下去的github的rebase merging现在可以接着执行操作了，点击下面的rebase and merge按钮：
+
+   ![](../笔记图片/9/77.jpg)
+
+8. 此时的GitGarden如下图所示，我们已经将Shanghai分支合并到master分支了：
+
+   ![](../笔记图片/9/78.jpg)
+
+#### [git rerere](https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-Rerere)
+
+在上面我们使用
+
+
 
 # 其他
 
