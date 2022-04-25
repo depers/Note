@@ -380,7 +380,7 @@ $ git cat-file -p b21693805
 
 当我们输入`cat .git/HEAD`我们就可以看到HEAD文件中存储的信息`ref: refs/heads/fix_readme`，储存着当前我们所指向的分支。接着我们输入`git cat-file -t HEAD`发现这个引用指向的属性`commit`，其实这样的话我们就可以巧用HEAD文件了，利用它指代的引用
 
-* `git diff  HEAD HEAD^`、`git diff HEAD HEAD~`查看最后一次commit和他的上一次commit的区别
+* `git diff HEAD HEAD^`、`git diff HEAD HEAD~`查看最后一次commit和他的上一次commit的区别
 * `git diff HEAD HEAD^^`、`git diff HEAD HEAD~2`查看最后一次提交和上上一次提交的区别
 
 ## 用Git时的常见场景
@@ -739,9 +739,29 @@ test2到test5都是使用模板新建的，每一种模板的都有自己的特�
 
 #### [git rerere](https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-Rerere)
 
-在上面我们使用
+在上面我们使用git rebase将上海分支基于master进行变基操作。但是在变基的过程中，如果多次commit针对同一文件进行了变更，就需要我们多次去解决同一文件的冲突，这样实在是太麻烦了，这里我们使用git rerere来解决这个问题。
 
+1. 首先我们切换的到上海分支：`git checkout Shanghai`
 
+2. 启用rerere功能：`git config --global rerere.enabled true`
+
+3. 将上海分支合并到master：`git merge master`，此时会产生冲突，如下图会出现 **Recorded preimage for 'readme'**，说明我们使用了重用记录：
+
+   ![](../笔记图片/9/79.jpg)
+
+4. 接着我们编辑readme文件，解决冲突：`vi readme`
+
+5. 然后添加到暂存区：`git add .`
+
+6. 接着提交到版本库：`git commit -am temp...`，此时我们已经将冲突的解决记录在案了
+
+7. 然后我们撤销上面temp的合并，然后重置到他的上一次commit来代替他：`git reset --hard HEAD^`。此时`rerere`操作我们就做完了。
+
+8. 此时我们就可以执行：`git rebase master`操作，进行变基。
+
+9. 此时git还会提示我们解决冲突，但是因为之前重用记录的原因，readme文件的冲突已经自己解决好了，然后我们执行`git add .`和`git rebase --continue`操作就可以。我们靠一次重用记录，我们可以解决多次合并冲突的问题，但是`git add .`和`git rebase --continue`的操作仍需要我们执行多次。
+
+10. rerere操作让我们通过一次记录在案，减少了多次解决冲突的麻烦，使得rebase操作省力了很多。
 
 # 其他
 
