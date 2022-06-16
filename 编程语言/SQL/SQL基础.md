@@ -318,42 +318,66 @@ FROM Customers
 ORDER BY cust_name;
 ```
 
-/*------------------------连接-----------------------------*/
--- 
+# 连接
 
 连接用于连接多个表，使用 JOIN 关键字，并且条件语句使用 ON 而不是 Where。
--- 
 
 连接可以替换子查询，并且比子查询的效率一般会更快。
 
 可以用 AS 给列名、计算字段和表名取别名，给表名取别名是为了简化 SQL 语句以及连接相同表。
 
-#### 内连接
-#### 内连接又称等值连接(比如有两张表，一张表是学生学号表，一张是选课表，通过内连接查询可以将两张表中学号相同的信息拼在一起)，也可以不使用 INNER JOIN 关键字。
-```
+## 内连接
+
+内连接又称等值连接(比如有两张表，一张表是学生学号表，一张是选课表，通过内连接查询可以将两张表中学号相同的信息拼在一起)，也可以不使用 INNER JOIN 关键字。**若学生学号表一条记录为null或是选课表一条记录为null，这种情况下这条记录就会被丢弃。**
+
+```sql
 SELECT a.col1, a.col2, a.col5, b.col3 FROM mytable AS a, mytable1 AS b WHERE a.id = b.id;
 ```
 
-#### 使用 INNER JOIN 关键字
-```
-SELECT a.col1, a.col2, a.col5, b.col3 FROM mytable AS a inner join  mytable1 AS b ON a.id = b.id;
+## 使用 INNER JOIN 关键字
+
+```sql
+SELECT a.col1, a.col2, a.col5, b.col3 FROM mytable AS a inner join mytable1 AS b ON a.id = b.id;
 ```
 
-#### 自连接
-#### 自连接可以看成内连接的一种，只是连接的表是自身而已。
+注意：inner join后面是可以追加and条件的：
+
+```sql
+SELECT a.col1, a.col2, a.col5, b.col3 FROM mytable AS a inner join mytable1 AS b ON a.id = b.id and a.col1 = 1;
+```
+
+上面这句sql等价于：
+
+```sql
+SELECT a.col1, a.col2, a.col5, b.col3 FROM mytable AS a inner join mytable1 AS b ON a.id = b.id where a.col1 = 1;
+```
+
+## 自连接
+
+自连接可以看成内连接的一种，只是连接的表是自身而已。
+
 ```
 SELECT * FROM mytable WHERE col1 = col1 AND col2 = 'fengxiao';
 ```
 
-#### 自然连接
-#### 自然连接是把两个表中同名列通过等值测试连接起来的，同名列可以有多个。
-#### 内连接和自然连接的区别：内连接提供连接的列，而自然连接自动连接所有同名列，他比内连接更智能。
+## 自然连接
+
+自然连接是把两个表中同名列通过等值测试连接起来的，同名列可以有多个。
+
+内连接和自然连接的区别：内连接提供连接的列，而自然连接自动连接所有同名列，他比内连接更智能。
+
 ```
 SELECT * FROM mytable natural join mytable1;
 ```
 
-#### 外连接保留了没有关联的那些行。分为左外连接，右外连接以及全外连接.
-#### 左外连接，左外连接就是保留左表没有关联的行。
+## 外连接
+
+外连接保留了没有关联的那些行。分为左外连接，右外连接以及全外连接.
+
+### 左外连接
+
+左外连接，左外连接就是保留左表没有关联的行。
+
 mysql> select * from mytable;
 
 | id | col1       | col2       | col4 | col5 |
@@ -379,9 +403,8 @@ SELECT a.col2, a.col4, a.col5, b.col1, b.col2, b.col3 mytable AS a LEFT OUTER JO
 | fengxiao   | aaa  |   66 | 1811942438 | fengxiao | 2018-03-23 |
 | kanglirong | NULL |   99 |       NULL | NULL     | NULL       |
 
+### 右外连接
 
-
-#### 右外连接
 mysql> SELECT a.col2, a.col4, a.col5, b.col1, b.col2, b.col3 as a RIGHT OUTER JOIN mytable1 AS b ON a.col2 = b.col2;
 
 | col2     | col4 | col5 | col1       | col2     | col3       |
@@ -391,11 +414,16 @@ mysql> SELECT a.col2, a.col4, a.col5, b.col1, b.col2, b.col3 as a RIGHT OUTER JO
 
 2 rows in set (0.00 sec)
 
-/*--------------------组合查询--------------------------------*/
-#### 使用 UNION 来组合两个查询，如果第一个查询返回 M 行，第二个查询返回 N 行，那么组合查询的结果为 M+N 行。
-#### 每个查询必须包含相同的列、表达式或者聚集函数。
-#### 默认会去除相同行，如果需要保留相同行，使用 UNION ALL。
-#### 只能包含一个 ORDER BY 子句，并且必须位于语句的最后。
+## 组合查询
+
+使用 UNION 来组合两个查询，如果第一个查询返回 M 行，第二个查询返回 N 行，那么组合查询的结果为 M+N 行。
+
+每个查询必须包含相同的列、表达式或者聚集函数。
+
+默认会去除相同行，如果需要保留相同行，使用 UNION ALL。
+
+只能包含一个 ORDER BY 子句，并且必须位于语句的最后。
+
 ```
 SELECT col
 FROM mytable
