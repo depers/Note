@@ -1,5 +1,6 @@
-#### 创建一个数据库
+------------------------创建表----------------------
 
+#### 创建一个数据库
 ```
 CREATE DATABASE IF NOT EXISTS db_test_1 DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 ```
@@ -433,32 +434,5 @@ FROM mytable
 WHERE col =2;
 ```
 
-# 函数
+# 分组
 
-## 日期计算函数
-
-1. `date_add('某个日期时间', interval 1 时间种类名称)`，日期时间加计算
-
-   时间种类名称：`quarter`-季度，`week`-周，`day`-天，`hour`-小时，`minute`-分钟，`second`-秒，`microsecond`-毫秒
-
-   示例：
-
-   * `select date_add('2022-07-20', interval 1 day)`
-   * `select date_add('2022-07-20 14:20:21', interval 1 day)`
-
-2. `date_sub()`，时期时间减计算
-
-   示例：
-
-   * `select date_sub('2022-07-20', interval 1 day)`
-   * `select date_sub('2022-07-20 14:20:21', interval 1 day)`
-
-3. `datediff()`，日期相减计算差值
-
-4. `timediff()`，时间相减计算差值
-
-5. `now()`，当前具体的日期和时间
-
-6. `curdate()`，当前日期
-
-7. `curtime()`，当前时间
