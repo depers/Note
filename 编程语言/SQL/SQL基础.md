@@ -7,7 +7,8 @@ CREATE DATABASE IF NOT EXISTS db_test_1 DEFAULT CHARSET utf8 COLLATE utf8_genera
 SHOW CREATE DATABASE db_test_1;
 ```
 
-#### 创建一个数据表
+# 创建一个数据表
+## 创建一个新表
 ```
 CREATE TABLE `mytable1` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -20,38 +21,47 @@ CREATE TABLE `mytable1` (
 ```
 SHOW CREATE TABLE mytable;
 ```
+## 依据现有表结构创建新表
+### 只复制表结构
+```
+create table `mytable2` like `mytable`;
+```
+### 复制数据和表结构
+```
+create table `mytable2` select * from `mytable`;
+```
 
-------------------------插入------------------------
+# 插入
 
-#### 插入一条数据
+## 插入一条数据
 ```
 INSERT INTO mytable(col1, col2) VALUES(1811942438, 'FENGXIAO'); --其中col1的长度定为11，其中一位为符号位，所以只能插入10位数字。
 ```
 
-#### 插入检索出的数据
+## 插入检索出的数据
 ```
 INSERT INTO mytable1(col1, col2)
 SELECT col1, col2
 FROM mytable2;
 ```
 
-#### 将一个表的内容复制到一个新表
+## 将一个表的内容复制到一个新表
 ```
 CREATE TABLE newtable AS
 SELECT * FROM mytable;
 ```
 
-#### 更新
+# 更新
 ```
 UPDATE mytable SET col2 = 'xiaoming' WHERE id = 1;
 ```
 
-#### 删除
+# 删除
 ```
 DELETE FROM mytable1 WHERE id = 1;
 ```
 
-#### 清空表
+# 清空表
 ```
 TRUNCATE TABLE newtable;
 ```
@@ -81,12 +91,18 @@ DROP TABLE newtable;
 
 
 -----------------------查询--------------------------
-#### DISTINCT 去重查询关键字
+#### DISTINCT 
+
+去重查询关键字
+
 ```
  SELECT DISTINCT col1 FROM mytable;
 ```
 
-#### LIMIT 限制返回的行数。两个参数，第一个起始行，从0开始；第二个参数为返回的总函数；
+#### LIMIT 
+
+限制返回的行数。两个参数，第一个起始行，从0开始；第二个参数为返回的总函数；
+
 #### 返回前五行：
 ```
 SELECT * FROM mytable LIMIT 5;
