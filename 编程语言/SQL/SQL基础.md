@@ -1,15 +1,15 @@
 #### 创建一个数据库
 
-```
+```sql
 CREATE DATABASE IF NOT EXISTS db_test_1 DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 ```
-```
+```sql
 SHOW CREATE DATABASE db_test_1;
 ```
 
 # 创建一个数据表
 ## 创建一个新表
-```
+```sql
 CREATE TABLE `mytable1` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `col1` int(11) NOT NULL DEFAULT '1',
@@ -18,7 +18,9 @@ CREATE TABLE `mytable1` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ```
-```
+查看建表语句：
+
+```sql
 SHOW CREATE TABLE mytable;
 ```
 ## 依据现有表结构创建新表
@@ -34,120 +36,137 @@ create table `mytable2` select * from `mytable`;
 # 插入
 
 ## 插入一条数据
-```
+```sql
 INSERT INTO mytable(col1, col2) VALUES(1811942438, 'FENGXIAO'); --其中col1的长度定为11，其中一位为符号位，所以只能插入10位数字。
 ```
 
-## 插入检索出的数据
+## 插入多条数据
+
+```sql
+INSERT INTO mytbale (col1, col2)
+VALUES
+(val1, val2),
+(val1, val2);
 ```
+
+## 插入检索出的数据
+
+```sql
 INSERT INTO mytable1(col1, col2)
 SELECT col1, col2
 FROM mytable2;
 ```
 
 ## 将一个表的内容复制到一个新表
-```
+```sql
 CREATE TABLE newtable AS
 SELECT * FROM mytable;
 ```
 
 # 更新
-```
+```sql
 UPDATE mytable SET col2 = 'xiaoming' WHERE id = 1;
 ```
 
 # 删除
-```
+```sql
 DELETE FROM mytable1 WHERE id = 1;
 ```
 
 # 清空表
-```
+```sql
 TRUNCATE TABLE newtable;
 ```
 
-----------------------修改表-------------------------
+# 修改表
 
 #### 添加列
-```
+```sql
 ALTER TABLE mytable ADD col4 CHAR(20);
 ```
 
 #### 修改列
-```
+```sql
 ALTER TABLE test MODIFY col1 col_1 CHAR(20);
 ALTER TABLE test CHANGE col1 col_1 CHAR(20);
 ```
 
 #### 删除列
-```
+```sql
 ALTER TABLE mytable DROP COLUMN col3;
 ```
 
-#### 删除表
-```
+# 删除表
+
+```sql
 DROP TABLE newtable;
 ```
 
+# 查询
 
------------------------查询--------------------------
-#### DISTINCT 
+## DISTINCT 
 
 去重查询关键字
 
-```
- SELECT DISTINCT col1 FROM mytable;
+```sql
+SELECT DISTINCT col1 FROM mytable;
 ```
 
-#### LIMIT 
+## LIMIT 
 
 限制返回的行数。两个参数，第一个起始行，从0开始；第二个参数为返回的总函数；
 
-#### 返回前五行：
-```
+* 返回前五行：
+
+```sql
 SELECT * FROM mytable LIMIT 5;
 
 SELECT * FROM mytable LIMIT 0, 5;
 ```
-#### 返回3~5行：
-```
+* 返回3~5行：
+
+```sql
 SELECT * FROM mytable LIMIT 2, 5;
 ```
 
---------------------排序----------------------------
-#### ASC：升序（默认）
-#### DESC：降序
-#### 可以按多个列进行排序，并且为每个列指定不同的排序方式：
+## 排序
+
+* `ASC`：升序（默认）
+
+* `DESC`：降序
+
+可以按多个列进行排序，并且为每个列指定不同的排序方式：
+
 ```
 SELECT * FROM mytable
 ORDER BY col DESC, col2 ASC;
 ```
 
-----------------------过滤----------------------------
-#### 过滤条件就是在WHERE 后面要写的查询条件，主要有以下几类：
+## 过滤
 
-1) =、 <、 >、 等于 小于 大于
+### 比较运算符
 
-2）<>、!= 不等于
+过滤条件就是在WHERE 后面要写的查询条件，主要有以下几类：
 
-3）<=、!> 小于等于
+1. `=`、 `<`、 `>`、 等于 小于 大于
 
-4) >=、!< 大于等于
+2. `<>`、`!= `不等于
 
-5）BETWEEN...AND 在两个值之间
+3. `<=`、`!> `小于等于
 
-6）IS NULL 为NULL值
+4. `>=`、`!<` 大于等于
 
-注意：
-​    
+5. `BETWEEN...AND` 在两个值之间
 
-NULL 与 0 、空字符串都不同；
-​    
+6. `IS NULL `为NULL值
+
+注意：`NULL`与 `0 `、空字符串的含义并不相同；
+
+### 逻辑运算符
 
 AND OR 用于连接多个过滤条件。优先处理 AND，因此当一个过滤表达式涉及到多个 AND 和 OR 时，应当使用 () 来决定优先级。
 ​    IN 操作符用于匹配一组值，其后也可以接一个 SELECT 子句，从而匹配子查询得到的一组值。
 ​    NOT 操作符用于否定一个条件。
-
 
 --------------------通配符-------------------------
 1）通配符也是用在过滤语句中，但它只能用于文本字段。
