@@ -1,5 +1,17 @@
 # Java8学习笔记
 
+## 方法引用
+
+- Function
+
+  java.util.function.Function<T, R>接口定义了一个叫作apply的方法，它接受一个**泛型T**的对象，并返回一个**泛型R**的对象，并对将泛型T作为apply的参数。
+
+- Predicate
+
+  接口定义了一个名叫test的抽象方法，它接受**泛型T对象**，并返回一个**boolean**。
+
+* Comparator
+
 ## 7.重构或测试
 
 ### 增加代码的灵活性
