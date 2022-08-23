@@ -318,9 +318,9 @@ hibernate.validator校验框架的学习：
 
 1. 常用的验证注解
 
-   ![](E:\markdown笔记\笔记图片\19\7.png)
+   ![](..\笔记图片\19\7.png)
 
-   ![8](E:\markdown笔记\笔记图片\19\8.png)
+   ![8](..\笔记图片\19\8.png)
 
 2. 自定义消息
 
@@ -552,7 +552,7 @@ hibernate.validator校验框架的学习：
   
   2. 切片的定义
   
-     ![](E:\markdown笔记\笔记图片\19\9.png)
+     ![](..\笔记图片\19\9.png)
   
      * 切片类
      * 切入点
@@ -560,7 +560,7 @@ hibernate.validator校验框架的学习：
 
 ### 8.Filter、Inteceptor、ControllerAdvice、Aspect和Controller的关系
 
-![](E:\markdown笔记\笔记图片\19\10.png)
+![](..\笔记图片\19\10.png)
 
 * 6、7节所讲的内容的调用顺序如上图所示
 * 从外到内，依次是Filter、Interceptor、ControllerAdvice、Aspect、Controller
@@ -585,7 +585,7 @@ hibernate.validator校验框架的学习：
 
 ### 10.异步处理REST服务
 
-![](E:\markdown笔记\笔记图片\19\11.png)
+![](..\笔记图片\19\11.png)
 
 * 传统的同步处理机制，是主线程接收http请求，然后处理，最后主线程输出http响应
 * 异步处理机制，是主线程接收http请求，副线程处理，最后再由主线程输出http响应。在副线程处理的时候，主线程还可以处理别的http请求，提高的服务的吞吐量。
@@ -596,11 +596,11 @@ hibernate.validator校验框架的学习：
 
    * 执行的结果：
 
-     ![](E:\markdown笔记\笔记图片\19\14.png)
+     ![](..\笔记图片\19\14.png)
 
 2. 使用DeferredResult一步处理Rest服务
 
-   ![](E:\markdown笔记\笔记图片\19\12.png)
+   ![](..\笔记图片\19\12.png)
 
    下面根据上图进行模拟：
 
@@ -612,7 +612,7 @@ hibernate.validator校验框架的学习：
 
    * 日志结果：
 
-     ![](E:\markdown笔记\笔记图片\19\15.png)
+     ![](..\笔记图片\19\15.png)
 
 3. 异步处理配置
 
@@ -742,11 +742,11 @@ Spring Security核心功能
 
   2. 然后启动项目，在浏览器中请求http://localhost:8060/user，就会出现下图的图片：
 
-     ![](E:\markdown笔记\笔记图片\19\16.png)
+     ![](..\笔记图片\19\16.png)
 
   3. 然后在浏览器中输入用户名user，密码是项目启动时控制台打印的一串字符串：
 
-     ![](E:\markdown笔记\笔记图片\19\17.png)
+     ![](..\笔记图片\19\17.png)
 
   4. 登录之后就可以获取到请求的连接资源了
 
@@ -774,7 +774,7 @@ Spring Security核心功能
 
   2. 启动项目之后，在浏览器中输入http://localhost:8060/user，就会出现下图的图片，后面的操作和上面的一样。
 
-     ![](E:\markdown笔记\笔记图片\19\18.png)
+     ![](..\笔记图片\19\18.png)
 
   3. 如果你不想使用formLogin进行验证，想通过httpBasic方式进行验证，修改cn.bravedawn.browser.BrowserSecurityConfig：
 
@@ -801,7 +801,7 @@ Spring Security核心功能
 
 * Spring Security基本原理
 
-  ![](E:\markdown笔记\笔记图片\19\19.png)
+  ![](..\笔记图片\19\19.png)
 
   1. UsernamePasswordAuthenticationFilter（`http..formLogin()`）、BasicAuthenticationFilter（`http.httpBasic()`）
 
@@ -877,7 +877,7 @@ Spring Security核心功能
 
    * spring默认实现的加密算法，每次登陆的加密字符串都是不同的。如下图所示：
 
-     ![](E:\markdown笔记\笔记图片\19\20.png)
+     ![](..\笔记图片\19\20.png)
 
 ### 4.个性化用户认证流程
 
@@ -921,7 +921,7 @@ Spring Security核心功能
 
    * 处理不同类型的请求
 
-   ![](E:\markdown笔记\笔记图片\19\21.png)
+   ![](..\笔记图片\19\21.png)
 
      1. 编辑自定义的Controller方法，编辑cn.bravedawn.BrowserSecurityController
 
@@ -1035,7 +1035,7 @@ Spring Security核心功能
 
 1. 认证处理流程说明，下面是整个调用的流程
 
-   ![](E:\markdown笔记\笔记图片\19\23.png)
+   ![](..\笔记图片\19\23.png)
 
    * org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter#**doFilter**
    * org.springframework.security.web.authentication.**UsernamePasswordAuthenticationFilter**#attemptAuthentication
@@ -1059,7 +1059,7 @@ Spring Security核心功能
 
    spring security将用户信息放到了session中，具体是如何操作的
 
-   ![](E:\markdown笔记\笔记图片\19\24.png)
+   ![](..\笔记图片\19\24.png)
 
    * 在org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter#successfulAuthentication方法中
 
@@ -1077,7 +1077,7 @@ Spring Security核心功能
 
    * org.springframework.security.web.context.SecurityContextPersistenceFilter
 
-     ![](E:\markdown笔记\笔记图片\19\25.png)
+     ![](..\笔记图片\19\25.png)
 
      功能：
 
@@ -1147,7 +1147,7 @@ Spring Security核心功能
 
 1. 验证码基本参数可配置
 
-   ![](E:\markdown笔记\笔记图片\19\26.png)
+   ![](..\笔记图片\19\26.png)
 
    * 默认配置
 
@@ -1235,9 +1235,9 @@ Spring Security核心功能
 
 1. 记住我功能基本原理
 
-   ![](E:\markdown笔记\笔记图片\19\27.png)
+   ![](..\笔记图片\19\27.png)
 
-   ![28](E:\markdown笔记\笔记图片\19\28.png)
+   ![28](..\笔记图片\19\28.png)
 
    上图中可以看到RememberMeAuthenticationFilter在过滤器链的位置。
 
