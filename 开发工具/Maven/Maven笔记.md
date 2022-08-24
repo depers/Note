@@ -316,4 +316,67 @@ pom文件的基本结构如下：
 
    运行下面的命令执行程序：`mvn exec:java`
 
-   
+
+## 2. Apache Maven Standard Directory Layout
+
+> 2022年8月24日 陕西西安
+
+促进项目之间的统一目录结构也是Maven的重要功能之一。
+
+### 目录布局
+
+Maven项目的标准目录布局：
+
+```
+└───maven-project
+    ├───pom.xml
+    ├───README.txt
+    ├───NOTICE.txt
+    ├───LICENSE.txt
+    └───src
+        ├───main
+        │   ├───java
+        │   ├───resources
+        │   ├───filters
+        │   └───webapp
+        ├───test
+        │   ├───java
+        │   ├───resources
+        │   └───filters
+        ├───it
+        ├───site
+        └───assembly
+```
+
+### 根目录
+
+根目录每一个目录的功能和含义如下：
+
+* *maven-project/pom.xml* - 定义 Maven 项目构建生命周期中所需的依赖项和模块
+* *maven-project/LICENSE.txt* - 项目的许可证资料
+* *maven-project/NOTICE.txt* - 项目中使用的第三方库的信息
+* *maven-project/src/main* - 作为打包构建主要部分，包含源代码和资源文件
+* *maven-project/src/test* - 存放所有的测试代码和资源
+* *maven-project/src/it* - 通常保留用于 Maven 故障安全插件所使用的集成测试
+* *maven-project/src/site* - 使用 Maven 站点插件创建的站点文档
+* *maven-project/src/assembly* - 封装二进制程序的组装配置
+
+### src/main 目录
+
+src/main 是 Maven 项目中最重要的目录。
+
+* *src/main/java* - 构件的Java源代码
+* *src/main/resources* - 配置文件和其他文件，例如 i18n 文件、每个环境配置文件和 XML 配置
+* *src/main/webapp* - 对于 Web 应用程序，包含 JavaScript、 CSS、 HTML 文件、视图模板和图像等资源
+* *src/main/filters* - 包含在构建阶段将值注入到资源文件夹中的配置属性的文件
+
+### src/test目录
+
+src/test 是Maven存放测试代码的地方。
+
+值得注意是，这些目录或文件都不会成为构件的一部分。
+
+* *src/test/java* - 测试的Java源代码
+* *src/test/resources* - 用于测试的配置文件和其他文件
+* *src/test/filters* - 包含在测试阶段将值注入到资源文件夹中的配置属性的文件
+
