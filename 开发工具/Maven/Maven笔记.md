@@ -187,11 +187,13 @@ pom文件的基本结构如下：
    mvn clean install -Pproduction
    ```
 
- ### Maven构建的声明周期
+ ### Maven构建的生命周期
 
 每个 Maven 构建都遵循特定的生命周期。
 
-1. Maven生命周期的各个阶段
+1. Maven生命周期的阶段
+
+下面列出了 Maven 生命周期中最重要的阶段:
 
    * *validate* – 检查项目的正确性
    * *compile* – 将源代码编译成二进制构件
