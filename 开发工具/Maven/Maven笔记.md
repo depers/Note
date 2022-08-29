@@ -380,3 +380,185 @@ src/test 是Maven存放测试代码的地方。
 * *src/test/resources* - 用于测试的配置文件和其他文件
 * *src/test/filters* - 包含在测试阶段将值注入到资源文件夹中的配置属性的文件
 
+## 3. Maven Local Repository
+
+## 4. Maven Goals and Phases
+
+> 2022年8月26日 陕西西安
+
+### 概述
+
+这篇文章中，主要探讨Maven构建的生命周期及其阶段，还有就是目标（Goals）和阶段（Phases）的核心关系。
+
+### Maven构建的生命周期
+
+Maven的构建遵从一个特定的生命周期去部署和分发目标项目，Maven内置的生命周期有如下三个：
+
+* default：主生命周期，负责项目部署
+* clean：清理项目并删除之前构建所生成的所有文件
+* site：创建项目的站点文档
+
+每一个生命周期都是由一系列阶段（Phase）组成。default生命周期由23个阶段组成，因为他是构建的主要生命周期。除此之外，clean的生命周期由3个阶段组成，而site生命周期由4和阶段组成。
+
+### Maven Phase
+
+Maven Phase是代表Maven构建生命周期中的一个阶段，下面是default生命周期的最重要的一些阶段：
+
+- *validate* – 检查项目的正确性
+- *compile* – 将源代码编译成二进制构件
+- *test-compile* - 编译测试源代码
+- *test* – 执行单元测试
+- *package* – 将编译后的代码打包到归档文件中
+- *integration-test* – 执行额外的测试
+- *install* – 将打包好的文件安装（保存）到本地仓库中
+- *deploy* – 将打包好的文件部署到远程服务器或仓库中
+
+对于每个生命周期阶段的完整列表，参考：[Lifecycle Reference](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Lifecycle_Reference)
+
+**Phase是以特定顺序执行的，这意味着如果我们执行一个特定的Phase，使用的命令是：`mvn <Phase>`，它不仅要执行指定的阶段，还要执行前面的所有阶段。**
+
+```
+mvn deploy
+```
+
+例如，如果我们运行deploy阶段，这是默认构建生命周期的最后一个Phase，它会在deploy阶段之前执行所有的阶段，其实他执行了default的整个生命周期。
+
+### Maven Goal
+
+每个阶段包含一系列的目标，每个目标负责一个特定的任务。当我们运行一个阶段时，所有绑定到该阶段的目标都会按顺序执行。以下是一些与之相关的阶段和其默认目标：
+
+- *compiler:compile* - 编译器插件的 *compile* 目标绑定到 *compile* 阶段
+- *compiler:testCompile* - 绑定到 *test-compile* 阶段
+- *surefire:test* - 绑定到 *test* 阶段
+- *install:install* is bound to the *install* phase
+- *jar:jar* and *war:war* - 绑定到 *package* 阶段
+
+我们可以使用下面的命令列出与特定阶段相关的所有目标及其插件：
+
+```
+mvn help:describe -Dcmd=<PHASENAME>
+```
+
+例如，要列出与编译阶段有关的所有目标，我们可以运行：
+
+```
+mvn help:describe -Dcmd=compile
+```
+
+我们得到的输出如下：
+
+```
+compile' is a phase corresponding to this plugin: // 编译时与这个插件相对应的一个阶段
+org.apache.maven.plugins:maven-compiler-plugin:3.1:compile
+```
+
+如上所述，这意味着 *maven-compiler-plugin* 插件的 *compile* 目标绑定到 *compile* 阶段。
+
+### Maven Plugin
+
+**插件是为 Maven 提供目标的工件。**此外，一个插件可能有一个或多个目标，其中每个目标代表该插件的功能。例如，编译器插件有两个目标：`compile` and `testCompile`. 。前者编译主代码的源代码，而后者编译测试代码的源代码。Maven 插件是一组目标。 然而，这些目标不一定都绑定到同一个阶段。
+
+例如，这里有一个简单的 Maven 故障安全插件配置，它负责运行集成测试：
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${maven.failsafe.version}</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>integration-test</goal>
+                        <goal>verify</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+```
+
+正如我们所看到的，故障安全插件在这里有两个主要的配置目标：
+
+- *integration-test*：运行集成测试
+- *verify*：验证所有通过的集成测试
+
+我们可以使用下面的命令在一个特定的插件中列出其所有的目标：
+
+```
+mvn <PLUGIN>:help
+```
+
+例如，要列出*failsafe plugin*的所有目标，我们可以运行:
+
+```
+mvn failsafe:help
+```
+
+输出结果将是：
+
+```
+This plugin has 3 goals:
+
+failsafe:help
+  Display help information on maven-failsafe-plugin.
+  Call mvn failsafe:help -Ddetail=true -Dgoal=<goal-name> to display parameter
+  details.
+
+failsafe:integration-test
+  Run integration tests using Surefire.
+
+failsafe:verify
+  Verify integration tests ran using Surefire.
+```
+
+**要运行一个特定的目标而不执行它的整个阶段(和前面的阶段) ，我们可以使用以下命令：**
+
+```
+mvn <PLUGIN>:<GOAL>
+```
+
+例如，要运行*failsafe plugin的*  *integration-test* 目标，我们需要运行:
+
+```
+mvn failsafe:integration-test
+```
+
+### Building a Maven Project
+
+要构建一个 Maven 项目，我们需要通过运行其中一个阶段来执行一个生命周期，这将执行整个*default* 生命周期：
+
+```
+mvn deploy
+```
+
+或者，我们可以停止在 *install* 阶段:
+
+```
+mvn install
+```
+
+但通常情况下，我们首先会在新构建之前运行*clean* 生命周期去清理项目：
+
+```
+mvn clean install
+```
+
+我们也可以只运行插件的一个特定目标:
+
+```
+mvn compiler:compile
+```
+
+**注意：**如果我们尝试构建 Maven 项目而没有指定阶段或目标，我们将得到一个错误:
+
+```
+[ERROR] No goals have been specified for this build. You must specify a valid lifecycle phase or a goal
+```
+
+### 总结
+
+* Maven有三个内置的生命周期
+* 一个声明周期里面包含若干个阶段；一个阶段里面包含了若干个目标；插件是一组目标。
+* 阶段和插件是什么关系呢？我的理解是阶段的执行要借助插件来实现。
