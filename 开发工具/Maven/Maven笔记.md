@@ -1,3 +1,8 @@
+# LOG
+
+* 2022/08/30 陕西西安 更新 *5. Install local jar with Maven*
+* 2022/09/06 陕西西安 更新 *6，7 两篇文章*
+
 # Maven Basics
 
 ## 1. Apache Maven Tutorial
@@ -384,6 +389,70 @@ src/test 是Maven存放测试代码的地方。
 
 ## 3. Maven Local Repository
 
+> 2022年9月5日 陕西西安
+
+### 概述
+
+本文主要介绍在Maven本地存储库的目录配置。
+
+简单地说，当我们运行 Maven 构建时，我们项目的依赖项（jar、插件 jar、其他工件）都存储在本地以供以后使用。
+
+Maven支持三种类型的存储库：
+
+1. *Local* - 本地开发机器上的文件夹位置
+2. *Central* – Maven 社区提供的存储库
+3. *Remote* - 组织拥有的自定义存储库
+
+### 本地存储库
+
+Maven 的本地存储库是本地机器上存储所有项目工件的目录。当我们执行 Maven 构建时，Maven 会自动将所有依赖项 jar 下载到本地存储库中。 通常，此目录名为 `.m2`。
+
+以下是基于操作系统的默认本地存储库所在的位置：
+
+```bash
+Windows: C:\Users\<User_Name>\.m2
+```
+
+```
+Linux: /home/<User_Name>/.m2
+```
+
+```
+Mac: /Users/<user_name>/.m2
+```
+
+对于 Linux 和 Mac，我们可以用简短的形式来写：
+
+```
+~/.m2
+```
+
+### 自定义本地存储库的位置
+
+如果在默认目录下不存在依赖项文件，则可能是因为某些预先存在的配置导致的。该配置文件位于 Maven 安装目录中名为 conf 的文件夹中，名称为 settings.xml。
+
+配置如下：
+
+```
+<settings>
+    <localRepository>C:/maven_repository</localRepository>
+    ...
+```
+
+如果修改了这个配置，之前存储在较早位置的依赖项文件不会自动移动。
+
+### 通过命令行传递本地存储库位置
+
+除了在 Maven 的 settings.xml 中设置自定义本地存储库外，mvn 命令还支持 `maven.repo.local` 属性，它允许我们将本地存储库位置作为命令行参数传递：
+
+```
+mvn -Dmaven.repo.local=/my/local/repository/path clean install
+```
+
+这样，我们就不用修改Maven的settings.xml了。
+
+
+
 ## 4. Maven Goals and Phases
 
 > 2022年8月26日 陕西西安
@@ -458,7 +527,7 @@ org.apache.maven.plugins:maven-compiler-plugin:3.1:compile
 
 ### Maven Plugin
 
-**插件是为 Maven 提供目标的工件。**此外，一个插件可能有一个或多个目标，其中每个目标代表该插件的功能。例如，编译器插件有两个目标：`compile` and `testCompile`. 。前者编译主代码的源代码，而后者编译测试代码的源代码。Maven 插件是一组目标。 然而，这些目标不一定都绑定到同一个阶段。
+**插件是为 Maven 提供目标的工件。**此外，一个插件可能有一个或多个目标，其中每个目标代表该插件的功能。例如，编译器插件有两个目标：`compile` and `testCompile` 。前者编译主代码的源代码，而后者编译测试代码的源代码。Maven 插件是一组目标。 然而，这些目标不一定都绑定到同一个阶段。
 
 例如，这里有一个简单的 Maven 故障安全插件配置，它负责运行集成测试：
 
@@ -562,5 +631,404 @@ mvn compiler:compile
 ### 总结
 
 * Maven有三个内置的生命周期
-* 一个声明周期里面包含若干个阶段；一个阶段里面包含了若干个目标；插件是一组目标。
+* 一个声明周期里面包含若干个阶段；一个阶段里面包含了若干个目标，目标需要绑定到阶段去执行；插件是一组目标。
 * 阶段和插件是什么关系呢？我的理解是阶段的执行要借助插件来实现。
+
+
+
+## 5. Install local jar with Maven
+
+> 2022年8月24日 陕西西安
+
+### 问题和选择
+
+Maven 是一个非常通用的工具，其可用的公共存储库是首屈一指的。 但是，总会有一个工件（依赖）没有托管在任何地方，或者托管它的存储库存在依赖风险，因为它可能在您需要时你的项目无法正常启动。
+
+当这种情况发生时，有几种解决办法：
+
+1. 安装 Nexus 等成熟的**存储库管理**解决方案
+2. 试着把工件（依赖）上传到一个更有声望的公共仓库
+3. **使用 maven 插件在本地安装工件（依赖）**
+
+Nexus 当然是更成熟的解决方案，但也更复杂。 配置一个实例来运行 Nexus，设置 Nexus 本身，配置和维护它对于像使用单个 jar 这样简单的问题可能是矫枉过正的。 但是，如果这种场景（托管自定义工件）很常见，那么存储库管理器就很有意义。
+
+将工件直接上传到公共存储库或 Maven 中心也是一个很好的解决方案，但通常会耗时很长。 此外，该库可能根本没有启用 Maven，这使得该过程变得更加困难，因此现在能够使用该工件并不是一个现实的解决方案。
+
+这留下了第三个选项——在源代码控制中添加工件并使用 maven 插件——在这种情况下，`maven-install-plugin`在构建过程需要它之前先在本地安装它。 这是迄今为止最简单、最可靠的选择。
+
+### 通过*maven-intsall-plugin*安装本地jar
+
+让我们从将工件（依赖）安装到本地存储库所需的完整配置开始：
+
+```xml
+<plugin>
+   <groupId>org.apache.maven.plugins</groupId>
+   <artifactId>maven-install-plugin</artifactId>
+   <version>2.5.1</version>
+   <configuration>
+      <groupId>org.somegroup</groupId>
+      <artifactId>someartifact</artifactId>
+      <version>1.0</version>
+      <packaging>jar</packaging>
+      <file>${basedir}/dependencies/someartifact-1.0.jar</file>
+      <generatePom>true</generatePom>
+   </configuration>
+   <executions>
+      <execution>
+         <id>install-jar-lib</id>
+         <goals>
+            <goal>install-file</goal>
+         </goals>
+         <phase>validate</phase>
+      </execution>
+   </executions>
+</plugin>
+```
+
+让我们分解并分析这个配置的细节。
+
+#### 2.1 工件信息
+
+构件信息被定义为 `< configuration >` 元素的一部分。实际的语法非常类似于声明依赖项-*groupId*、 *artifactId* 和 *version* 元素。
+
+```xml
+<groupId>org.somegroup</groupId>
+<artifactId>someartifact</artifactId>
+<version>1.0</version>
+```
+
+配置的下一部分需要定义工件的 *packaging* ——这被指定为 `jar`。
+
+```
+<packaging>jar</packaging>
+```
+
+接下来，我们需要提供要安装实际 jar 文件的位置——这可以是绝对文件路径，也可以是相对路径，这里可以使用使用 Maven 中可用的属性。 在这种情况下，`${basedir}` 属性代表项目的根，即 `pom.xml` 文件所在的位置。 这意味着 `someartifact-1.0.jar` 文件需要放在根目录下的 `/dependencies/` 目录中。
+
+```xml
+<file>${basedir}/dependencies/someartifact-1.0.jar</file>
+```
+
+最后，还可以配置其他一些可选细节，具体可以参考：https://maven.apache.org/plugins/maven-install-plugin/install-file-mojo.html
+
+#### 2.2 执行
+
+***install-file goal*** 的执行绑定到标准 Maven 构建生命周期的 ***validate phase***。 因此，在尝试编译之前——您需要显式运行验证阶段：
+
+```
+mvn validate
+```
+
+在这一步之后，标准编译将起作用：
+
+```
+mvn clean install
+```
+
+一旦编译阶段执行完毕，我们的 `someartifact-1.0.jar` 就会正确安装在我们的本地存储库中，就像可能从 Maven 中心本身检索到的任何其他工件一样。
+
+#### 2.3 生成pom与提供pom
+
+我们是否需要为工件提供 `pom.xml` 文件的问题主要取决于**工件本身的运行时依赖关系**。
+
+如果运行时**没有依赖关系**，它只是一个简单的工件，此时我们只需要生成`pom`。`install-file` 目标中的 `generatePom` 选项应该足以处理这些类型的工件：
+
+```xml
+<generatePom>true</generatePom>
+```
+
+如果工件在运行时**依赖于其他 jar**，则这些 jar 也需要在运行时出现在类路径中，此时我们就需要提供`pom`去添加它们，这里我们可以提供自定义的`pom`文件和已安装的工件：
+
+```
+<generatePom>false</generatePom>
+<pomFile>${basedir}/dependencies/someartifact-1.0.pom</pomFile>
+```
+
+这将允许 Maven 解析此自定义 `pom.xml` 中定义的工件的所有依赖项，而无需在项目的主 pom 文件中手动定义它们。
+
+### 总结
+
+本文介绍了如何通过使用 `maven-install-plugin` 将其安装在本地来使用未托管在 Maven 项目中的任何地方的 jar。
+
+参考原文：https://www.baeldung.com/install-local-jar-with-maven/
+
+## 6. Maven Deploy to Nexus
+
+> 2022年9月5日
+>
+> 没有进行实操验证
+
+### 概述
+
+上一节中我们讨论了如何将以一个第三方jar包安装到本地的存储库，这种方式非常适合小项目。但是随着项目的发展，Nexus 很快成为托管第三方工件以及跨开发流重用内部工件的唯一真正成熟的选择。这篇文章我们主要讨论如何将一个第三方工件通过maven部署到Nexus上。
+
+### 定义存储库信息
+
+为了让 Maven 能够部署在构建的打包阶段创建的工件，它需要通过 `distributionManagement` 元素定义将在其中部署打包工件的存储库信息：
+
+```xml
+<distributionManagement>
+   <snapshotRepository>
+      <id>nexus-snapshots</id>
+      <name>snapshot Respository</name>
+      <url>http://localhost:8081/nexus/content/repositories/snapshots</url>
+   </snapshotRepository>
+</distributionManagement>
+```
+
+### Plugins
+
+默认情况下，Maven 通过 `maven-deploy-plugin` 处理部署机制——这映射到默认 Maven 生命周期的 *deploy* 阶段：
+
+```xml
+<plugin>
+   <groupId>org.apache.maven.plugins</groupId>
+   <artifactId>maven-deploy-plugin</artifactId>
+   <version>2.8.1</version>
+   <executions>
+      <execution>
+         <id>default-deploy</id>
+         <phase>deploy</phase>
+         <goals>
+            <goal>deploy</goal>
+         </goals>
+      </execution>
+   </executions>
+</plugin>
+```
+
+除了用 *maven-deploy-plugin* 外，我们还可以使用 *nexus-staging-maven-plugin* 这个插件，这个插件为了充分利用 Nexus 提供的功能而构建的。在使用这个插件之前，我们首先要禁用 *maven-deploy-plugin* 的配置，使用 `<skip>true</skip>`（或者直接删除这个配置）
+
+```xml
+<plugin>
+   <groupId>org.apache.maven.plugins</groupId>
+   <artifactId>maven-deploy-plugin</artifactId>
+   <version>${maven-deploy-plugin.version}</version>
+   <configuration>
+      <skip>true</skip>
+   </configuration>
+</plugin>
+```
+
+接着我们定义如下配置：
+
+```xml
+<plugin>
+   <groupId>org.sonatype.plugins</groupId>
+   <artifactId>nexus-staging-maven-plugin</artifactId>
+   <version>1.5.1</version>
+   <executions>
+      <execution>
+         <id>default-deploy</id>
+         <phase>deploy</phase>
+         <goals>
+            <goal>deploy</goal>
+         </goals>
+      </execution>
+   </executions>
+   <configuration>
+      <serverId>nexus</serverId>
+      <nexusUrl>http://localhost:8081/nexus/</nexusUrl>
+      <skipStaging>true</skipStaging>
+   </configuration>
+</plugin>
+```
+
+这个插件的部署 *goal* 映射到 Maven 构建的 *deploy* 阶段。在将 -SNAPSHOT 工件简单部署到 Nexus 时，我们不需要暂存功能，因此可以通过 `<skipStaging>` 元素完全禁用它。
+
+### 全局配置setting.xml
+
+部署自己的jar包到Nexus是一项安全操作，需要在Maven全局setting.xml文件中配置服务器的凭证，下面是基于原始和明文凭据的定义如下：
+
+* `servers.server.id` 对应`distributionManagement.snapshotRepository.id`的配置
+
+```
+<servers>
+   <server>
+      <id>nexus-snapshots</id>
+      <username>deployment</username>
+      <password>the_pass_for_the_deployment_user</password>
+   </server>
+</servers>
+```
+
+服务器还可以配置为使用基于密钥的安全性，而不是原始和明文凭据。
+
+### 部署过程
+
+执行部署过程，输入如下指令：
+
+```
+mvn clean deploy -Dmaven.test.skip=true
+```
+
+其中`-Dmaven.test.skip=true`是在部署作业的上下文中跳过测试，因为该作业应该是项目部署管道中的最后一个作业。这种部署管道的一个常见示例是一系列 Jenkins 作业，每个作业只有在成功完成时才会触发下一个作业。因此，管道中先前作业的责任是运行项目中的所有测试套件——当部署作业运行时，所有测试都应该已经通过。
+
+若我们执行这句命令，之前的测试会在部署之前重新执行一遍：
+
+```
+mvn clean deploy
+```
+
+### 总结
+
+本文介绍了将 Maven 工件部署到 Nexus 的简单但高效的解决方案：
+
+1. 通过 *maven-deploy-plugin* 进行实现（默认）
+2. 通过 *nexus-staging-maven-plugin* 进行实现，暂存功能被禁用（staging functionality）
+
+### 参考文章
+
+* https://zhuanlan.zhihu.com/p/141676033
+
+## 7. Maven Release to Nexus
+
+> 2022年9月6日 陕西西安
+>
+> 没有进行实操验证
+
+### 概要
+
+在的上一篇文章中，我们设置了一个使用 Maven 到 Nexus 的部署过程。 在本文中，我们将在项目的 pom 以及 Jenkins 作业中使用 Maven 配置发布流程。
+
+### 在pom中配置存储库
+
+为了让 Maven 能够发布到 Nexus Repository Server，我们需要通过 `distributionManagement` 元素定义存储库信息：
+
+```
+<distributionManagement>
+   <repository>
+      <id>nexus-releases</id>
+      <url>http://localhost:8081/nexus/content/repositories/releases</url>
+   </repository>
+</distributionManagement>
+```
+
+### 在pom中定义SCM
+
+scm（Source Code/Control Management）源代码版本控制。
+
+发布过程将与项目的源代码控制交互——这意味着我们首先需要在 pom.xml 中定义 `<scm>` 元素：
+
+```xml
+<scm>
+   <connection>scm:git:https://github.com/user/project.git</connection>
+   <url>http://github.com/user/project</url>
+   <developerConnection>scm:git:https://github.com/user/project.git</developerConnection>
+</scm>
+```
+
+`connection`和`developerConnection`元素是一样的，是标记版本控制源代码的地址。
+
+`url`可以是你项目的主页或是github的项目页面。
+
+### 发布的插件
+
+发布进程使用的标准 Maven 插件是 `maven-release-plugin`——这个插件的配置是最少的：
+
+```xml
+<plugin>
+   <groupId>org.apache.maven.plugins</groupId>
+   <artifactId>maven-release-plugin</artifactId>
+   <version>2.4.2</version>
+   <configuration>
+      <tagNameFormat>v@{project.version}</tagNameFormat>
+      <autoVersionSubmodules>true</autoVersionSubmodules>
+      <releaseProfiles>releases</releaseProfiles>
+   </configuration>
+</plugin>
+```
+
+上面这段配置中，最重要的是`releaseProfiles`元素。这条配置会强制要求一个 Maven 配置文件——发布配置文件。
+
+在这个过程中，`nexus-staging-maven-plugin` 用于执行对 nexus-releases Nexus 存储库的部署：
+
+```xml
+<profiles>
+   <profile>
+      <id>releases</id> # 这里
+      <build>
+         <plugins>
+            <plugin>
+               <groupId>org.sonatype.plugins</groupId>
+               <artifactId>nexus-staging-maven-plugin</artifactId>
+               <version>1.5.1</version>
+               <executions>
+                  <execution>
+                     <id>default-deploy</id>
+                     <phase>deploy</phase>
+                     <goals>
+                        <goal>deploy</goal>
+                     </goals>
+                  </execution>
+               </executions>
+               <configuration>
+                  <serverId>nexus-releases</serverId>
+                  <nexusUrl>http://localhost:8081/nexus/</nexusUrl>
+                  <skipStaging>true</skipStaging>
+               </configuration>
+            </plugin>
+         </plugins>
+      </build>
+   </profile>
+</profiles>
+```
+
+该插件被配置为在没有暂存机制的情况下执行发布过程，与之前的部署过程相同（`skipStaging=true`）。
+
+除此之外，还需要在全局 settings.xml (`%USER_HOME%/.m2/settings.xml`) 中配置 nexus-releases 服务器的凭据：
+
+```xml
+<servers>
+   <server>
+      <id>nexus-releases</id>
+      <username>deployment</username>
+      <password>the_pass_for_the_deployment_user</password>
+   </server>
+</servers>
+```
+
+### 发布过程
+
+让我们将发布过程分解为一些小的、重点突出的步骤。
+
+#### 1. Release:Clean
+
+清理版本：
+
+* 删除发布描述符（release.properties）
+* 删除任何备份的 POM 文件
+
+#### 2. Release:prepare
+
+发布过程的下一部分是准备发布， 这将：
+
+* 执行一些检查。应该没有未提交的更改，并且项目应该不依赖于 SNAPSHOT 依赖项
+* 将 pom 文件中的项目版本更改为完整的版本号（删除 `SNAPSHOT` 后缀）。在我们的示例中为 0.1
+* 运行项目测试套件
+* 提交并推送更改
+* 使用此非 `SNAPSHOT` 版本代码创建标签
+* 在 pom 中增加项目的版本。在我们的例子中是`0.2-SNAPSHOT`
+* 提交并推送更改
+
+#### 3.  Release:perform
+
+Release过程的后半部分是执行发布，这将：
+
+* 从版本控制中检出release标签
+* 构建和部署发布的代码
+
+该过程的第二步依赖于 Prepare 步骤的输出。
+
+### 在Jenkins上
+
+这里对这块先不做了解，后续涉及应用的时候再看。
+
+### 总结
+
+本文展示了如何在有或没有 Jenkins 的情况下实现发布 Maven 项目的过程。 与上一篇部署maven项目类似，此过程使用 `nexus-staging-maven-plugin` 与 Nexus 交互，并专注于一个 git 项目。
+
+### 参考文章
+
+* https://www.baeldung.com/maven-release-nexus
+* https://github.com/eugenp/tutorials/tree/master/maven-modules
