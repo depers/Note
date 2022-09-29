@@ -17,6 +17,7 @@
     * Java并发编程
     * JVM
   * Rust
+    * Rust程序设计语言
   * JavaScript
     * JavaScript基础
     * ES6学习
