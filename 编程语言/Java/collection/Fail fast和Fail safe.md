@@ -26,6 +26,8 @@ Fail fast迭代器会抛出`ConcurrentModificationException` ，在下面两种�
 
 ### 面试官：Fail Fast Iterator 是怎么知道内部结构被修改的？
 
+
+
 ## Reference
 
 * [Fail Fast Vs Fail Safe Iterator In Java : Java Developer Interview Questions](https://javahungry.blogspot.com/2014/04/fail-fast-iterator-vs-fail-safe-iterator-difference-with-example-in-java.html)
