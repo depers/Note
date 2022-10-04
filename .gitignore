@@ -26,7 +26,7 @@ build/
 *.diff
 *.patch
 *.tmp
-./obsidian
+.obsidian/
 
 # system ignore
 .DS_Store
