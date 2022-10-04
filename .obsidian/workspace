@@ -1,0 +1,153 @@
+{
+  "main": {
+    "id": "815bf14348b275b2",
+    "type": "split",
+    "children": [
+      {
+        "id": "dc53f022c0d0df9d",
+        "type": "leaf",
+        "dimension": 17.4370709382151,
+        "state": {
+          "type": "outline",
+          "state": {
+            "file": "编程语言/Java/collection/Java HashMap的底层实现.md"
+          }
+        },
+        "group": "ff39dd6814b08b7c"
+      },
+      {
+        "id": "e917f6ec1aa59263",
+        "type": "leaf",
+        "dimension": 82.5629290617849,
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "编程语言/Java/collection/Java HashMap的底层实现.md",
+            "mode": "source",
+            "source": false
+          }
+        },
+        "group": "ff39dd6814b08b7c"
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "d3345f0d1e576fc6",
+    "type": "split",
+    "children": [
+      {
+        "id": "22f55936a88c80eb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3fd4a0ed75908821",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "058b4c29860b98d7",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:#authenticate",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "87cf63b9b88941ee",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8749bfa872744276",
+    "type": "split",
+    "children": [
+      {
+        "id": "efaa8d3548c36eaa",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "37f24361b4e444ff",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "编程语言/Java/collection/Java HashMap的底层实现.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "c09a567c5e6af368",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "编程语言/Java/collection/Java HashMap的底层实现.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "1eca2241012d9d60",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "646902f154838efa",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "编程语言/Java/collection/Java HashMap的底层实现.md"
+              }
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "dc53f022c0d0df9d",
+  "lastOpenFiles": [
+    "编程语言/Rust/Rust程序设计语言/第八章 常见集合.md",
+    "编程语言/Java/collection/Java HashMap的底层实现.md",
+    "编程语言/Rust/Rust程序设计语言/第一章 入门.md",
+    "笔记图片/28-rust/1.svg"
+  ]
+}
