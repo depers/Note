@@ -1,4 +1,4 @@
-# 2022年10月4日
+# 第一节：Java EE 单体架构
 
 学习《[小马哥的 Java 项目实战营](https://u.geekbang.org/subject/java2nd)》第一课的笔记记录：
 
