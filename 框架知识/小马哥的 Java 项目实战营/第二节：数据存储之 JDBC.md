@@ -34,22 +34,74 @@
    
          1. 通过 ClassLoader 加载 Drvier 实现（由用户/应用控制）
    
-            ```
+            ```java
             Class.forName("com.mysql.jdbc.Driver");
             ```
 
          2. 通过 “jdbc.drivers” 系统属性
 
-            通过读取“jdbc.drivers”系统属性后，再经过":"的分割，尝试获取多值，再通过ClassLoader加载对应的实现类
+            通过读取“jdbc.drivers”系统属性后，再经过":"的分割，尝试获取多值，再通过ClassLoader加载对应的实现类。
+
+            加载顺序和属性值的顺序有关系。
 
          3. 【推荐使用】通过 Java SPI ServiceLoader 获取 Driver 实现
-
-            ServiceLoader会初始化Driver实现类（应用主动配置），包含Class加载
-
-      额外的知识：
-
-      * Reflection.getCallerClass()
-      * Class.forName("com.mysql.jdbc.Driver"); 底层都做了些什么？
+         
+            ServiceLoader会初始化Driver实现类（应用主动配置），包含Class加载。
+            
+            驱动的加载顺序与Class Path的顺序有关系。
+            
+            Java的SPI会一次性全部加载驱动，比较浪费资源。
+   
+      3. 额外的知识：
+   
+         * Reflection.getCallerClass()
+   
+         * Class.forName("com.mysql.jdbc.Driver"); 底层都做了些什么？
+   
+      4. 问题集合
+   
+         1. 当多个 Driver 同时被加载到 ClassLoader 后，到底用了哪个？
+   
+            getConnection 方法是通过 JDBC URL 判断的，通过迭代多次，返回第一个成功的 Connection 实例，参考java.sql.DriverManager#getConnection(java.lang.String, java.util.Properties, java.lang.Class<?>)方法。
+   
+            ```java
+            for(DriverInfo aDriver : registeredDrivers) {
+                // If the caller does not have permission to load the driver then
+                // skip it.
+                if(isDriverAllowed(aDriver.driver, callerCL)) {
+                    try {
+                        println("    trying " + aDriver.driver.getClass().getName());
+                        Connection con = aDriver.driver.connect(url, info);
+                        if (con != null) {
+                            // Success!
+                            println("getConnection returning " + aDriver.driver.getClass().getName());
+                            return (con);
+                        }
+                    } catch (SQLException ex) {
+                        if (reason == null) {
+                            reason = ex;
+                        }
+                    }
+            
+                } else {
+                    println("    skipping: " + aDriver.getClass().getName());
+                }
+            }
+            ```
+   
+         2. java.sql.DriverManager#loadInitialDrivers 方法中 JavaSPI 空便利的意义在哪里？
+   
+            ```java
+            try{
+            	while(driversIterator.hasNext()) {
+            	driversIterator.next();
+            	}
+            } catch(Throwable t) {
+            	// Do nothing
+            }
+            ```
+   
+            ServiceLoader#next() 方法会主动触发 ClassLoader 加载。看这个方法：java.util.ServiceLoader.LazyIterator#nextService。
    
    4. Connection
    
