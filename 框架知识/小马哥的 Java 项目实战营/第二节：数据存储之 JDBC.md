@@ -103,18 +103,45 @@
    
             ServiceLoader#next() 方法会主动触发 ClassLoader 加载。看这个方法：java.util.ServiceLoader.LazyIterator#nextService。
    
-   4. Connection
+   4. 数据连接接口 - java.sql.Connection
+   
+      * 相近语义术语
+   
+        一个 JDBC Connection 相当于 MyBatis Session 或者Hibernate Session
    
       * 获取 Connection
    
         通过 ClassLoader 类加载数据库 JDBC Driver 实现类的方式，增加 java.sql.DriverManager#registeredDrivers 字段的元素，然后通过迭代的方式逐一 尝试 getConnection 方法参数的 JDBC URL 是否可用。
    
-   5. Statement
+   5. SQL 命令接口 - java.sql.Statement
    
-      1. BeanInfo和PropertyDescriptor
-      2. ORM精华
+      1. 主要类型
    
-   6. ResultSet
+         * 普通 SQL 命令 - java.sql.Statement
+         * 预编译 SQL 命令 - java.sql.PreparedStatement
+         * 存储过程 SQL 命令 - java.sql.CallableStatement
+   
+      2. DDL语句和DML语句
+   
+         * DML 语句 ：CRUD
+   
+           * R（读操作）：java.sql.Statement#executeQuery
+           * CUD（增删改）：java.sql.Statement#executeUpdate(java.lang.String)
+   
+         * DDL 语句
+   
+           使用java.sql.Statement#execute(java.lang.String)
+   
+           * 成功的话：不需要返回值（返回值 false）
+           * 失败的话：SQLException
+   
+      3. BeanInfo和PropertyDescriptor
+   
+      4. ORM精华
+   
+   6. SQL 执行结果接口 - java.sql.ResultSet
+   
+      * resultset.next()，如果存在且游标滚动（这里有两个语义）
    
    7. ResultSetMetaData
    
