@@ -30,9 +30,9 @@
 
       1. 管理器的角色
 
-      2. 获取 Driver 实现，数据库驱动Driver实现会显示的调用java.sql.DriverManager#registerDriver方法，下面三种方式可以同时做
+      2. 获取 Driver 实现，下面三种方式可以同时做
 
-         1. 通过 ClassLoader 加载 Drvier 实现（由用户/应用控制）
+         1. 通过 ClassLoader 加载 Drvier 实现（由用户/应用控制），数据库驱动Driver实现会显示的调用java.sql.DriverManager#registerDriver方法
 
             ```java
             Class.forName("com.mysql.jdbc.Driver");
@@ -46,7 +46,7 @@
 
          3. 【推荐使用】通过 Java SPI ServiceLoader 获取 Driver 实现
          
-            ServiceLoader会初始化Driver实现类（应用主动配置），包含Class加载。
+            ServiceLoader会初始化Driver实现类（应用程序去主动配置的），包含Class加载。
             
             驱动的加载顺序与Class Path的顺序有关系。
             
