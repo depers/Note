@@ -89,7 +89,7 @@
             }
             ```
 
-         2. java.sql.DriverManager#loadInitialDrivers 方法中 JavaSPI 空便利的意义在哪里？
+         2. java.sql.DriverManager#loadInitialDrivers 方法中 JavaSPI 空遍历的意义在哪里？
 
             ```java
             try{
