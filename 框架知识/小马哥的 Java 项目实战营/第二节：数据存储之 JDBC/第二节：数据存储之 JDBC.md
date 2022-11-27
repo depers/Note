@@ -157,7 +157,7 @@
 
       2. ClassUtils.wrapperToPrimitive，Spring将包装类型转换为原始类型
 
-      3. Double ThrowableFunction，自己封住的将Function中的异常抛出来
+      3. Dubbo ThrowableFunction，自己封住的将Function中的异常抛出来
 
       4. Java8 CompletableFuture 
 

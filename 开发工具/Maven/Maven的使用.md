@@ -26,4 +26,6 @@
 
   这个scope只支持`<dependencyManagement>`中dependency的类型为pom的节点。
 
+值得注意：如果在存在多个module的项目中，如果moduleA中有一个依赖dependencyA如果设置了他的scope，那如果moduleB以来moduleA的时候，module里面就用不了dependencyA。
+
 > 参考博客：<https://blog.csdn.net/qq_31071543/article/details/91350906>
