@@ -34,23 +34,23 @@
 
 ### 2.一起认识Spring家族的主要成员
 
-![1](E:\markdown笔记\笔记图片\13\1.png)
+![1](..\笔记图片\13\1.png)
 
-![2](E:\markdown笔记\笔记图片\13\2.png)
+![2](..\笔记图片\13\2.png)
 
-![3](E:\markdown笔记\笔记图片\13\3.png)
+![3](..\笔记图片\13\3.png)
 
-![4](E:\markdown笔记\笔记图片\13\4.png)
+![4](..\笔记图片\13\4.png)
 
 ### 3.跟着Spring了解技术趋势
 
-![5](E:\markdown笔记\笔记图片\13\5.png)
+![5](..\笔记图片\13\5.png)
 
-![6](E:\markdown笔记\笔记图片\13\6.png)
+![6](..\笔记图片\13\6.png)
 
 ### 4.编写你的第一个Spring程序
 
-![7](E:\markdown笔记\笔记图片\13\7.png)
+![7](..\笔记图片\13\7.png)
 
 * Spring Initializr
 
@@ -122,9 +122,9 @@
 
 * Spring Boot的配置演示，项目地址：<https://github.com/depers/geektime-spring-code/tree/master/5-1/datasource-demo-1>
 
-  ![9](E:\markdown笔记\笔记图片\13\9.png)
+  ![9](..\笔记图片\13\9.png)
 
-  ![8](E:\markdown笔记\笔记图片\13\8.png)
+  ![8](..\笔记图片\13\8.png)
 
   在Spring Initializr中初始化构建后，直接下载。在DatasourceDemoApplication中编写如下代码：
 
@@ -160,19 +160,19 @@
 
   运行结果如下图：
 
-  ![14](E:\markdown笔记\笔记图片\13\14.png)
+  ![14](..\笔记图片\13\14.png)
 
 * 手动直接配置所需的Bean。不使用Spring Boot的自动配置数据源，自己手动配置。项目地址：<https://github.com/depers/geektime-spring-code/tree/master/5-1/pure-spring-datasource-demo>
 
-  ![10](E:\markdown笔记\笔记图片\13\10.png)
+  ![10](..\笔记图片\13\10.png)
 
-  ![11](E:\markdown笔记\笔记图片\13\15.png)
+  ![11](..\笔记图片\13\15.png)
 
   
 
 如上图所示，这个项目不使用Spring Boot，引入了运行时的h2驱动、dbcp2的数据库连接池、Spring jdbc。然后编写了如下程序：
 
-![11](E:\markdown笔记\笔记图片\13\11.png)
+![11](..\笔记图片\13\11.png)
 
 除了通过代码配置，还可以在applicationContext.xml中进行配置：
 
@@ -199,19 +199,19 @@
 </beans>
 ```
 
-![12](E:\markdown笔记\笔记图片\13\12.png)
+![12](..\笔记图片\13\12.png)
 
 * 数据源相关的配置，项目地址：<https://github.com/depers/geektime-spring-code/tree/master/5-1/datasource-demo-2>
 
-  ![13](E:\markdown笔记\笔记图片\13\13.png)
+  ![13](..\笔记图片\13\13.png)
 
   在这个项目中，我们在application.properties中配置了数据源的相关信息，新建了数据库并对数据库进行了相关的操作。
 
 ### 6.如何配置多数据源
 
-![16](E:\markdown笔记\笔记图片\13\16.png)
+![16](..\笔记图片\13\16.png)
 
-![17](E:\markdown笔记\笔记图片\13\17.png)
+![17](..\笔记图片\13\17.png)
 
 从上图中可以看到多数据源的配置有两种办法：
 
@@ -219,17 +219,17 @@
 
 而在使用Spring Boot配置多数据源中又有两种办法：1)配置@Primary类型的Bean，2)排除Spring Boot的自动配置，在接下来内容中介绍了第2种排除Spring Boot的自动配置的方案。项目地址：<https://github.com/depers/geektime-spring-code/tree/master/6/multi-datasource-demo>
 
-![18](E:\markdown笔记\笔记图片\13\18.png)
+![18](..\笔记图片\13\18.png)
 
 ### 7.那些好用的连接池们：HikariCP
 
-![19](E:\markdown笔记\笔记图片\13\19.png)
+![19](..\笔记图片\13\19.png)
 
-![20](E:\markdown笔记\笔记图片\13\20.png)
+![20](..\笔记图片\13\20.png)
 
-![21](E:\markdown笔记\笔记图片\13\21.png)
+![21](..\笔记图片\13\21.png)
 
-![22](E:\markdown笔记\笔记图片\13\22.png)
+![22](..\笔记图片\13\22.png)
 
 HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
@@ -259,21 +259,21 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 ```
 ### 8.那些好用的连接池们：Alibaba Druid
 
-![23](E:\markdown笔记\笔记图片\13\23.png)
+![23](..\笔记图片\13\23.png)
 
-![24](E:\markdown笔记\笔记图片\13\24.png)
+![24](..\笔记图片\13\24.png)
 
-![25](E:\markdown笔记\笔记图片\13\25.png)
+![25](..\笔记图片\13\25.png)
 
 使用druid的两种方法：
 
-![26](E:\markdown笔记\笔记图片\13\26.png)
+![26](..\笔记图片\13\26.png)
 
-![27](E:\markdown笔记\笔记图片\13\27.png)
+![27](..\笔记图片\13\27.png)
 
-![28](E:\markdown笔记\笔记图片\13\28.png)
+![28](..\笔记图片\13\28.png)
 
-![29](E:\markdown笔记\笔记图片\13\29.png)
+![29](..\笔记图片\13\29.png)
 
 * 在Spring Boot中使用Druid时应该注意的点
 
@@ -299,71 +299,71 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
 * 详情访问<https://github.com/depers/geektime-spring-code/tree/master/8/druid-demo>，在这个例子中我们在每次连接数据库的前后都会做相应的操作。
 
-![30](E:\markdown笔记\笔记图片\13\30.png)
+![30](..\笔记图片\13\30.png)
 
 ### 9.如何通过Spring JDBC访问数据库
 
-![31](E:\markdown笔记\笔记图片\13\31.png)
+![31](..\笔记图片\13\31.png)
 
-![32](E:\markdown笔记\笔记图片\13\32.png)
+![32](..\笔记图片\13\32.png)
 
-![33](E:\markdown笔记\笔记图片\13\33.png)
+![33](..\笔记图片\13\33.png)
 
-![34](E:\markdown笔记\笔记图片\13\34.png)
+![34](..\笔记图片\13\34.png)
 
-![35](E:\markdown笔记\笔记图片\13\35.png)
+![35](..\笔记图片\13\35.png)
 
 该部分的代码详情请参考：<https://github.com/depers/geektime-spring-code/tree/master/9/simple-jdbc-demo>
 
 ### 10.什么是Spring的事务抽象（上）
 
-![36](E:\markdown笔记\笔记图片\13\36.png)
+![36](..\笔记图片\13\36.png)
 
-![37](E:\markdown笔记\笔记图片\13\37.png)
+![37](..\笔记图片\13\37.png)
 
-![38](E:\markdown笔记\笔记图片\13\38.png)
+![38](..\笔记图片\13\38.png)
 
-![39](E:\markdown笔记\笔记图片\13\39.png)
+![39](..\笔记图片\13\39.png)
 
-![40](E:\markdown笔记\笔记图片\13\40.png)
+![40](..\笔记图片\13\40.png)
 ### 11.什么是Spring的事务抽象（下）
-![41](E:\markdown笔记\笔记图片\13\41.png)
+![41](..\笔记图片\13\41.png)
 
 编程式事务的两种办法，本视频中着重演示了第一个方法Transaction Tempate，具体参见：<https://github.com/depers/geektime-spring-code/tree/master/11/programmatic-transaction-demo>
 
-![42](E:\markdown笔记\笔记图片\13\42.png)
+![42](..\笔记图片\13\42.png)
 
-![43](E:\markdown笔记\笔记图片\13\43.png)
+![43](..\笔记图片\13\43.png)
 
 声明式事务中主要演示了三个方法：
 
-![44](E:\markdown笔记\笔记图片\13\44.png)
+![44](..\笔记图片\13\44.png)
 
 可以看到第一个和第二个方法都加入@Transactional注解，都是支持事务的。而第三个方法他调用了第二个带有事务的方法。但是通过调用这三个方法发现第三个方法他是不支持事务的。这是因为Spring其实为你的类做了一个代理，你必须去调用代理类才能执行那些被代理曾强的方法。如果方法是在类的内部调用的话，并没有走到那些代理方法，虽然invikeInsertThenRollback调用了带有@Transactional注解的方法，但是因为它本身是没有事务注解的，所以他调用insertThenRollback也不会有事务的支持。
 
 ### 12.了解Spring的JDBC异常抽象
 
-![45](E:\markdown笔记\笔记图片\13\45.png)
+![45](..\笔记图片\13\45.png)
 
 其中错误码的定义有两个地方：一个是Spring的ErrorCode，其次我们还可以自己定义ErrorCode在Classpath下的sql-error-codes.xml中，我们通过定制可以覆盖官方的一些配置。
 
-![46](E:\markdown笔记\笔记图片\13\46.png)
+![46](..\笔记图片\13\46.png)
 
-![47](E:\markdown笔记\笔记图片\13\47.png)
+![47](..\笔记图片\13\47.png)
 
 上述代码的演示项目请参见：<https://github.com/depers/geektime-spring-code/tree/master/12/errorcode-demo>
 
 ### 13.课程答疑（上）
 
-![48](E:\markdown笔记\笔记图片\13\48.png)
+![48](..\笔记图片\13\48.png)
 
 * 开发环境
 
-  ![49](E:\markdown笔记\笔记图片\13\49.png)
+  ![49](..\笔记图片\13\49.png)
 
 * 一些注解
 
-  ![49](E:\markdown笔记\笔记图片\13\50.png)
+  ![49](..\笔记图片\13\50.png)
 
   * @Configuration：标明当前的这个类是一个配置类。
 
@@ -375,7 +375,7 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
   * @ConfigurationProperties：通过 @ConfigurationProperties 来获取配置文件的信息。
 
-  ![51](E:\markdown笔记\笔记图片\13\51.png)
+  ![51](..\笔记图片\13\51.png)
   
   * @Component：注解主要用于标记一个类作为spring的组件，spring扫描的时候扫描的是这个注解。所有Java的Bean都可以通过@Component来定义。
   * @Repository：标识该类是一个数据库访问层的Repository
@@ -390,18 +390,18 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
   
 * 关于Actuator Endpoint访问不到的说明
 
-  ![52](E:\markdown笔记\笔记图片\13\52.png)
+  ![52](..\笔记图片\13\52.png)
 
-  ![53](E:\markdown笔记\笔记图片\13\53.png)
+  ![53](..\笔记图片\13\53.png)
   
 * 读数据源、分库分表、读写分离的关系
 
-  ![54](E:\markdown笔记\笔记图片\13\54.png)
+  ![54](..\笔记图片\13\54.png)
 
   * 系统需要访问几个完全不同的数据库，就像上图中的左图
   * 系统访问同一个库的主库和备库：主库用来做读写操作，备库用来做读操作。
 
-  ![55](E:\markdown笔记\笔记图片\13\55.png)
+  ![55](..\笔记图片\13\55.png)
 
   * 系统需要访问一组做了分库分表的数据库可以使用数据库中间件进行操作。
 
@@ -409,44 +409,44 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
 * 内部方法调用与事务的课后问题
 
-  ![56](E:\markdown笔记\笔记图片\13\56.png)
+  ![56](..\笔记图片\13\56.png)
 
   这里回答了第11节的课后问题：即该节最后一幅图中第三个方法为什么没有做事务处理？根据上图问题的解法，我们修改源代码，这样第三个方法就得到了事务的支持：
 
-  ![57](E:\markdown笔记\笔记图片\13\57.png)
+  ![57](..\笔记图片\13\57.png)
 
 * REQUIRES_NEW与NESTED事务传播特性的说明
 
-  ![57](E:\markdown笔记\笔记图片\13\58.png)
+  ![57](..\笔记图片\13\58.png)
 
   这一部分没有听懂，而且代码运行也与视频中不一样。这个项目的代码是：<https://github.com/depers/geektime-spring-code/tree/master/14/transaction-propagation-demo>
 
 * Alibaba Druid的一些展开说明
 
-  ![57](E:\markdown笔记\笔记图片\13\59.png)
+  ![57](..\笔记图片\13\59.png)
 
   代码详情参考<https://github.com/depers/geektime-spring-code/tree/master/14/druid-demo>，设置以上慢SQL的设置后，我们启动项目可以在控制台看到如下的显示：
 
-  ![61](E:\markdown笔记\笔记图片\13\61.png)
+  ![61](..\笔记图片\13\61.png)
 
-  ![60](E:\markdown笔记\笔记图片\13\60.png)
+  ![60](..\笔记图片\13\60.png)
 ## 第三章：O R Mapping实践
 
  ### 15.认识Spring Data JPA
 
-![62](E:\markdown笔记\笔记图片\13\62.png)
+![62](..\笔记图片\13\62.png)
 
-![63](E:\markdown笔记\笔记图片\13\63.png)
+![63](..\笔记图片\13\63.png)
 
-![64](E:\markdown笔记\笔记图片\13\64.png)
+![64](..\笔记图片\13\64.png)
 
-![65](E:\markdown笔记\笔记图片\13\65.png)
+![65](..\笔记图片\13\65.png)
 
-![66](E:\markdown笔记\笔记图片\13\66.png)
+![66](..\笔记图片\13\66.png)
 
 ### 16.定义JPA的实体对象
 
-![67](E:\markdown笔记\笔记图片\13\67.png)
+![67](..\笔记图片\13\67.png)
 
 @Entity：标识实体类是JPA实体，告诉JPA在程序运行时生成实体类对应表
 
@@ -460,9 +460,9 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
 ​	@SequenceGenerator：用来定义一个生成主键的序列，与@GeneratedValue联合使用才有效。具体使用可以参考<https://blog.csdn.net/lvxinzhi/article/details/43484923>
 
-![68](E:\markdown笔记\笔记图片\13\68.png)
+![68](..\笔记图片\13\68.png)
 
-![69](E:\markdown笔记\笔记图片\13\69.png)
+![69](..\笔记图片\13\69.png)
 
 @Column：表示属性所对应字段名进行个性化设置
 
@@ -480,7 +480,7 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
 @OrderBy：
 
-![70](E:\markdown笔记\笔记图片\13\70.png)
+![70](..\笔记图片\13\70.png)
 
 @Getter：
 
@@ -506,44 +506,44 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
 ### 17.开始我们的线上咖啡馆实战项目：SpringBucks
 
-![71](E:\markdown笔记\笔记图片\13\71.png)
+![71](..\笔记图片\13\71.png)
 
-![72](E:\markdown笔记\笔记图片\13\72.png)
+![72](..\笔记图片\13\72.png)
 
-![73](E:\markdown笔记\笔记图片\13\73.png)
+![73](..\笔记图片\13\73.png)
 
-![74](E:\markdown笔记\笔记图片\13\74.png)
+![74](..\笔记图片\13\74.png)
 
 * joda-money：用于表示货币金额的Java库
 * userType：解决joda-money类的映射
 
-![75](E:\markdown笔记\笔记图片\13\75.png)
+![75](..\笔记图片\13\75.png)
 
-![76](E:\markdown笔记\笔记图片\13\76.png)
+![76](..\笔记图片\13\76.png)
 
 我们在生成表结构的时候jpa会为我们创建三张表和一个序列，如果我们使用@GeneratedValue(strategy = GenerationType.IDENTITY)标明主键生成的策略：数据库会有自增主键。这样后，jpa就不会为我们生成自增主键了。
 
 以上实体的定义请参照：<https://github.com/depers/geektime-spring-code/tree/master/17/jpa-demo>
 
-![77](E:\markdown笔记\笔记图片\13\77.png)
+![77](..\笔记图片\13\77.png)
 
 上面介绍了@MappedSuperclass的使用方法，将子类都有的属性转移到父类中。
 
-![78](E:\markdown笔记\笔记图片\13\78.png)
+![78](..\笔记图片\13\78.png)
 
 这里注意的是@ToString(callSuper = true)，他会将父类中的属性也打印出来。
 
-![79](E:\markdown笔记\笔记图片\13\79.png)
+![79](..\笔记图片\13\79.png)
 
 以上实体的定义请参照：<https://github.com/depers/geektime-spring-code/tree/master/17/jpa-complex-demo>
 
 在上面的代码中，我们可以看到枚举的使用。我们定义了OrderState枚举，然后在CoffeeOrder中使用了他，在数据库生成的时候，在表中jpa为我们生成了一个integer类型。如下图所示：
 
-![81](E:\markdown笔记\笔记图片\13\81.png)
+![81](..\笔记图片\13\81.png)
 
 ### 18.Spring Data Jpa操作数据库
 
-![82](E:\markdown笔记\笔记图片\13\82.png)
+![82](..\笔记图片\13\82.png)
 
 这里我们需要注意的是：
 
@@ -553,27 +553,27 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 * @JpaRespository接口：JpaRepository接口同时拥有了基本CRUD功能以及分页功能。
 * 其中泛型T表示操作的Bean，ID则为主键id的类型。
 
-![83](E:\markdown笔记\笔记图片\13\83.png)
+![83](..\笔记图片\13\83.png)
 
-![84](E:\markdown笔记\笔记图片\13\84.png)
+![84](..\笔记图片\13\84.png)
 
-![85](E:\markdown笔记\笔记图片\13\85.png)
+![85](..\笔记图片\13\85.png)
 
-![86](E:\markdown笔记\笔记图片\13\86.png)
+![86](..\笔记图片\13\86.png)
 
 上面两张图片的代码在：<https://github.com/depers/geektime-spring-code/tree/master/17/jpa-demo>
 
-![87](E:\markdown笔记\笔记图片\13\87.png)
+![87](..\笔记图片\13\87.png)
 
 在这张图片中定义了一个**通用的Repository**。其中@NoRepositoryBean表明Spring不需要为我创建一个Repository的Bean。
 
-![88](E:\markdown笔记\笔记图片\13\88.png)
+![88](..\笔记图片\13\88.png)
 
 上图中开启事务用的是@Transactional注解。可以在方法执行的时候开启一个事务。
 
 ### 19.Spring Data JPA的Repository是怎么从接口变成Bean的
 
-![89](E:\markdown笔记\笔记图片\13\89.png)
+![89](..\笔记图片\13\89.png)
 
 其中：
 
@@ -583,7 +583,7 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 * RepositoryConfigurationExtensionSupport：org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport#getRepositoryConfiguration
 * JpaRepositoryFactory：org.springframework.data.jpa.repository.support.JpaRepositoryFactory#getTargetRepository
 
-![90](E:\markdown笔记\笔记图片\13\90.png)
+![90](..\笔记图片\13\90.png)
 
 其中：
 
@@ -595,9 +595,9 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
 ### 20.通过MyBatis操作数据库
 
-![91](E:\markdown笔记\笔记图片\13\91.png)
+![91](..\笔记图片\13\91.png)
 
-![92](E:\markdown笔记\笔记图片\13\92.png)
+![92](..\笔记图片\13\92.png)
 
 其中：
 
@@ -606,11 +606,11 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 * mabatis.type-handlers-package：指定类型转换类的前缀。
 * myabtis.configuration.map-underscore-to-camel-case = true：将数据库中的下划线的字段名转换为驼峰规则。
 
-![93](E:\markdown笔记\笔记图片\13\93.png)
+![93](..\笔记图片\13\93.png)
 
 MyBatis也支持注解，在定义映射时，可以使用xml或是注解，或是两者混用。
 
-![94](E:\markdown笔记\笔记图片\13\94.png)
+![94](..\笔记图片\13\94.png)
 
 上面介绍了mybatis基于注解的使用方法，该实例项目的源代码在<https://github.com/depers/geektime-spring-code/tree/master/20/mybatis-demo>
 
@@ -632,9 +632,9 @@ MyBatis也支持注解，在定义映射时，可以使用xml或是注解，或�
 
 ### 21.让MyBatis更好用的那些工具：MyBatis Generator
 
-![96](E:\markdown笔记\笔记图片\13\96.png)
+![96](..\笔记图片\13\96.png)
 
-![97](E:\markdown笔记\笔记图片\13\97.png)
+![97](..\笔记图片\13\97.png)
 
 其中：
 
@@ -645,7 +645,7 @@ MyBatis也支持注解，在定义映射时，可以使用xml或是注解，或�
 * javaClientGenerator：mapper生成策略。ANNOTATEDMAPPER：采用注解，XMLMAPPER：使用xml文件；MIXEDMAPPER：注解和xml混合
 * table：处理表与对象之间的关系。
 
-![98](E:\markdown笔记\笔记图片\13\98.png)
+![98](..\笔记图片\13\98.png)
 
 其中：
 
@@ -654,9 +654,9 @@ MyBatis也支持注解，在定义映射时，可以使用xml或是注解，或�
 * SerializablePlugin：为生成的Java模型类添加序列化接口，并生成serialVersionUID字段
 * RowBoundsPlugin：这个插件可以生成一个新的selectByExample方法，这个方法可以接受一个RowBounds参数，主要用来实现分页。
 
-![99](E:\markdown笔记\笔记图片\13\99.png)
+![99](..\笔记图片\13\99.png)
 
-![100](E:\markdown笔记\笔记图片\13\100.png)
+![100](..\笔记图片\13\100.png)
 
 注意：如果我们第二次生成代码时，为了避免覆盖自己修改的代码。自己应实现一套与生成代码不同的代码，我们因采取两套model，两套mapper和两套xml。
 
@@ -664,7 +664,7 @@ MyBatis也支持注解，在定义映射时，可以使用xml或是注解，或�
 
 ### 22.让MyBatis更好用的那些工具：MyBatis PageHelper
 
-![101](E:\markdown笔记\笔记图片\13\101.png)
+![101](..\笔记图片\13\101.png)
 
 * 引入POM
 
@@ -694,9 +694,9 @@ MyBatis也支持注解，在定义映射时，可以使用xml或是注解，或�
 
 ### 23.SpringBucks实战项目进度小结
 
-![102](E:\markdown笔记\笔记图片\13\102.png)
+![102](..\笔记图片\13\102.png)
 
-![103](E:\markdown笔记\笔记图片\13\103.png)
+![103](..\笔记图片\13\103.png)
 
 值得注意的是：
 
@@ -708,19 +708,19 @@ MyBatis也支持注解，在定义映射时，可以使用xml或是注解，或�
 
 ### 24.通过 Docker 辅助开发
 
-![104](E:\markdown笔记\笔记图片\13\104.png)
+![104](..\笔记图片\13\104.png)
 
-![105](E:\markdown笔记\笔记图片\13\105.png)
+![105](..\笔记图片\13\105.png)
 
-![106](E:\markdown笔记\笔记图片\13\106.png)
+![106](..\笔记图片\13\106.png)
 
-![107](E:\markdown笔记\笔记图片\13\107.png)
+![107](..\笔记图片\13\107.png)
 
-![108](E:\markdown笔记\笔记图片\13\108.png)
+![108](..\笔记图片\13\108.png)
 
-![109](E:\markdown笔记\笔记图片\13\109.png)
+![109](..\笔记图片\13\109.png)
 
-![110](E:\markdown笔记\笔记图片\13\110.png)
+![110](..\笔记图片\13\110.png)
 
 运行MongoDB:（该命令需要在linux控制台输入）
 
@@ -736,15 +736,15 @@ docker start mongo
 dcoker exec -it mongo mongo -u admin -p admin
 ```
 
-![111](E:\markdown笔记\笔记图片\13\111.png)
+![111](..\笔记图片\13\111.png)
 
 ### 25.在 Spring 中访问 MongoDB
 
-![112](E:\markdown笔记\笔记图片\13\112.png)
+![112](..\笔记图片\13\112.png)
 
-![113](E:\markdown笔记\笔记图片\13\113.png)
+![113](..\笔记图片\13\113.png)
 
-![114](E:\markdown笔记\笔记图片\13\114.png)
+![114](..\笔记图片\13\114.png)
 
 创建用户：
 
@@ -790,13 +790,13 @@ db.createUser(
 
 ### 26.在 Spring 中访问 Redis
 
-![116](E:\markdown笔记\笔记图片\13\116.png)
+![116](..\笔记图片\13\116.png)
 
-![117](E:\markdown笔记\笔记图片\13\117.png)
+![117](..\笔记图片\13\117.png)
 
-![118](E:\markdown笔记\笔记图片\13\118.png)
+![118](..\笔记图片\13\118.png)
 
-![119](E:\markdown笔记\笔记图片\13\119.png)
+![119](..\笔记图片\13\119.png)
 
 ```
 docker pull redis
@@ -811,17 +811,17 @@ docker exec -it redis redis-cli
 
 ### 27.Redis 的哨兵与集群模式
 
-![120](E:\markdown笔记\笔记图片\13\120.png)
+![120](..\笔记图片\13\120.png)
 
 代码分析：redis.clients.jedis.JedisSentinelPool
 
-![121](E:\markdown笔记\笔记图片\13\121.png)
+![121](..\笔记图片\13\121.png)
 
 源码分析：redis.clients.jedis.JedisCluster
 
 ### 28.了解 Spring 的缓存抽象
 
-![122](E:\markdown笔记\笔记图片\13\122.png)
+![122](..\笔记图片\13\122.png)
 
 * 缓存的使用场景
 
@@ -839,11 +839,11 @@ docker exec -it redis redis-cli
 
 Spring缓存抽象的相关注解：
 
-![123](E:\markdown笔记\笔记图片\13\123.png)
+![123](..\笔记图片\13\123.png)
 
 代码中演示了使用Spring的缓存抽象在JVM中做缓存，相关代码：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%204/cache-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 4/cache-demo)
 
-![124](E:\markdown笔记\笔记图片\13\124.png)
+![124](..\笔记图片\13\124.png)
 
 代码中演示了使用Spring的缓存抽象在Redis中做缓存，相关代码：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%204/cache-with-redis-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 4/cache-with-redis-demo)
 
@@ -851,7 +851,7 @@ Spring缓存抽象的相关注解：
 
 * 配置连接工厂：在新的Spring-Data-Redis中，spring已经使用Lettuce代替了Jedis。
 
-  ![125](E:\markdown笔记\笔记图片\13\125.png)
+  ![125](..\笔记图片\13\125.png)
 
   * RedisStandaloneConfiguration：单节点
   * RedisSentisnelConfiguration：哨兵
@@ -863,13 +863,13 @@ Spring缓存抽象的相关注解：
 
   JedisCluster不支持读写分离。
 
-  ![126](E:\markdown笔记\笔记图片\13\126.png)
+  ![126](..\笔记图片\13\126.png)
 
   
 
 * RedisTemplate
 
-  ![127](E:\markdown笔记\笔记图片\13\127.png)
+  ![127](..\笔记图片\13\127.png)
 
   * StringRedisTemplate：如果K与V都是String的话可以使用这个工具类。
 
@@ -891,9 +891,9 @@ Spring缓存抽象的相关注解：
 
 * Redis Repository
 
-  ![128](E:\markdown笔记\笔记图片\13\128.png)
+  ![128](..\笔记图片\13\128.png)
 
-  ![129](E:\markdown笔记\笔记图片\13\129.png)
+  ![129](..\笔记图片\13\129.png)
 
   * 项目地址：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%204/redis-repository-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 4/redis-repository-demo)
 
@@ -903,33 +903,33 @@ Spring缓存抽象的相关注解：
 
 官网：<https://projectreactor.io/>
 
-![132](E:\markdown笔记\笔记图片\13\132.png)
+![132](..\笔记图片\13\132.png)
 
 打个比方，在程序中我会会编写a=b+c的赋值，执行完a=b+c之后a的值就确定了下来，若b和c再发生变化，那么a的值就不会在发生变化。而响应式编程中，就像excel表格中的运算一样，如果b和c发生变化，那么a也会变化。
 
-![133](E:\markdown笔记\笔记图片\13\133.png)
+![133](..\笔记图片\13\133.png)
 
-![134](E:\markdown笔记\笔记图片\13\134.png)
+![134](..\笔记图片\13\134.png)
 
   上面的图片是事例演示。
 
 ### 32.Project Reactor 介绍（下）
 
-![135](E:\markdown笔记\笔记图片\13\135.png)
+![135](..\笔记图片\13\135.png)
 
-![136](E:\markdown笔记\笔记图片\13\136.png)
+![136](..\笔记图片\13\136.png)
 
 项目代码中我做了详细注释，如果不理解再看下视频：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%205/simple-reactor-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 5/simple-reactor-demo)
 
 ### 33.通过 Reactive 的方式访问 Redis
 
-![137](E:\markdown笔记\笔记图片\13\137.png)
+![137](..\笔记图片\13\137.png)
 
 本节的代码地址：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%205/redis-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 5/redis-demo)
 
 ### 34.通过 Reactive 的方式访问 MongoDB
 
-![138](E:\markdown笔记\笔记图片\13\138.png)
+![138](..\笔记图片\13\138.png)
 
 本节代码的地址：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%205/mongodb-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 5/mongodb-demo)
 
@@ -937,25 +937,25 @@ Spring缓存抽象的相关注解：
 
 Spring Data R2DBC，用于针对关系型数据库进行反应式编程。
 
-![139](E:\markdown笔记\笔记图片\13\139.png)
+![139](..\笔记图片\13\139.png)
 
 * 通过Spring Data R2DBC
 
   参考项目：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%205/simple-r2dbc-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 5/simple-r2dbc-demo)
 
-![140](E:\markdown笔记\笔记图片\13\140.png)
+![140](..\笔记图片\13\140.png)
 
 * R2DBC Repository支持
 
   参考项目：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%205/r2dbc-repository-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 5/r2dbc-repository-demo)
 
-![141](E:\markdown笔记\笔记图片\13\141.png)
+![141](..\笔记图片\13\141.png)
 
 ### 36.通过 AOP 打印数据访问层的摘要（上）
 
-![142](E:\markdown笔记\笔记图片\13\142.png)
+![142](..\笔记图片\13\142.png)
 
-![143](E:\markdown笔记\笔记图片\13\143.png)
+![143](..\笔记图片\13\143.png)
 
 * @EnableAspectJAutoProxy：表示开启*AOP*代理自动配置，如果配@EnableAspectJAutoProxy表示使用*cglib*进行代理对象的生成；设置*@EnableAspectJAutoProxy(exposeProxy=true)*表示通过*aop*框架暴露该代理对象，*aopContext*能够访问。
 * @aspect：定义切面
@@ -970,11 +970,11 @@ Spring Data R2DBC，用于针对关系型数据库进行反应式编程。
 
 Spring 相关文档：<https://docs.spring.io/spring/docs/5.2.0.RELEASE/spring-framework-reference/core.html#aop-ataspectj>
 
-![144](E:\markdown笔记\笔记图片\13\144.png)
+![144](..\笔记图片\13\144.png)
 
 ### 38.SpringBucks 实战项目进度小结
 
-![145](E:\markdown笔记\笔记图片\13\145.png)
+![145](..\笔记图片\13\145.png)
 
 项目地址：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%205/reactive-springbucks](https://github.com/depers/geektime-spring-code/tree/master/Chapter 5/reactive-springbucks)
 
@@ -982,9 +982,9 @@ Spring 相关文档：<https://docs.spring.io/spring/docs/5.2.0.RELEASE/spring-f
 
 ### 39.编写第一个 Spring MVC Controller
 
-![146](E:\markdown笔记\笔记图片\13\146.png)
+![146](..\笔记图片\13\146.png)
 
-![147](E:\markdown笔记\笔记图片\13\147.png)
+![147](..\笔记图片\13\147.png)
 
 其中@RestController结合了@Controller和@ResponseBody两个注解的功能。
 
@@ -1001,13 +1001,13 @@ Spring 相关文档：<https://docs.spring.io/spring/docs/5.2.0.RELEASE/spring-f
 
 ### 40.理解 Spring 的应用上下文
 
-![148](E:\markdown笔记\笔记图片\13\148.png)
+![148](..\笔记图片\13\148.png)
 
-![149](E:\markdown笔记\笔记图片\13\149.png)
+![149](..\笔记图片\13\149.png)
 
-![150](E:\markdown笔记\笔记图片\13\150.png)
+![150](..\笔记图片\13\150.png)
 
-![151](E:\markdown笔记\笔记图片\13\151.png)
+![151](..\笔记图片\13\151.png)
 
 上图中是Root webApplicationContext、Servlet webApplicationContext在web.xml和Java基于注解的配置方式。
 
@@ -1089,9 +1089,9 @@ Spring 相关文档：<https://docs.spring.io/spring/docs/5.2.0.RELEASE/spring-f
 
 ### 41.理解请求的处理机制
 
-![152](E:\markdown笔记\笔记图片\13\152.png)
+![152](..\笔记图片\13\152.png)
 
-![153](E:\markdown笔记\笔记图片\13\153.png)
+![153](..\笔记图片\13\153.png)
 
 项目代码：
 
@@ -1103,20 +1103,20 @@ mappedHandler = getHandler(processedRequest);
 
 ### 42.如何定义处理方法（上）
 
-![154](E:\markdown笔记\笔记图片\13\154.png)
+![154](..\笔记图片\13\154.png)
 
-![155](E:\markdown笔记\笔记图片\13\156.png)
+![155](..\笔记图片\13\156.png)
 
 <https://docs.spring.io/spring/docs/5.2.0.RELEASE/spring-framework-reference/web.html#mvc-ann-methods>
 
 <https://docs.spring.io/spring/docs/5.2.0.RELEASE/spring-framework-reference/web.html#mvc-ann-return-types>
 
-![157](E:\markdown笔记\笔记图片\13\157.png)
+![157](..\笔记图片\13\157.png)
 
 * consumes：可以根据请求的 `Content-Type` 缩小请求映射
 * produces：可以根据请求的`Accept` 缩小请求映射
 
-![158](E:\markdown笔记\笔记图片\13\158.png)
+![158](..\笔记图片\13\158.png)
 
 上面这段代码的效果是一样的，都是取请求路径的参数。
 
@@ -1124,11 +1124,11 @@ mappedHandler = getHandler(processedRequest);
 
 ### 43.如何定义处理方法（下）
 
-![159](E:\markdown笔记\笔记图片\13\159.png)
+![159](..\笔记图片\13\159.png)
 
-![160](E:\markdown笔记\笔记图片\13\160.png)
+![160](..\笔记图片\13\160.png)
 
-![161](E:\markdown笔记\笔记图片\13\161.png)
+![161](..\笔记图片\13\161.png)
 
 #### default关键字的使用
 
@@ -1285,21 +1285,21 @@ mappedHandler = getHandler(processedRequest);
 
 ### 44.Spring MVC 中的视图解析机制（上）-- TODO
 
-![162](E:\markdown笔记\笔记图片\13\162.png)
+![162](..\笔记图片\13\162.png)
 
-![163](E:\markdown笔记\笔记图片\13\163.png)
+![163](..\笔记图片\13\163.png)
 
 ### 45.Spring MVC 中的视图解析机制（下）-- TODO
 
-![164](E:\markdown笔记\笔记图片\13\164.png)
+![164](..\笔记图片\13\164.png)
 
-![165](E:\markdown笔记\笔记图片\13\165.png)
+![165](..\笔记图片\13\165.png)
 
 ### 46.Spring MVC 中的常用视图（上）
 
-![166](E:\markdown笔记\笔记图片\13\166.png)
+![166](..\笔记图片\13\166.png)
 
-![168](E:\markdown笔记\笔记图片\13\168.png)
+![168](..\笔记图片\13\168.png)
 
 <https://docs.spring.io/spring/docs/5.2.0.RELEASE/spring-framework-reference/web.html#mvc-view>
 
@@ -1343,11 +1343,11 @@ mappedHandler = getHandler(processedRequest);
 
 ### 47.Spring MVC 中的常用视图（下）
 
-![169](E:\markdown笔记\笔记图片\13\169.png)
+![169](..\笔记图片\13\169.png)
 
-![170](E:\markdown笔记\笔记图片\13\170.png)
+![170](..\笔记图片\13\170.png)
 
-![171](E:\markdown笔记\笔记图片\13\171.png)
+![171](..\笔记图片\13\171.png)
 
 项目代码：
 
@@ -1383,13 +1383,13 @@ mappedHandler = getHandler(processedRequest);
 
 ### 48.静态资源与缓存
 
-![172](E:\markdown笔记\笔记图片\13\172.png)
+![172](..\笔记图片\13\172.png)
 
-![173](E:\markdown笔记\笔记图片\13\173.png)
+![173](..\笔记图片\13\173.png)
 
-![174](E:\markdown笔记\笔记图片\13\174.png)
+![174](..\笔记图片\13\174.png)
 
-![177](E:\markdown笔记\笔记图片\13\177.png)
+![177](..\笔记图片\13\177.png)
 
 项目代码：
 
@@ -1419,9 +1419,9 @@ mappedHandler = getHandler(processedRequest);
 
 ### 49.Spring MVC 中的异常处理机制
 
-![175](E:\markdown笔记\笔记图片\13\175.png)
+![175](..\笔记图片\13\175.png)
 
-![176](E:\markdown笔记\笔记图片\13\176.png)
+![176](..\笔记图片\13\176.png)
 
 上面图片中值得注意的是：我们在@ControllerAdvice书写的标有@ExceptionHandler的方法的优先级是低于在@Controller中书写的标有@ExceptionHandler的方法的优先级。
 
@@ -1444,7 +1444,7 @@ mappedHandler = getHandler(processedRequest);
 
 ### 50.了解 Spring MVC 的切入点
 
-![178](E:\markdown笔记\笔记图片\13\178.png)
+![178](..\笔记图片\13\178.png)
 
 上图中是同步请求的拦截接口，这部分的源码可以参考org.springframework.web.servlet.DispatcherServlet#doDispatch中的：
 
@@ -1460,7 +1460,7 @@ mappedHandler = getHandler(processedRequest);
 
   这里会调用Interceptor的afterCompletion方法，该方法的作用是postHandle方法(报异常也会执行)之后会执行。
 
-![179](E:\markdown笔记\笔记图片\13\179.png)
+![179](..\笔记图片\13\179.png)
 
 上图中针对AsyncHandlerInterceptor，在org.springframework.web.servlet.DispatcherServlet#doDispatch中会执行下列代码，他不会执行HandlerInterceptor的postHandle和afterCompletion方法。
 
@@ -1506,15 +1506,15 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
 ### 51.SpringBucks 实战项目进度小结（waiter-service）
 
-![181](E:\markdown笔记\笔记图片\13\181.png)
+![181](..\笔记图片\13\181.png)
 
-![182](E:\markdown笔记\笔记图片\13\182.png)
+![182](..\笔记图片\13\182.png)
 
 项目springbucks集成了本章的所有知识点，生成了服务waiter-service.
 
 ### 52.课程答疑
 
-![183](E:\markdown笔记\笔记图片\13\183.png)
+![183](..\笔记图片\13\183.png)
 
 * 使用MySQL数据库代替H2
 
@@ -1522,17 +1522,17 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
   项目地址：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%206/jpa-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 6/jpa-demo)
 
-  ![184](E:\markdown笔记\笔记图片\13\184.png)
+  ![184](..\笔记图片\13\184.png)
 
-  ![185](E:\markdown笔记\笔记图片\13\185.png)
+  ![185](..\笔记图片\13\185.png)
 
 * Java语言特性说明
 
   项目地址：[https://github.com/depers/geektime-spring-code/tree/master/Chapter%206/stream-demo](https://github.com/depers/geektime-spring-code/tree/master/Chapter 6/stream-demo)
 
-  ![186](E:\markdown笔记\笔记图片\13\186.png)
+  ![186](..\笔记图片\13\186.png)
 
-  ![187](E:\markdown笔记\笔记图片\13\187.png)
+  ![187](..\笔记图片\13\187.png)
 
   map和flatMap的区别：
 
@@ -1553,13 +1553,13 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
 ### 53.通过 RestTemplate 访问 Web 资源
 
-![189](E:\markdown笔记\笔记图片\13\189.png)
+![189](..\笔记图片\13\189.png)
 
-![190](E:\markdown笔记\笔记图片\13\190.png)
+![190](..\笔记图片\13\190.png)
 
-![191](E:\markdown笔记\笔记图片\13\191.png)
+![191](..\笔记图片\13\191.png)
 
-![192](E:\markdown笔记\笔记图片\13\192.png)
+![192](..\笔记图片\13\192.png)
 
 项目代码：
 
@@ -1605,13 +1605,13 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
 ### 54.RestTemplate 的高阶用法
 
-![193](E:\markdown笔记\笔记图片\13\193.png)
+![193](..\笔记图片\13\193.png)
 
-![194](E:\markdown笔记\笔记图片\13\194.png)
+![194](..\笔记图片\13\194.png)
 
-![195](E:\markdown笔记\笔记图片\13\195.png)
+![195](..\笔记图片\13\195.png)
 
-![196](E:\markdown笔记\笔记图片\13\196.png)
+![196](..\笔记图片\13\196.png)
 
 项目代码：
 
@@ -1642,13 +1642,13 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
 ### 55.简单定制 RestTemplate
 
-![197](E:\markdown笔记\笔记图片\13\197.png)
+![197](..\笔记图片\13\197.png)
 
-![198](E:\markdown笔记\笔记图片\13\198.png)
+![198](..\笔记图片\13\198.png)
 
-![199](E:\markdown笔记\笔记图片\13\199.png)
+![199](..\笔记图片\13\199.png)
 
-![200](E:\markdown笔记\笔记图片\13\200.png)
+![200](..\笔记图片\13\200.png)
 
 项目代码：
 
@@ -1681,9 +1681,9 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
 ### 56.通过 WebClient 访问 Web 资源
 
-![201](E:\markdown笔记\笔记图片\13\201.png)
+![201](..\笔记图片\13\201.png)
 
-![202](E:\markdown笔记\笔记图片\13\202.png)
+![202](..\笔记图片\13\202.png)
 
 项目代码：
 
@@ -1707,9 +1707,9 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
 ### 57.SpringBucks 实战项目进度小结（cumtomer-service）
 
-![204](E:\markdown笔记\笔记图片\13\204.png)
+![204](..\笔记图片\13\204.png)
 
-![205](E:\markdown笔记\笔记图片\13\205.png)
+![205](..\笔记图片\13\205.png)
 
 项目代码：
 
@@ -1722,52 +1722,52 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
 ### 58.设计好的 RESTful Web Service（上）
 
-![206](E:\markdown笔记\笔记图片\13\206.png)
+![206](..\笔记图片\13\206.png)
 
 该篇论文：[架构风格与基于网络应用软件的架构设计（中文修订版）](<https://www.infoq.cn/article/web-based-apps-archit-design>)
 
-![207](E:\markdown笔记\笔记图片\13\207.png)
+![207](..\笔记图片\13\207.png)
 
-![208](E:\markdown笔记\笔记图片\13\208.png)
+![208](..\笔记图片\13\208.png)
 
-![209](E:\markdown笔记\笔记图片\13\209.png)
+![209](..\笔记图片\13\209.png)
 
-![210](E:\markdown笔记\笔记图片\13\210.png)
+![210](..\笔记图片\13\210.png)
 
 ### 59.设计好的 RESTful Web Service（下）
 
-![211](E:\markdown笔记\笔记图片\13\211.png)
+![211](..\笔记图片\13\211.png)
 
-![212](E:\markdown笔记\笔记图片\13\212.png)
+![212](..\笔记图片\13\212.png)
 
 注意：
 
 * 安全是指：请求不会改变资源的内容。
 * 幂等是指：无论我请求多少次，他的结果都是一样的。
 
-![213](E:\markdown笔记\笔记图片\13\213.png)
+![213](..\笔记图片\13\213.png)
 
-![214](E:\markdown笔记\笔记图片\13\214.png)
+![214](..\笔记图片\13\214.png)
 
-![215](E:\markdown笔记\笔记图片\13\215.png)
+![215](..\笔记图片\13\215.png)
 
 ### 60.什么是 HATEOAS
 
-![216](E:\markdown笔记\笔记图片\13\216.png)
+![216](..\笔记图片\13\216.png)
 
-![217](E:\markdown笔记\笔记图片\13\217.png)
+![217](..\笔记图片\13\217.png)
 
-![218](E:\markdown笔记\笔记图片\13\218.png)
+![218](..\笔记图片\13\218.png)
 
 我理解的HATEOAS就是通过link来定义操作。
 
-![219](E:\markdown笔记\笔记图片\13\219.png)
+![219](..\笔记图片\13\219.png)
 
 ### 61.使用 Spring Data REST 实现简单的超媒体服务（上）
 
-![220](E:\markdown笔记\笔记图片\13\220.png)
+![220](..\笔记图片\13\220.png)
 
-![221](E:\markdown笔记\笔记图片\13\221.png)
+![221](..\笔记图片\13\221.png)
 
 项目代码：
 
@@ -1813,7 +1813,7 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
 ### 62.使用 Spring Data REST 实现简单的超媒体服务(下)
 
-![222](E:\markdown笔记\笔记图片\13\222.png)
+![222](..\笔记图片\13\222.png)
 
 项目代代码：
 
@@ -1849,15 +1849,15 @@ if (asyncManager.isConcurrentHandlingStarted()) {
 
 ### 63.分布式环境中如何解决 Session 的问题
 
-![223](E:\markdown笔记\笔记图片\13\223.png)
+![223](..\笔记图片\13\223.png)
 
-![224](E:\markdown笔记\笔记图片\13\224.png)
+![224](..\笔记图片\13\224.png)
 
 Spring session其实就是集中式会话的一个实现；
 
-![225](E:\markdown笔记\笔记图片\13\225.png)
+![225](..\笔记图片\13\225.png)
 
-![226](E:\markdown笔记\笔记图片\13\226.png)
+![226](..\笔记图片\13\226.png)
 
 项目代码：
 
@@ -1904,17 +1904,17 @@ Spring session其实就是集中式会话的一个实现；
 
 ### 64.使用 WebFlux 代替 Spring MVC（上）
 
-![228](E:\markdown笔记\笔记图片\13\228.png)
+![228](..\笔记图片\13\228.png)
 
-![229](E:\markdown笔记\笔记图片\13\229.png)
+![229](..\笔记图片\13\229.png)
 
-![230](E:\markdown笔记\笔记图片\13\230.png)
+![230](..\笔记图片\13\230.png)
 
-![231](E:\markdown笔记\笔记图片\13\231.png)
+![231](..\笔记图片\13\231.png)
 
 其中基于注解的控制器与Spring MVC的方式是十分相似的。
 
-![232](E:\markdown笔记\笔记图片\13\232.png)
+![232](..\笔记图片\13\232.png)
 
 ### 65.使用 WebFlux 代替 Spring MVC（下）
 
@@ -1953,31 +1953,31 @@ Spring session其实就是集中式会话的一个实现；
 
 ### 66.SpringBucks 实战项目进度小结
 
-![233](E:\markdown笔记\笔记图片\13\233.png)
+![233](..\笔记图片\13\233.png)
 
-![234](E:\markdown笔记\笔记图片\13\234.png)
+![234](..\笔记图片\13\234.png)
 
 ## 第九章：重新认识Spring Boot
 
-![235](E:\markdown笔记\笔记图片\13\235.png)
+![235](..\笔记图片\13\235.png)
 
-![236](E:\markdown笔记\笔记图片\13\236.png)
+![236](..\笔记图片\13\236.png)
 
-![237](E:\markdown笔记\笔记图片\13\237.png)
+![237](..\笔记图片\13\237.png)
 
-![238](E:\markdown笔记\笔记图片\13\238.png)
+![238](..\笔记图片\13\238.png)
 
 Spring Boot的文档：<https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/reference/html/>
 
 ### 68.了解自动配置的实现原理
 
-![239](E:\markdown笔记\笔记图片\13\239.png)
+![239](..\笔记图片\13\239.png)
 
 其中在注解@SpringBootApplication中包含了@EnableAutoConfiguration。
 
-![240](E:\markdown笔记\笔记图片\13\240.png)
+![240](..\笔记图片\13\240.png)
 
-![241](E:\markdown笔记\笔记图片\13\241.png)
+![241](..\笔记图片\13\241.png)
 
 * @Conditional：它的作用是按照一定的条件进行判断，满足条件给容器注册bean。
 * @ConditionalOnClass：判断当前classpath下是否存在指定类，若存在则将当前的配置装载入spring容器。
@@ -1988,13 +1988,13 @@ Spring Boot的文档：<https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/re
 * @Configuration标注在类上，相当于把该类作为spring的xml配置文件中的`<beans>`，作用为：配置spring容器(应用上下文)
 * @EnableConfigurationProperties：在配置类上使用@EnableConfigurationProperties注解去指定这个类，这个时候就会让该类上的@ConfigurationProperties生效，然后作为bean添加进spring容器中
 
-![242](E:\markdown笔记\笔记图片\13\242.png)
+![242](..\笔记图片\13\242.png)
 
 在项目启动参数中添加`--debug`，然后再启动项目。就可以看到Spring自动配置的类有哪些，计算报告的生成是由org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener来做的。
 
 * org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportMessage
 
-![243](E:\markdown笔记\笔记图片\13\243.png)
+![243](..\笔记图片\13\243.png)
 
 项目代码：
 
@@ -2031,15 +2031,15 @@ Spring Boot的文档：<https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/re
         ```
 ### 69.动手实现自己的自动配置
 
-![244](E:\markdown笔记\笔记图片\13\244.png)
+![244](..\笔记图片\13\244.png)
 
-![245](E:\markdown笔记\笔记图片\13\245.png)
+![245](..\笔记图片\13\245.png)
 
-![246](E:\markdown笔记\笔记图片\13\246.png)
+![246](..\笔记图片\13\246.png)
 
-![247](E:\markdown笔记\笔记图片\13\247.png)
+![247](..\笔记图片\13\247.png)
 
-![248](E:\markdown笔记\笔记图片\13\248.png)
+![248](..\笔记图片\13\248.png)
 
 在IDEA中先通过File>import导入autoconfigure-demo，然后通过File>New>Module from existing source...分别导入geektime-spring-boot-autoconfig，greeting项目。
 
@@ -2153,15 +2153,15 @@ Spring Boot的文档：<https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/re
 
 ### 70.如何在低版本 Spring 中快速实现类似自动配置的功能
 
-![249](E:\markdown笔记\笔记图片\13\249.png)
+![249](..\笔记图片\13\249.png)
 
-![250](E:\markdown笔记\笔记图片\13\250.png)
+![250](..\笔记图片\13\250.png)
 
-![251](E:\markdown笔记\笔记图片\13\251.png)
+![251](..\笔记图片\13\251.png)
 
-![252](E:\markdown笔记\笔记图片\13\252.png)
+![252](..\笔记图片\13\252.png)
 
-![253](E:\markdown笔记\笔记图片\13\253.png)
+![253](..\笔记图片\13\253.png)
 
 * 源码解析
   * org.springframework.beans.factory.support.AbstractBeanFactory#getBean
@@ -2243,9 +2243,9 @@ Spring Boot的文档：<https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/re
 
 起步依赖的作用就是简化maven的依赖配置。
 
-![](E:\markdown笔记\笔记图片\13\254.png)
+![](..\笔记图片\13\254.png)
 
-![255](E:\markdown笔记\笔记图片\13\255.png)
+![255](..\笔记图片\13\255.png)
 
 在Spring Boot项目中，我们查看了他的子module spring-boot-parent，该项目里面只有一个pom文件，在module spring-boot-dependencies中的pom文件中则声明了大量的版本控制信息。这样做的意思就是，我通过一个只包含pom文件的starter来声明项目中具体的依赖的版本控制信息。
 
@@ -2255,7 +2255,7 @@ Spring Boot的文档：<https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/re
 <lettuce.version>5.2.0.RELEASE</lettuce.version>
 ```
 
-![256](E:\markdown笔记\笔记图片\13\256.png)
+![256](..\笔记图片\13\256.png)
 
 Spring Boot为我们提供了很多的starter，详情可以阅读相关的文档： https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/reference/html/using-boot-build-systems.html#using-boot-starter 
 
@@ -2263,13 +2263,13 @@ Spring Boot为我们提供了很多的starter，详情可以阅读相关的文�
 
 ### 72.定制自己的起步依赖
 
-![](E:\markdown笔记\笔记图片\13\257.png)
+![](..\笔记图片\13\257.png)
 
-![258](E:\markdown笔记\笔记图片\13\258.png)
+![258](..\笔记图片\13\258.png)
 
 在本节的操作中我们引入了四个项目分别是autoconfigure-demo，geektime-spring-boot-starter，geektime-spring-boot-backport，greeting，如下图所示：
 
-![](E:\markdown笔记\笔记图片\13\260.png)
+![](..\笔记图片\13\260.png)
 
 其中geektime-spring-boot-backport，greeting这两个项目没有变化。这里我来分别介绍下另外两个项目的变化：
 
@@ -2277,7 +2277,7 @@ Spring Boot为我们提供了很多的starter，详情可以阅读相关的文�
 
   1. pom文件的修改，修改后的pom文件的骨架结构如下图所示：
 
-     ![](E:\markdown笔记\笔记图片\13\259.png)
+     ![](..\笔记图片\13\259.png)
 
      添加了：
 
@@ -2299,28 +2299,28 @@ Spring Boot为我们提供了很多的starter，详情可以阅读相关的文�
 
 #### 1.外化配置的加载顺序
 
-![](E:\markdown笔记\笔记图片\13\261.png)
+![](..\笔记图片\13\261.png)
 
 * 其中标红的命令行参数，例如使用**--server.port=9000**这个配置就会覆盖默认的8080端口启动。
 
-![262](E:\markdown笔记\笔记图片\13\262.png)
+![262](..\笔记图片\13\262.png)
 
 * System.getProperties()处理的就是java -D参数指定的属性。
 * 操作系统环境变量：比如linux系统中环境变量就可以加载进来的作为系统的配置。
 
-![](E:\markdown笔记\笔记图片\13\263.png)
+![](..\笔记图片\13\263.png)
 
-![264](E:\markdown笔记\笔记图片\13\264.png)
+![264](..\笔记图片\13\264.png)
 
 #### 2.application.properties的存放位置
 
-![](E:\markdown笔记\笔记图片\13\265.png)
+![](..\笔记图片\13\265.png)
 
-![](E:\markdown笔记\笔记图片\13\266.png)
+![](..\笔记图片\13\266.png)
 
 #### 3.Relaxed Binding
 
-![](E:\markdown笔记\笔记图片\13\267.png)
+![](..\笔记图片\13\267.png)
 
 外置配置的相关参考文档： https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/reference/html/boot-features-external-config.html 
 
@@ -2328,11 +2328,11 @@ Spring Boot为我们提供了很多的starter，详情可以阅读相关的文�
 
 #### 1.基本知识
 
-![](E:\markdown笔记\笔记图片\13\268.png)
+![](..\笔记图片\13\268.png)
 
-![269](E:\markdown笔记\笔记图片\13\269.png)
+![269](..\笔记图片\13\269.png)
 
-![270](E:\markdown笔记\笔记图片\13\270.png)
+![270](..\笔记图片\13\270.png)
 
 #### 2.源码分析
 
