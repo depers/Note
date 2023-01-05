@@ -997,7 +997,7 @@ docker run --name nacos -d -p 8848:8848 -e MODE=standalone nacos/nacos-server
     	<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
     </dependency>
     ```
-    
+  
   2. 编辑application.properties
 
      ```properties
@@ -1172,7 +1172,8 @@ docker run --name nacos -d -p 8848:8848 -e MODE=standalone nacos/nacos-server
   
     8. 启动consul-waiter-service，然后在postman中再去请求http://localhost:8090/customer/menu ：
   
-      ![](../笔记图片\13-2\131.png)
+       ![](../笔记图片/13-2/131.png)
+  
 ### 101.使用Hystrix实现服务熔断（下）
 
    ![](../笔记图片\13-2\132.png)
@@ -1492,9 +1493,9 @@ netflix已经放弃了对Hystrix的维护工作，推荐我们使用Resilience4j
                  .get();
          }
        ```
-  
+
   然后在application.properties配置断路的相关配置，其中resilience4j.circuitbreaker.backends.后面跟的就是断路器的名字menu：
-  
+
      ```properties
      resilience4j.circuitbreaker.backends.menu.failure-rate-threshold=50
      resilience4j.circuitbreaker.backends.menu.wait-duration-in-open-state=5000
@@ -1502,7 +1503,7 @@ netflix已经放弃了对Hystrix的维护工作，推荐我们使用Resilience4j
      resilience4j.circuitbreaker.backends.menu.ring-buffer-size-in-half-open-state=3
      resilience4j.circuitbreaker.backends.menu.event-consumer-buffer-size=10
      ```
-  
+
   5. 启动consul-waiter-service和resilience4j-circuitbreaker-demo两个程序，访问 http://localhost:8090/actuator/circuitbreakers 就可以看到两个断路器的名字。
   
      ![](../笔记图片\13-2\152.png)
@@ -1512,17 +1513,17 @@ netflix已经放弃了对Hystrix的维护工作，推荐我们使用Resilience4j
      ![](../笔记图片\13-2\153.png)
      
   7. 停止consul-waiter-service，然后：`curl http://localhost:8090/customer/menu`，其中断路器menu是通过**CircuitBreakerRegistry**方式配置的断路。
-    
+
     访问 http://localhost:8090/actuator/circuitbreakerevents 的截图：
-  
+      
     ![](../笔记图片\13-2\154.png)
-  
+      
     控制台命令的截图：
-  
+      
     ![155](../笔记图片\13-2\155.png)
-  
+
   8. 停止consul-waiter-service，然后：`curl -X POST http://localhost:8090/customer/order`，断路器order是通过**注解**的方式配置的断路。
-    
+
     访问http://localhost:8090/customer/order的截图：
     
     ![](../笔记图片\13-2\156.png)
@@ -2737,7 +2738,7 @@ docker run --name rabbitmq -d -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_US
   10. 此时我们通过浏览器访问RabbitMQ： http://192.168.156.134:15672/ ，查看消息队列notifyOrders，从下图中可以发现他有两个binding。
   
      ![](../笔记图片\13-2\249.png)
-     
+  
   11. 下面我们通过postman进行测试，发送请求 http://localhost:8090/customer/order ：
   
      ![](../笔记图片\13-2\250.png)

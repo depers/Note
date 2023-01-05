@@ -476,6 +476,7 @@ Maven的构建遵从一个特定的生命周期去部署和分发目标项目，
 Maven Phase是代表Maven构建生命周期中的一个阶段，下面是default生命周期的最重要的一些阶段：
 
 - *validate* – 检查项目的正确性
+- *process-resources* - 将资源复制并处理到目标目录中，准备打包。
 - *compile* – 将源代码编译成二进制构件
 - *test-compile* - 编译测试源代码
 - *test* – 执行单元测试
