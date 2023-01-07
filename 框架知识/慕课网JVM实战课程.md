@@ -77,3 +77,86 @@
 
 参考“**Note/读书笔记/《深入理解Java虚拟机》/第6章 类文件结构**”的内容。
 
+### 2-9 ASM开发：编程模型和核心API
+
+> 编码项目位于mall/jvm/jvm-demo
+
+1. ASM概述
+    * ASM是一个Java字节码操纵框架，它能被用来动态生成类或者增强既有类的功能。
+    * ASM可以直接产生二进制class文件，也可以在类被加载入虚拟机之前动态改变类的行为，ASM从类文件中读入信息后，能够改变类行为，分析类信息，甚至能根据要求生成新类。
+    * 目前许多框架入cglib，Hibernate，Spring都直接或间接的使用ASM操作字节码。
+2. ASM编程模型
+    * Core API：提供了基于事件形式的编程模型。该模型不需要一次性将整个类的结构读取到内存中，因此这种方式更快，需要更少的内存，但这种编程方式难度较大。
+    * Tree API：提供了基于树形的编程模型。该模型需要一次性将一个类的完成结构全部读取到内存中，所以这种方式需要更多的内存，这种变成方式比较简单。
+3. ASM的Core API
+    * ASM Core API中操纵字节码的功能基于ClassVistor接口。这个接口中的每个方法对应了class文件中的每一项。
+    * ASM提供了三个基于ClassVisitor接口的类来实现class文件的生成和转换。
+        1. ClassReader：ClassReader解析一个类的class字节码。
+        2. ClassAdapter：ClassAdapter是ClassVisitor的实现类，实现要变化的功能。
+        3. ClassWriter：ClassWriter也是ClassVisitor的实现类，可以用来输出变化后的字节码。
+4. ASM给我们提供了ASMifier工具来帮助开发，可使用ASMifier工具生成ASM结构来对比，然后编写自己的asm程序。
+
+5. 使用ASMifier查看修改前代码的asm结构
+
+    * Java源代码
+
+        ```java
+        public class Main {
+        
+            public void test() throws Exception{
+                System.out.println("now in method test ---->");
+                Thread.sleep(1000);
+            }
+        }
+        ```
+
+    * 使用ASMifier查看asm结构
+
+        ```
+        java -cp /Users/depers/Desktop/software/apache-maven-3.8.6/repository/org/ow2/asm/asm/9.4/asm-9.4.jar:/Users
+        /depers/Desktop/software/apache-maven-3.8.6/repository/org/ow2/asm/asm-util/9.4/asm-util-9.4.jar org.objectweb.asm.util.ASMifier Main.class
+        ```
+
+6. 为代码添加运行耗时的计算逻辑
+
+    第一种改法：
+
+    ```java
+    public void test() throws Exception {
+    	  MyTimeLogger.start();
+      	System.out.println("now in method test ---->");
+      	Thread.sleep(1000L);
+      	long var1 = System.currentTimeMillis();
+      	MyTimeLogger.end();
+    }
+    ```
+
+    第二种改法：
+
+    ```java
+    public void test() throws Exception {
+        MyTimeLogger.start();
+        System.out.println("now in method test ---->");
+        Thread.sleep(1000L);
+        long var1 = System.currentTimeMillis();
+        MyTimeLogger.end();
+    }
+    ```
+
+7. 通过ASMifier查看上面代码的asm结构，然后通过asm提供的api修改原有的class文件，上述两端代码的修改的程序可以参考cn.bravedawn.jvm.asm.MyClassVisitor.MyMethodVisitor和cn/bravedawn/jvm/asm/MyClassVisitor2。
+
+8. 接着运行生成器修改已经编译好的class文件，具体可以参考cn.bravedawn.jvm.asm.Generator和cn.bravedawn.jvm.asm.Generator2。
+
+9. 此时我们编写测试类，就可以发现asm针对字节码的修改意见体现到了程序中。这里代码可以参考cn.bravedawn.jvm.asm.MyTest和cn.bravedawn.jvm.asm.MyTest2。
+
+### 2-10 ASM开发：ClassVisitor开发
+
+参见2-9的内容，代码位于jvm-demo的cn/bravedawn/jvm/asm包下。
+
+### 2-11 ASM开发：MethodVisitor开发
+
+参见2-9的内容，代码位于jvm-demo的cn/bravedawn/jvm/asm包下。
+
+### 2-12 ASM开发：实现模拟AOP的功能
+
+参见2-9的内容，代码位于jvm-demo的cn/bravedawn/jvm/asm包下。
