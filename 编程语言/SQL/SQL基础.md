@@ -195,12 +195,6 @@ SELECT col * col2 AS alias
 FROM mytable;
 ```
 
-#### Concat() 用于连接多个字段。许多数据库会使用空格把一个值填充为列宽，因此连接的结果会出现一些不必要的空格，使用 TRIM() 可以去除首尾空格。
-```
-SELECT Concat(TRIM(col1), '(', TRIM(col2), ')')
-FROM mytable;
-```
-
 --------------------函数---------------------------
 
 #### 各个 DBMS 的函数都是不相同的，因此不可移植。
@@ -335,7 +329,7 @@ SELECT col1, AVG(col5) AS num FROM mytable GROUP BY col1;
 /*--------------------子查询----------------------*/
 #### 子查询中只能返回一个字段的数据。
 #### 可以将子查询的结果作为 WHRER 语句的过滤条件：
-```
+```sql
 SELECT *
 FROM mytable1
 WHERE col1 IN (SELECT col2
@@ -343,7 +337,7 @@ WHERE col1 IN (SELECT col2
 ```
 
 #### 下面的语句可以检索出客户的订单数量，子查询语句会对第一个查询检索出的每个客户执行一次：
-```
+```sql
 SELECT cust_name, (SELECT COUNT(*)
 ​                   FROM Orders
 ​                   WHERE Orders.cust_id = Customers.cust_id)
@@ -497,3 +491,22 @@ WHERE col =2;
 6. `curdate()`，当前日期
 
 7. `curtime()`，当前时间
+
+8. `date()`，获取date类型字段的具体日期
+
+9. `time()`，获取date类型字段的具体时间
+
+## 时间比较
+
+![](../../笔记图片/32-SQL基础/1.png)
+
+## 字符串函数
+
+1. Concat() 用于连接多个字段。许多数据库会使用空格把一个值填充为列宽，因此连接的结果会出现一些不必要的空格，使用 TRIM() 可以去除首尾空格。
+
+    ```sql
+    SELECT Concat(TRIM(col1), '(', TRIM(col2), ')')
+    FROM mytable;
+    ```
+
+    
