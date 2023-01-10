@@ -232,14 +232,40 @@
 
     就拿我编写的cn.bravedawn.jvm.classloader.ClassLoaderStudy类，首先按照第一点他会通过AppClassLoader来加载，如果没有找到这个类所在的模块定义，就会去通过PlatformClassLoader去加载，如果在PlatformClassLoader加载的模块中找不到这个类，就会去找BoostrapClassLoader去加载这个类，如果还是找不到，就去找当前类加载器的下一级加载器去加载这个类。
 
-2. 双亲委派模型的优势
-
-    1. 双亲韦委派模型对于保证Java程序的稳定运行很重要，自己编写的类和Java提供的内库类只会被加载一次，从而避免了被恶意修改。
-    2. 实现双亲委派的代码在java.lang.ClassLoader的loadClass()方法中，如果要自定义类加载器，推荐覆盖实现findClass()方法。
-
-3. 参考文章：
+2. 参考文章：
 
     * [Java JVM JDK9-类加载机制 双亲委派模式](https://blog.csdn.net/xiaohulunb/article/details/103914303)
 
 ### 3-4 案例：自定义ClassLoader
 
+我们在cn.bravedawn.jvm.classloader.MyClassLoader中定义了自己的ClassLoader，覆盖了原有的findClass()方法，这里我们通过读取本地文件的方式来获取到class文件的信息从而减class文件装载到虚拟机中。其他场景下我们也可以自定义自己的classloader，比如装载前修改class文件进行方法增强，权限校验，加解密class文件，网络中的class文件。
+
+我在cn.bravedawn.jvm.classloader.MyClassLoaderTest测试类中加载MyClass.class文件，这里有两种情况：
+
+1. 在项目中没有创建`class/cn/bravedawn/jvm/classloader/MyClass.class`的时候，我们运行MyClassLoaderTest测试类时，JVM发现jvm.demo是一个具名模块，且在具名模块中可以找到类加载器AppClassLoader，所以就会使用AppClassLoader去加载MyClass.class文件。此时输出的结果是：
+
+    ```
+    cls Class loader = jdk.internal.loader.ClassLoaders$AppClassLoader@5a39699c
+    cls parent Class loader = jdk.internal.loader.ClassLoaders$PlatformClassLoader@1efbd816
+    ```
+
+2. 如果删除target下面的MyClass.class文件，创建`class/cn/bravedawn/jvm/classloader/MyClass.class`后，我们再次运行MyClassLoader.class测试类，此时JVM发现AppClassLoader加载不到MyClass.class，就会使用PlatformClassLoader去加载还是找不到，接着又会去BootstrapClassLoader去加载，最后发现都没加载到，就会使用子的加载器，即MyClassLoader去加载，此时的输出结果是：
+
+    ```
+    cls Class loader = cn.bravedawn.jvm.classloader.MyClassLoader@4909b8da
+    cls parent Class loader = jdk.internal.loader.ClassLoaders$AppClassLoader@5a39699c
+    ```
+
+### 3-5 双亲委派模型说明
+
+1. 双亲委派模型的重要特性
+    1. 双亲韦委派模型对于保证Java程序的稳定运行很重要，自己编写的类和Java提供的内库类只会被加载一次，从而避免了被恶意修改。
+    2. 实现双亲委派的代码在java.lang.ClassLoader的loadClass()方法中，如果要自定义类加载器，推荐覆盖实现findClass()方法。
+    3. 如果有一个类加载器能够加载某个类，称为 **定义类加载器**，所有能成功返回该类的Class的类加载器 都称为 **初始类加载器**。
+    4. 如果没有指定父加载器，默认将启动类加载器作为父加载器。
+    5. 每个类加载器都有自己的命名空间，命名空间由该加载器及其所有付加载器所加载的类构成，不同的命名空间，可以出现 类的全路径名 相同的情况。比如说相同的一段程序（我在程序里面加一段Thread.sleep(50000)的逻辑），我其实可以在IDE里面运行两次这段程序，此时就实现了上面所谓的不同的命名空间。
+    6. 运行时包由由同一个类加载器的类构成，决定两个类是否属于同一个运行时包，不仅要看**全路径名**是否一样，还要看**定义类加载器**是否相同。只有属于同一个运行时包的类才能实现相互包内可见。
+2. 破坏双亲委派模型
+    1. 双亲委派模型存在的问题：父加载器无法向下识别子加载器加载的资源。
+    2. 为了解决这个问题，引入了线程上下文类加载器，可以通过Tread的setContextClassLoader()进行设置。这里举的例子就是DriverManager.getConnection()父加载器通过线程上下文类加载器获取子级类加载器去加载MySQL的Driver类。具体可以参考：cn.bravedawn.jvm.classloader.DriverManagerTest的实现。
+    3. 另一种典型的情况就是实现热替换，比如OSGI的模块化热部署，它的类加载器就不再是严格按照双亲委派模型，很可能就在平级的类加载器中就执行了。
