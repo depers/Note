@@ -83,7 +83,7 @@
 
    解决办法：命令`mysql_install_db`，再启动MySQL就正常了。
 
-7. 输入`sudo mysql uroot -p`直接进入开始操作数据库，设置管理员和权限。下面是sql：
+7. 输入`sudo mysql -uroot -p`直接进入开始操作数据库，设置管理员和权限。下面是sql：
 
    ```
    select user,host,password from mysql.user;
@@ -104,7 +104,7 @@
    set password for root@127.0.0.1=password('fx1212')
    
    // 赋权
-   grant all privileges on *.* to 'root'@'%' identified by 'fx1212' with grant option;
+   GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'fx1212' WITH GRANT OPTION;
    flush privileges;
    ```
 
