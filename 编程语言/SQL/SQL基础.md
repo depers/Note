@@ -468,7 +468,7 @@ WHERE col =2;
 
 1. `date_add('某个日期时间', interval 1 时间种类名称)`，日期时间加计算
 
-   时间种类名称：`quarter`-季度，`week`-周，`day`-天，`hour`-小时，`minute`-分钟，`second`-秒，`microsecond`-毫秒
+   时间种类名称：`month`-月，quarter`-季度，`week`-周，`day`-天，`hour`-小时，`minute`-分钟，`second`-秒，`microsecond`-毫秒
 
    示例：
 
