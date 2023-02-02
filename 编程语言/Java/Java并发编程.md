@@ -1580,7 +1580,11 @@ FutureTask实现了Runnable和Future的接口，它既可以作为Runnable被线
 * Executors.newScheduledThreadPool：参见
   * schedule：com.bravedawn.concurrency.example.threadPool.ThreadPoolExample4
   * scheduleAtFixedRate与Timer：com.bravedawn.concurrency.example.threadPool.ThreadPoolExample5
+      * 创建一个给定初始延迟的间隔性的任务，之后的每次任务执行时间为 **初始延迟 + N * dela（间隔）**。
+      * 例如一个任务初始延迟为1分钟，间隔是1秒钟，之后每次任务执行的频率就是1分1秒，1分2秒，1分3秒....
+      * 与scheduleWithFixedDelay 最大的区别就是 ，scheduleAtFixedRate  **不受任务执行时间的影响**。
   * scheduleWithFixedDelay：com.bravedawn.concurrency.example.threadPool.ThreadPoolExample6
+      * 创建一个给定初始延迟的间隔性的任务，之后的下次执行时间是**上一次任务从执行到结束所需要的时间+给定的间隔时间**。
 
 #### 2.线程池的合理配置
 
