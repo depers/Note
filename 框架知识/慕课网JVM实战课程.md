@@ -549,5 +549,7 @@ Java程序对于类的使用方式分为：主动使用和被动使用，JVM必�
     * 然后根据方法体内部定义的变量顺序和作用域来分配slot。
     
     * slot是复用的，以节省栈帧的空间，这种设计可能会影响到系统的垃圾收集行为。
-    
-    * 
+
+### 5-2 案例：slot是复用的
+
+主要讨论了slot是可以复用的，具体的实现可以参考：jvm/jvm-demo/src/main/java/cn/bravedawn/jvm/excutor/SlotTest3.java
