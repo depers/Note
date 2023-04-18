@@ -21,7 +21,7 @@
      ```
      export JAVA_HOME=/usr/local/webapp/software/jdk1.8.0_151
      export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
-     export PATH=$JAVA_HOME/bin
+     export PATH=$PATH:$JAVA_HOME/bin
      ```
      
    * `source /etc/profile`
@@ -59,7 +59,7 @@
 
 2. 若本机没有安装，需到官网下载rpm文件进行安装，安装命令`rpm -Uvh *.rpm --nodeps --force`
 
-3. 安装之后启动mysql，命令`service mysqld start`，接着使用`sudo grep 'temporpary password /var/log/mysqld.log`查看临时密码。然后使用`mysql -uroot -p[temporpary password]`登录，直接进行第7步的配置工作
+3. 安装之后启动mysql，命令`service mysqld start`，接着使用`sudo grep 'temporary password' /var/log/mysqld.log`查看临时密码。然后使用`mysql -uroot -p[temporpary password]`登录，直接进行第7步的配置工作
 
 4. 若在/var/log/mysqld.log没有临时密码，则在/etc/my.conf添加skip-grant-tables，可以不用密码直接登录数据库。如下是my.conf文件：
 
@@ -336,7 +336,7 @@
 5. 启动filebeat：`/usr/local/filebeat-6.6.0/filebeat &`
 6. 查看线程：`ps -ef | grep filebeat`
 
-## Centos自启动配置
+## 10. Centos自启动配置
 
 修改/etc/rc.local文件
 
@@ -364,7 +364,80 @@ export JAVA_HOME=/usr/local/webapp/software/jdk1.8.0_211
 /usr/local/webapp/nginx/sbin/nginx
 ```
 
+## 11. Maven配置
 
+1. 下载maven的二进制压缩包，并解压
 
+2. 修改软件源，在conf/setting.xml文件的mirrors节点添加以下内容：
 
+    ```xml
+    <mirror>
+        <id>alimaven</id>
+        <mirrorOf>central</mirrorOf>
+        <name>aliyun maven</name>
+        <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+    </mirror>
+    ```
+
+3. 修改本地仓库目录
+
+    ```xml
+    <localRepository>/Users/depers/Desktop/package/apache-maven-3.9.1/repository</localRepository>
+    ```
+
+## 12. Mysql8在centos7上的安装
+
+1. 检查是否安装了MySQL：`rpm -qa|grep mysql-server`
+2. 若本机没有安装，需到官网下载rpm文件进行安装，安装命令`rpm -Uvh *.rpm --nodeps --force`
+
+3. 安装之后启动mysql，命令`service mysqld start`，接着使用`sudo grep 'temporary password' /var/log/mysqld.log`查看临时密码。然后使用`mysql -uroot -p[temporpary password]`登录
+
+4. 使用临时密码登录MySQL，重置root密码
+
+    ```sql
+    alter user 'root'@'localhost' identified by 'Fengxiao17393164120-+';
+    ```
+
+5. 修改MySQL密码策略
+
+    ```sql
+    -- 查看密码配置
+    SHOW VARIABLES LIKE 'validate_password%';
+    
+    -- 修改密码策略为较低
+    set global validate_password_policy=0;
+    
+    -- 重新设置一个简单的密码
+    alter user 'root'@'localhost' identified by 'fx12345678';
+    ```
+
+6. 为用户授权
+
+    ```sql
+    -- 查看用户是否有grant授权的权限
+    select user ,grant_priv, host from user ;
+    
+    -- 更新用户主机名字段
+    update user set host='%' where user='root' ;
+    
+    -- [数据库.数据表] TO [用户名@hostname]
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+    
+    flush privileges;
+    
+    -- 创建其他的用户(MySQl8将用户的创建和授权分开了)
+    #创建账户
+    create user 'root'@'%' identified by '123456';
+    
+    -- 修改密码
+    ALTER user 'depers'@'%' IDENTIFIED BY 'fengxiao1313';
+    
+    #赋予权限
+    grant all privileges on *.* to 'root'@'%' with grant option;
+    
+    #刷新
+    flush privileges;
+    ```
+
+7. 重启mysql
 
