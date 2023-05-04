@@ -212,7 +212,7 @@
 
 1. 类加载器的说明
     * 启动类加载器：用于加载启动的基础模块类，比如：java.base、java.management、java.xml等
-    * 平台类加载器：用于加载一些平台相关的模块，比如：java.scripting、java.compiler*、java.corba*等
+    * 平台类加载器：用于加载一些平台相关的模块，比如：java.scripting、java.compiler、java.corba等
     * 应用程序类加载器：用于加载应用级别的模块，比如：jdk.compiler、jdk.jartool、jdk.jshell等，还加载了classpath路径中所有的类库。
     * Java程序不能直接引用启动类加载器，直接设置classLoader位`null`，默认就是用启动类加载器。
     * 类加载器并不需要等到某个类“**首次主动使用**”的时候才加载它，JVM规范允许类加载在预料到某个类将要被使用的时候就预先加载它。
