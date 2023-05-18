@@ -509,4 +509,33 @@ WHERE col =2;
     FROM mytable;
     ```
 
-    
+# 事务
+
+### MYSQL 事务处理主要有两种方法：
+
+1. 用 BEGIN, ROLLBACK, COMMIT来实现
+    * **BEGIN** 开始一个事务
+    * **ROLLBACK** 事务回滚
+    * **COMMIT** 事务确认
+
+2. 直接用 SET 来改变 MySQL 的自动提交模式
+    * **SET AUTOCOMMIT=0** 禁止自动提交
+    * **SET AUTOCOMMIT=1** 开启自动提交
+
+对于一个MYSQL数据库（InnoDB），事务的开启与提交模式无非下面这两种情况：
+
+1>若参数autocommit=0，事务则在用户本次对数据进行操作时自动开启，在用户执行commit命令时提交，用户本次对数据库开始进行操作到用户执行commit命令之间的一系列操作为一个完整的事务周期。若不执行commit命令，系统则默认事务回滚。总而言之，当前情况下事务的状态是自动开启手动提交。
+
+2>若参数autocommit=1（系统默认值），事务的开启与提交又分为两种状态：
+
+①手动开启手动提交：当用户执行start transaction命令时（事务初始化），一个事务开启，当用户执行commit命令时当前事务提交。从用户执行start transaction命令到用户执行commit命令之间的一系列操作为一个完整的事务周期。若不执行commit命令，系统则默认事务回滚。
+
+②自动开启自动提交：如果用户在当前情况下（参数autocommit=1）未执行start transaction命令而对数据库进行了操作，系统则默认用户对数据库的每一个操作为一个孤立的事务，也就是说用户每进行一次操作系都会即时提交或者即时回滚。这种情况下用户的每一个操作都是一个完整的事务周期。
+
+
+
+# 编写sql中遇到的问题
+
+## 1. 如果左连接查询中涉及limt 1语句应该怎么写sql？
+
+这个问题的具体解决棒法参考：[Limiting a left join to returning one result?](https://stackoverflow.com/questions/11388443/limiting-a-left-join-to-returning-one-result)
