@@ -511,7 +511,7 @@ WHERE col =2;
 
 # 事务
 
-### MYSQL 事务处理主要有两种方法：
+### MYSQL 事务处理主要有两种方法
 
 1. 用 BEGIN, ROLLBACK, COMMIT来实现
     * **BEGIN** 开始一个事务

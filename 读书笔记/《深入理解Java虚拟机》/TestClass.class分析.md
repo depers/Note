@@ -2,6 +2,21 @@
 
 ## 用十六进制编辑器打开二进制文本展示
 
+TestClass.java源码：
+
+```java
+public class TestClass {
+
+    private int m;
+
+    public int inc() {
+        return m + 1;
+    }
+}
+```
+
+使用十六进制编辑器打开TestClass.class文件：
+
 ![](../../笔记图片/29-深入理解Java虚拟机/TestClass.class.png)
 
 ## javap -v TestClass.class文件输出
