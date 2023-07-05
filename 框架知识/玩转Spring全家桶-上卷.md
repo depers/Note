@@ -1986,7 +1986,9 @@ Spring Boot的文档：<https://docs.spring.io/spring-boot/docs/2.1.9.RELEASE/re
 * @ConditionalOnProperty：当配置了特定属性会怎么样。
 * @Import注解可以普通类导入到 IoC容器中。
 * @Configuration标注在类上，相当于把该类作为spring的xml配置文件中的`<beans>`，作用为：配置spring容器(应用上下文)
-* @EnableConfigurationProperties：在配置类上使用@EnableConfigurationProperties注解去指定这个类，这个时候就会让该类上的@ConfigurationProperties生效，然后作为bean添加进spring容器中
+* @EnableConfigurationProperties：在配置类上使用@EnableConfigurationProperties注解去指定这个类，这个时候就会让该类上的@ConfigurationProperties生效，然后作为bean添加进spring容器中。
+    * @ConfigurationProperties注解：该注解主要是用来将配置文件中的属性绑定的相应的bean对象上。可以作用于类或是方法上。
+
 
 ![242](..\笔记图片\13\242.png)
 
