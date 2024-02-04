@@ -244,7 +244,7 @@
 
 ### 3-4 案例：自定义ClassLoader
 
-我们在cn.bravedawn.jvm.classloader.MyClassLoader中定义了自己的ClassLoader，覆盖了原有的findClass()方法，这里我们通过读取本地文件的方式来获取到class文件的信息从而减class文件装载到虚拟机中。其他场景下我们也可以自定义自己的classloader，比如装载前修改class文件进行方法增强，权限校验，加解密class文件，网络中的class文件。
+我们在cn.bravedawn.jvm.classloader.MyClassLoader中定义了自己的ClassLoader，覆盖了原有的findClass()方法，这里我们通过读取本地文件的方式来获取到class文件的信息从而将class文件装载到虚拟机中。其他场景下我们也可以自定义自己的classloader，比如装载前修改class文件进行方法增强，权限校验，加解密class文件，网络中的class文件。
 
 我在cn.bravedawn.jvm.classloader.MyClassLoaderTest测试类中加载MyClass.class文件，这里有两种情况：
 
