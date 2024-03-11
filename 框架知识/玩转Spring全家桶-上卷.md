@@ -331,6 +331,8 @@ HikariCP的官网：<https://github.com/brettwooldridge/HikariCP>
 
 编程式事务的两种办法，本视频中着重演示了第一个方法Transaction Tempate，具体参见：<https://github.com/depers/geektime-spring-code/tree/master/11/programmatic-transaction-demo>
 
+关于上面手动事务的处理还可以参考博客：[深入理解TransactionTemplate编程式事务](https://www.cnblogs.com/zjm-1/p/11006438.html)
+
 ![42](..\笔记图片\13\42.png)
 
 ![43](..\笔记图片\13\43.png)

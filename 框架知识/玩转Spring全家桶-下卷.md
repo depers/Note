@@ -1346,7 +1346,7 @@ docker run --name nacos -d -p 8848:8848 -e MODE=standalone nacos/nacos-server
 
 ![](../笔记图片\13-2\145.png)
 
-如果我们要对集群实现熔断信息的监控，每台机器用一个页面去监控的话就显的十分繁琐。此时我们就可以通过turbine去解决这个问题，如果我们要去监控所有的customer-service的熔断信息，我们就可以把**集群名**设置为**customer-service**就可以了。这时turbine就回去注册中心去查找所有的customer-service的节点，把他的熔断信息聚合起来，变成一个stream去输出，此时hystrix Bashboard去监控一个turbine stream就可以了。
+如果我们要对集群实现熔断信息的监控，每台机器用一个页面去监控的话就显的十分繁琐。此时我们就可以通过turbine去解决这个问题，如果我们要去监控所有的customer-service的熔断信息，我们就可以把**集群名**设置为**customer-service**就可以了。这时turbine就回去注册中心去查找所有的customer-service的节点，把他的熔断信息聚合起来，变成一个stream去输出，此时hystrix Dashboard去监控一个turbine stream就可以了。
 
 ##### 1.项目代码
 
@@ -1479,58 +1479,58 @@ netflix已经放弃了对Hystrix的维护工作，推荐我们使用Resilience4j
      ```
 4. 在geektime.spring.springbucks.customer.controller.CustomerController中通过**CircuitBreakerRegistry**方式配置断路：
   
-       ```java
-       public CustomerController(CircuitBreakerRegistry registry) {
-             circuitBreaker = registry.circuitBreaker("menu");
-         }
-         
-         @GetMapping("/menu")
-         public List<Coffee> readMenu() {
-             return Try.ofSupplier(
-                 CircuitBreaker.decorateSupplier(circuitBreaker,
-                                                 () -> coffeeService.getAll()))
-                 .recover(CircuitBreakerOpenException.class, Collections.emptyList())
-                 .get();
-         }
-       ```
+   ~~~java
+   public CustomerController(CircuitBreakerRegistry registry) {
+       circuitBreaker = registry.circuitBreaker("menu");
+   }
+   
+   @GetMapping("/menu")
+   public List<Coffee> readMenu() {
+       return Try.ofSupplier(
+           CircuitBreaker.decorateSupplier(circuitBreaker,
+                                           () -> coffeeService.getAll()))
+           .recover(CircuitBreakerOpenException.class, Collections.emptyList())
+           .get();
+   }
+   ~~~
 
   然后在application.properties配置断路的相关配置，其中resilience4j.circuitbreaker.backends.后面跟的就是断路器的名字menu：
 
-     ```properties
-     resilience4j.circuitbreaker.backends.menu.failure-rate-threshold=50
-     resilience4j.circuitbreaker.backends.menu.wait-duration-in-open-state=5000
-     resilience4j.circuitbreaker.backends.menu.ring-buffer-size-in-closed-state=5
-     resilience4j.circuitbreaker.backends.menu.ring-buffer-size-in-half-open-state=3
-     resilience4j.circuitbreaker.backends.menu.event-consumer-buffer-size=10
-     ```
+ ```properties
+ resilience4j.circuitbreaker.backends.menu.failure-rate-threshold=50
+ resilience4j.circuitbreaker.backends.menu.wait-duration-in-open-state=5000
+ resilience4j.circuitbreaker.backends.menu.ring-buffer-size-in-closed-state=5
+ resilience4j.circuitbreaker.backends.menu.ring-buffer-size-in-half-open-state=3
+ resilience4j.circuitbreaker.backends.menu.event-consumer-buffer-size=10
+ ```
 
   5. 启动consul-waiter-service和resilience4j-circuitbreaker-demo两个程序，访问 http://localhost:8090/actuator/circuitbreakers 就可以看到两个断路器的名字。
-  
+
      ![](../笔记图片\13-2\152.png)
-  
+
   6. 通过连接 http://localhost:8090/actuator/circuitbreakerevents 就可以看到我通过curl请求http://localhost:8090/customer/order和http://localhost:8090/customer/menu的记录。
-  
+
      ![](../笔记图片\13-2\153.png)
-     
+
   7. 停止consul-waiter-service，然后：`curl http://localhost:8090/customer/menu`，其中断路器menu是通过**CircuitBreakerRegistry**方式配置的断路。
 
-    访问 http://localhost:8090/actuator/circuitbreakerevents 的截图：
-      
-    ![](../笔记图片\13-2\154.png)
-      
-    控制台命令的截图：
-      
-    ![155](../笔记图片\13-2\155.png)
+     访问 http://localhost:8090/actuator/circuitbreakerevents 的截图：
+
+     ![](../笔记图片\13-2\154.png)
+
+     控制台命令的截图：
+
+     ![155](../笔记图片\13-2\155.png)
 
   8. 停止consul-waiter-service，然后：`curl -X POST http://localhost:8090/customer/order`，断路器order是通过**注解**的方式配置的断路。
 
-    访问http://localhost:8090/customer/order的截图：
-    
-    ![](../笔记图片\13-2\156.png)
-    
-    控制台命令截图：
-    
-    ![](../笔记图片\13-2\157.png)
+     访问http://localhost:8090/customer/order的截图：
+
+     ![](../笔记图片\13-2\156.png)
+
+     控制台命令截图：
+
+     ![](../笔记图片\13-2\157.png)
 
 #### 2.源码分析
 
