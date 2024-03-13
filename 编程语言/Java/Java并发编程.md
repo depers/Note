@@ -352,7 +352,9 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
   
  * `AtomicLongArray`：根据索引原子更新长整型数组里的元素
 
-### 2.原子性——锁（JDK中提供原子性的除了atomic之外还有锁——下面的两个锁）
+### 2.原子性——锁
+
+JDK中提供原子性的除了atomic之外还有锁——下面的两个锁：
 
 ![8-3](..\..\笔记图片\8\8-3.png)
 
@@ -554,20 +556,27 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
 ![](..\..\笔记图片\8\28.png)
 
-### volatile关键字
+### 5.volatile关键字
 
 在 Java 中，volatile关键字用于修饰变量，它可以确保变量的可见性和顺序性，但不保证原子性。下面是volatile关键字的原理和使用场景：
 1. 原理：
 
     * 可见性：当一个线程修改了被volatile修饰的变量时，其他线程可以立即看到这个变量的最新值，而不需要通过锁机制来保证可见性。这是因为 Java 内存模型会在写操作后将变量的值立即刷新到主内存中，并使其他线程的缓存失效。
     * 顺序性：在多线程环境下，volatile关键字可以保证代码的执行顺序，即在一个线程中，对volatile变量的操作会按照顺序执行，不会被重排序。这是因为 Java 编译器在生成指令时，会遵循happens-before 原则，确保对volatile变量的写操作一定在其读操作之前完成。
-
 2. 使用场景：
 
     * 共享变量：当一个变量被多个线程共享时，如果不使用volatile关键字，可能会出现可见性问题。使用volatile关键字可以确保变量在多个线程之间的可见性。
-
-    * 状态标志：在某些情况下，需要使用一个变量来表示某个状态，例如线程的启动或停止状态。使用volatile关键字可以确保线程在读取状态标志时获取到最新的值。
+* 状态标志：在某些情况下，需要使用一个变量来表示某个状态，例如线程的启动或停止状态。使用volatile关键字可以确保线程在读取状态标志时获取到最新的值。
     * 双重检查锁定：在双重检查锁定（Double-Checked Locking）的实现中，需要使用volatile关键字来保证变量的可见性和顺序性。
+3. 当且仅当满足如下条件时才应该使用volatile变量：
+    1. 对变量的写入操作**不依赖变量的当前值**，或者你能确保只有单个线程更新变量的值。换句话说就是说不适合做计数操作，很明显该操作依赖当前值。
+    2. 该变量不会与其他状态变量一起纳入不变性条件中。volatile修饰的变量没有包含在具有其他变量的不变式中。
+    3. 在访问变量时不需要加锁。
+
+### 6.总结
+
+1. **无状态对象一定是线程安全的**。如果一个类没有声明私有属性，我们称他实例化的对象就是无状态对象。
+2. **控制锁的作用域**，尽量在存在竞态条件的范围内加锁，从而提高并发能力。
 
 ## 第5章 安全发布对象
 
@@ -639,8 +648,8 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
   
 * 不正确的发布可变对象可能会导致两种错误：
 
-  * 发布线程以外的其他线程都可以看到发布对象过期的值
-  * 线程看到的对象的引用是最新的，但是对象状态的值却是失效
+  * 发布线程以外的其他线程都可以看到发布对象过期的值。
+  * 线程看到的对象的引用是最新的，但是对象状态的值却是失效。
 
 参考：
 
@@ -884,6 +893,11 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
 
 * ThreadLocal（详情参见：com.bravedawn.concurrency.example.threadlocal）
 
+  * ThreadLocal的内部实现
+
+    1. 线程Thread存在一个ThreadLocal.ThreadLocalMap的属性。
+    2. ThreadLocal内部存在一个`ThreadLocalMap`，这个map的key是一个弱引用`WeakReference`包裹的ThreadLocal（也就是自己本身）， value则是要进行线程隔离的变量。
+
   * 使用TreadLocal的相关场景：
 
     在我们进行**web开发的时候**，用户的每一个请求就是一个线程。一般的话我们获取用户的信息，需要在controller层通过request进行获取，然后传到service层或者是util里，这样传递数据是很费劲麻烦的。而我们使用TreadLocal之后，我们在请求已经到了后端服务器，在进行处理之前调用RequestHolder.add()将相关信息保存到ThreadLocal中，之后我们随用随取，当请求结束后，我们在调用RequestHolder.remove()。
@@ -891,21 +905,21 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
   * 具体实现
 
     * ThreadLocal处理类：com.bravedawn.concurrency.example.threadlocal.RequestHolder
-    
+
     * Filter类：com.bravedawn.concurrency.HttpFilter
-    
+
     * Interceptor类：com.bravedawn.concurrency.HttpInterceptor
-    
+
     * Controller类：com.bravedawn.concurrency.example.threadlocal.ThreadlocalController
-    
+
     * 配置类，用于配置Filter和Interceptor：com.bravedawn.concurrency.ConcurrencyApplication
-    
+
       * Spring Boot Filter的写法
-    
+
         1. 编写com.bravedawn.concurrency.HttpFilter
-    
+
         2. 在Application中进行配置
-    
+
            ```java
            @Bean
            public FilterRegistrationBean httpFilter(){
@@ -915,24 +929,24 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
                return registrationBean;
            }
            ```
-    
+
       * Spring Boot Interceptor的写法
-    
+
         1. 编写com.bravedawn.concurrency.HttpInterceptor
-    
+
         2. 首先让Application类继承`WebMvcConfigurationSupport`
-    
+
         3. 在Application中进行配置
-    
+
            ```java
            @Override
            protected void addInterceptors(InterceptorRegistry registry) {
            	registry.addInterceptor(new HttpInterceptor()).addPathPatterns("/**");
            }
            ```
-    
+
   * **ThreadLocal对象通常用于防止可变的单实例变量或全局变量进行共享**。例如：在单线程应用程序中可能会维持一个全局的数据库连接，并在程序启动时初始化这个连接对象，从而避免在调用每个方法时都要传递一个Connection对象。由于JDBC的连接对象不一定是线程安全的，因此，当多线程程序在没有协同的情况下使用全局变量时，就不是线程安全的。通过将JDBC的连接保存到ThreadLocal对象中，每个线程都会拥有属于自己的连接，如下为代码示例。
-  
+
     ```java
     private static ThreadLocal<Connection> connectionHolder = new ThreadLocal<Connection>(){
         //初始化ThreadLocal对象connectionHolder的共享变量为Connection类型的对象
@@ -946,13 +960,13 @@ Java内存模型还规定了在执行上述八种基本操作时，必须满足�
         return connectionHolder.get();
     }
     ```
-    
+
   * ThreadLocal的作用
-  
+
     ThreadLocal是解决线程安全问题一个很好的思路，它**通过为每个线程提供一个独立的变量副本，解决了变量并发访问的冲突问题**。在很多情况下，ThreadLocal比直接使用synchronized同步机制解决线程安全问题更简单，更方便，且结果程序拥有更高的并发性。
-  
+
   * ThreadLocal的使用场景
-  
+
     在Java的多线程编程中，为保证多个线程对共享变量的安全访问，通常会使用synchronized来保证同一时刻只有一个线程对共享变量进行操作。这种情况下可以将[类变量](https://links.jianshu.com/go?to=https%3A%2F%2Fbaike.baidu.com%2Fitem%2F%E7%B1%BB%E5%8F%98%E9%87%8F)放到ThreadLocal类型的对象中，使变量在每个线程中都有独立拷贝，不会出现一个线程读取变量时而被另一个线程修改的现象。最常见的ThreadLocal使用场景为用来解决数据库连接、Session管理等。
 
 ### 3.线程不安全的类与写法
