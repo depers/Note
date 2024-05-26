@@ -28,7 +28,7 @@
 
 * 提供的端点，默认打开的端点：
 
-    1. `/health：用来做健康检查的。
+    1. `/health`：用来做健康检查的。
     2. `/info`：用来描述引用信息的。
 
 * 常用端点
@@ -75,5 +75,12 @@ Spring Boot配置管理的17中姿势：
 
 # 2.8 必会：Profile
 
+## 第一种方式：连字符
 
+这种方式只适用于yml文件，不同环境的配置可以通过连字符进行分割。
 
+<img src="../../笔记图片/35-Spring Cloud Alibaba入门到进阶/10.png" style="zoom:50%;" />
+
+## 第二种方式：拆分文件
+
+针对于properties和yml文件可以使用application-dev/prod.properties的方式对不同环境的配置进行区分。

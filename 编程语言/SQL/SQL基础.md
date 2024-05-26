@@ -1,4 +1,4 @@
-#### 创建一个数据库
+# 创建一个数据库
 
 ```sql
 CREATE DATABASE IF NOT EXISTS db_test_1 DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
@@ -118,16 +118,24 @@ SELECT DISTINCT col1 FROM mytable;
 
 * 返回前五行：
 
-```sql
-SELECT * FROM mytable LIMIT 5;
+    ```sql
+    SELECT * FROM mytable LIMIT 5;
+    
+    SELECT * FROM mytable LIMIT 0, 5;
+    ```
+* 返回4~6行：
 
-SELECT * FROM mytable LIMIT 0, 5;
-```
-* 返回3~5行：
+    第一个参数：起始位置；第二个参数：返回的记录数量或者说偏移量。
 
-```sql
-SELECT * FROM mytable LIMIT 2, 5;
-```
+    ```sql
+    SELECT * FROM mytable LIMIT 2, 3;
+    ```
+
+    第一个参数：返回的记录数量或者说偏移量，第二个参数：起始位置。
+    
+    ```sql
+    select * from mytable LIMIT 3 OFFSET 2;
+    ```
 
 ## 排序
 
