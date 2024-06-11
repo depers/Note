@@ -1168,7 +1168,7 @@ JDK中提供原子性的除了atomic之外还有锁——下面的两个锁：
 * AQS的组件
   * CountDownLatch
   * Semaphore
-  * 
+  * CyclicBarrier
   * ReentrantLock
   * Condition
   * FutureTask
@@ -1862,11 +1862,11 @@ Spring对每个bean提供了一个scope属性来表示该bean的作用域。它�
 
 * HashMap在用iterator遍历的同时，不允许修改HashMap；ConcurrentHashMap允许该行为，并且更新对后续的遍历是可见的；
 
-#### Java8对ConcurrentMap的改进
+#### Java8对ConcurrentHashMap的改进
 
 * Java7中的ConcurrentHashMap理论上最大并发数和Segment个数相等；
 
-* Java8废弃了分段锁的方案，直接使用一个大数组，并对哈希碰撞下的寻址做了优化，当链表的长度超过一定值（默认8），列表将转换成红黑树，寻址的时间复杂度从O(n)降为O(logn)；
+* Java8废弃了分段锁的方案，直接使用一个大数组，并对哈希碰撞下的寻址做了优化，当链表的长度超过一定值（默认8），链表将转换成红黑树，寻址的时间复杂度从O(n)降为O(logn)；
 
   ![](..\..\笔记图片\8\52.webp)
 
