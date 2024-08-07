@@ -64,11 +64,19 @@ SELECT * FROM mytable;
 ```
 
 # 更新
+
+## 普通语法
+
 ```sql
 UPDATE mytable SET col2 = 'xiaoming' WHERE id = 1;
 ```
 
+## 如何顺序更新
+
+有一个场景是这样的，我这边要更新一批数据的业务日期，
+
 # 删除
+
 ```sql
 DELETE FROM mytable1 WHERE id = 1;
 ```
@@ -123,9 +131,9 @@ SELECT DISTINCT col1 FROM mytable;
     
     SELECT * FROM mytable LIMIT 0, 5;
     ```
-* 返回4~6行：
+* 返回3~5行：
 
-    第一个参数：起始位置；第二个参数：返回的记录数量或者说偏移量。
+    第一个参数：起始位置；第二个参数：返回的记录数量或者说偏移量。跳过前面2行，取3条数据
 
     ```sql
     SELECT * FROM mytable LIMIT 2, 3;
@@ -135,6 +143,20 @@ SELECT DISTINCT col1 FROM mytable;
     
     ```sql
     select * from mytable LIMIT 3 OFFSET 2;
+    ```
+    
+* mysql子查询用limit报错（ “This version of MySQL doesn’t yet support ‘LIMIT & IN/ALL/ANY/SOME subquery’ ”）
+
+    执行失败的sql：
+
+    ```sql
+    select * from table where id in (select id from table limit 10);
+    ```
+
+    修改后的sql：
+
+    ```sql
+    select * from table where id in (select t.id from (select * from table limit 10)as t)
     ```
 
 ## 排序
