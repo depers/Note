@@ -65,3 +65,26 @@
 
 ![](../../笔记图片/36-Netty 源码剖析与实战/如何在Netty中使用Reactor的三种模式.png)
 
+## 11 | 源码剖析：Netty对Reactor的支持
+
+Netty对Reactor模式支持的常见疑问：
+
+![](../../笔记图片/36-Netty 源码剖析与实战/解析Netty对Reactor模式支持的常见疑问.png)
+
+首先第一个问题，Netty是如何支持主从Reactor模式的：
+
+这个方法的入口是：`ServerBootstrap#group(io.netty.channel.EventLoopGroup, io.netty.channel.EventLoopGroup)`，在这里会将bossGroup赋值给`io.netty.bootstrap.AbstractBootstrap#group`对象。这个对象会在下面bind中的`io.netty.bootstrap.AbstractBootstrap#initAndRegister`方法中被使用，也就是下面的这句：
+
+```Java
+ChannelFuture regFuture = config().group().register(channel);
+```
+
+这里的`config().group()`就是bossGroup，channel就是`NioServerSocketChannel`，对应与Java NIO中的`ServerSocketChannel`。
+
+这个方法是的调用入口是：`ServerBootstrap.bind()`
+
+![](../../笔记图片/36-Netty 源码剖析与实战/将Netty的Channel注册到Selector.png)
+
+最后，这个NioServerSocketChannel最后注册到Selector选择器上，其中在注册选择器的时候，会从bossGroup的线程组中选一个线程去做这个注册工作。
+
+接着我们来看workGroup，在`io.netty.bootstrap.ServerBootstrap.ServerBootstrapAcceptor#channelRead`方法中。
