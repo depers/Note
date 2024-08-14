@@ -307,8 +307,10 @@ FROM mytable
 
 #### 在 SQL 中增加 HAVING 子句原因是，WHERE 关键字无法与合计函数一起使用。
 
-/*-------------------------------分组-------------------------*/
-#### 当前的数据表数据
+# 分组
+
+当前的数据表数据
+
 SELECT * FROM mytable；;
 
 | id | col1       | col2       | col4 | col5 |
@@ -316,14 +318,16 @@ SELECT * FROM mytable；;
 |  1 | 1811942438 | kanglirong | NULL |   99 |
 |  2 | 1811942438 | fengxiao   | aaa  |   66 |
 
-#### （如上表信息）根据col1进行分组查询，切记GROUP BY后面的字段名必须和SELECT 查询语句后面的字段值相同。
+（如上表信息）根据col1进行分组查询，切记GROUP BY后面的字段名必须和SELECT 查询语句后面的字段值相同。其中col1在group by关键字后面我们称它为聚合列，`count(*)`称为聚合函数。
+
 ```
 SELECT col1, COUNT(*) AS num
 FROM mytable
 GROUP BY col1;
 ```
 
-#### WHERE 过滤行，HAVING 过滤分组。行过滤应当先与分组过滤；
+WHERE 过滤行，HAVING 过滤分组。行过滤应当先与分组过滤；
+
 ```
 SELECT col, COUNT(*) AS num
 FROM mytable
@@ -332,7 +336,8 @@ GROUP BY col
 HAVING COUNT(*) >= 2;
 ```
 
-#### GROUP BY 的排序结果为分组字段，而 ORDER BY 也可以以聚集字段来进行排序。
+GROUP BY 的排序结果为分组字段，而 ORDER BY 也可以以聚集字段来进行排序。
+
 ```
 SELECT col, COUNT(*) AS num
 FROM mytable
@@ -340,10 +345,23 @@ GROUP BY col
 ORDER BY num;
 ```
 
-#### （如上表信息） 可以通过GROUP BY分组使用函数计算平均值。
+（如上表信息） 可以通过GROUP BY分组使用函数计算平均值。
+
 ```
 SELECT col1, AVG(col5) AS num FROM mytable GROUP BY col1;
 ```
+
+## 分组去重
+
+例如下面的sql，如果要保证col1、col2和col3都是不重复的，可以使用`group by`进行去重。
+
+```sql
+select col1, col2, col3
+from mytable
+group by col1, col2, col3
+```
+
+
 
 #### 分组规定
 
@@ -355,8 +373,8 @@ SELECT col1, AVG(col5) AS num FROM mytable GROUP BY col1;
 
 4. 大多数 SQL 实现不支持 GROUP BY 列具有可变长度的数据类型。
 
+# 子查询
 
-/*--------------------子查询----------------------*/
 #### 子查询中只能返回一个字段的数据。
 #### 可以将子查询的结果作为 WHRER 语句的过滤条件：
 ```sql

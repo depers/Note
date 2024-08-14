@@ -71,7 +71,7 @@ Netty对Reactor模式支持的常见疑问：
 
 ![](../../笔记图片/36-Netty 源码剖析与实战/解析Netty对Reactor模式支持的常见疑问.png)
 
-首先第一个问题，Netty是如何支持主从Reactor模式的：
+### 第一个问题：Netty是如何支持主从Reactor模式的？
 
 这个方法的入口是：`ServerBootstrap#group(io.netty.channel.EventLoopGroup, io.netty.channel.EventLoopGroup)`，在这里会将bossGroup赋值给`io.netty.bootstrap.AbstractBootstrap#group`对象。这个对象会在下面bind中的`io.netty.bootstrap.AbstractBootstrap#initAndRegister`方法中被使用，也就是下面的这句：
 
@@ -87,4 +87,38 @@ ChannelFuture regFuture = config().group().register(channel);
 
 最后，这个NioServerSocketChannel最后注册到Selector选择器上，其中在注册选择器的时候，会从bossGroup的线程组中选一个线程去做这个注册工作。
 
-接着我们来看workGroup，在`io.netty.bootstrap.ServerBootstrap.ServerBootstrapAcceptor#channelRead`方法中。
+接着我们来看workGroup，在`io.netty.bootstrap.ServerBootstrap.ServerBootstrapAcceptor#channelRead`方法中。方法的参数是`msg`，是一个`NioSocketChannel`，当客户端发起请求的时候就会走到这里，将客户端请求的channel注册到workGroup上。
+
+综上所述，bossGroup负责accept请求，workGroup负责请求的读操作和写操作。
+
+### 第二个问题：为什么说Netty的main reactor只会用到线程池中的一个线程？
+
+代码的关键入口是：`io.netty.util.concurrent.MultithreadEventExecutorGroup#next`，调用的对账信息如下图：
+
+![](../../笔记图片/36-Netty 源码剖析与实战/mainReactor只会使用一个线程.png)
+
+这里的这个`chooser`的实现有两种，一个是`PowerOfTowEventExecutorChooser`，一个是`GenericEventExecutorChooser`，使用这两种的哪一种，代码如下：
+
+```Java
+public EventExecutorChooser newChooser(EventExecutor[] executors) {
+    // 判断bossGroup的线程池数量是否为 2 的幂次方
+    if (isPowerOfTwo(executors.length)) {
+        return new PowerOfTowEventExecutorChooser(executors);
+    } else {
+        return new GenericEventExecutorChooser(executors);
+    }
+}
+```
+
+这两种具体的next方法，其实就是取线程池中的一个线程去处理main Reactor的逻辑。在上面的堆栈图中我们看到，最开始触发的逻辑的`ServerBootstrap.bind()`方法，对于服务器端来说，它的启动只会绑定一个端口，所以只有一个线程。
+
+### 第三个问题：Netty给NioSocketChannel分配NioEventLoop的规则是什么？
+
+`NioEventLoop`代表一个处理线程。bossGroup和workGroup如果不指定线程数的话，都会创建`CPU核心数*2`的`NioEventLoop`。具体的分配规则就是上面说到的`PowerOfTowEventExecutorChooser`和`GenericEventExecutorChooser`。方法的入口在：`io.netty.util.concurrent.MultithreadEventExecutorGroup#next`。
+
+### 第四个问题：通用模式的NIO实现多路复用器是怎么跨平台的
+
+
+
+
+
