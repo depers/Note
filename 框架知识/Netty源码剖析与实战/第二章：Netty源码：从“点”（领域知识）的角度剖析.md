@@ -118,7 +118,83 @@ public EventExecutorChooser newChooser(EventExecutor[] executors) {
 
 ### 第四个问题：通用模式的NIO实现多路复用器是怎么跨平台的
 
+在我们声明`NioEventLoopGroup`对象时，代码入口：`io.netty.channel.nio.NioEventLoopGroup#NioEventLoopGroup(int, java.util.concurrent.Executor)`。代码如下：
 
+```Java
+public NioEventLoopGroup(int nThreads, Executor executor) {
+    this(nThreads, executor, SelectorProvider.provider());
+}
+```
 
+接着看`java.nio.channels.spi.SelectorProvider#provider`，这里面有一句：
 
+```Java
+provider = sun.nio.ch.DefaultSelectorProvider.create();
+```
 
+这个方法在不同平台的JDK上是有不同的实现的，也就是说不同的平台使用的多路复用器是不一样的。
+
+## 12 | TCP粘包-半包Netty全搞定
+
+本节讨论的问题：
+
+![](../../笔记图片/36-Netty 源码剖析与实战/tcp粘包和半包的问题.png)
+
+### 什么是粘包和半包
+
+* 粘包
+
+    粘包是指发送方向接收方发送多个数据包时，接收方接收到的数据包并没有按照发送方发送的界限进行区分，而是将多个数据包的数据连续地接收到一起。这通常发生在应用层发送的数据小于TCP层的MSS（最大报文段长度）时，TCP层可能会将多个应用层数据合并为一个TCP段发送出去。接收方在接收到这个TCP段后，如果没有明确的数据边界，就可能出现粘包现象。
+
+    ![](../../笔记图片/36-Netty 源码剖析与实战/粘包的主要原因.png)
+
+* 半包
+
+    半包是指接收方在接收数据时，一个数据包被分成两部分接收，即数据包没有完整地接收。这可能是由于网络延迟、丢包或其他网络问题导致的。当接收方尝试处理一个不完整的数据包时，就会出现半包问题。
+
+    ![](../../笔记图片/36-Netty 源码剖析与实战/半包的主要原因.png)
+
+    ![](../../笔记图片/36-Netty 源码剖析与实战/从收发角度来看.png)
+
+### 为什么TCP应用中会出现粘包和半包现象
+
+根本原因：TCP是流式协议，消息没有边界。
+
+提示：UDP没有粘包和半包的问题，因为他的消息发送和接收，就像邮递的快递，虽然一次运输多个，但是每个包裹都有边界，一个一个签收。
+
+### 解决粘包和半包的几种办法
+
+推荐封装成帧中的第三种，固定长度字段存储内容的长度信息。
+
+![](../../笔记图片/36-Netty 源码剖析与实战/解决粘包和半包的办法.png)
+
+### Netty对三种常用封帧方式的支持
+
+![](../../笔记图片/36-Netty 源码剖析与实战/常用封帧方式的支持.png)
+
+## 13 | 源码剖析：Netty对处理粘包-半包的支持
+
+这里分析的类是：`io.netty.handler.codec.ByteToMessageDecoder#channelRead`
+
+```Java
+try {
+    ByteBuf data = (ByteBuf) msg;
+    // cumulation数据积累器
+    first = cumulation == null;
+    if (first) {
+        // 如果是第一笔数据，直接放入数据积累器中
+        cumulation = data;
+    } else {
+        // 如果不是第一笔数据，就追加到数据积累器中
+        cumulation = cumulator.cumulate(ctx.alloc(), cumulation, data);
+    }
+    // 进行解码
+    callDecode(ctx, cumulation, out);
+}
+```
+
+接着是看`io.netty.handler.codec.ByteToMessageDecoder#callDecode`
+
+暂时放置
+
+##
