@@ -16,13 +16,13 @@
 
 ## 04 为什么舍近求远，不直接使用Java NIO
 
-![](../../笔记图片/36-Netty源码剖析与实战/为什么不直接使用Java NIO.png)
+![](../../笔记图片/36-Netty源码剖析与实战/为什么不直接使用Java-NIO.png)
 
-![为什么不直接使用Java NIO-2](../../笔记图片/36-Netty源码剖析与实战/为什么不直接使用Java NIO-2.png)
+![为什么不直接使用Java NIO-2](../../笔记图片/36-Netty源码剖析与实战/为什么不直接使用Java-NIO-2.png)
 
 Netty是如何解决Epoll Bug的
 
-![](../../笔记图片/36-Netty源码剖析与实战/解决epoll bug.png)
+![](../../笔记图片/36-Netty源码剖析与实战/解决epoll-bug.png)
 
 JDK的第二个bug
 
