@@ -83,7 +83,7 @@
 
    解决办法：命令`mysql_install_db`，再启动MySQL就正常了。
 
-7. 输入`sudo mysql -uroot -p`直接进入开始操作数据库，设置管理员和权限。下面是sql：
+6. 输入`sudo mysql -uroot -p`直接进入开始操作数据库，设置管理员和权限。下面是sql：
 
    ```
    select user,host,password from mysql.user;
@@ -108,9 +108,9 @@
    flush privileges;
    ```
 
-8. 重启服务器：`service mysqld restart`
+7. 重启服务器：`service mysqld restart`
 
-9. 配置防火墙：`vim /etc/sysconfig/iptables`
+8. 配置防火墙：`vim /etc/sysconfig/iptables`
 
    ```
    -A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
@@ -122,9 +122,9 @@
    -A INPUT -m state --state NEW -m tcp -p tcp --dport 8081 -j ACCEPT
    ```
 
-10. 重启防火墙：`service iptables restart`
+9. 重启防火墙：`service iptables restart`
 
-11. mysql自启动设置：1）执行`chkconfig mysqld on`，2）执行`chlconfig --list mysqld`查看，如果2-5位启用on状态即成功。
+10. mysql自启动设置：1）执行`chkconfig mysqld on`，2）执行`chlconfig --list mysqld`查看，如果2-5位启用on状态即成功。
 
 ### 1. MySQL安装过程中出现的问题
 
@@ -149,6 +149,21 @@
    
    # service mysqld start
    ```
+
+2. 在MySQL中，如果你遇到了错误信息："You must reset your password using ALTER USER statement before executing this statement."。解决方法如下：
+
+    * 使用`ALTER USER`语句来重置你的密码。例如，如果你的用户名是'root'，并且你想要将密码更改为'newpassword'，你可以执行以下命令：
+
+       ```sql
+       ALTER USER 'root'@'localhost' IDENTIFIED BY 'My$ecureP@ssw0rd!';
+       ```
+
+   * 执行以下命令来刷新权限，确保密码更改立即生效：
+
+       ```sql
+       FLUSH PRIVILEGES;
+       ```
+
 
 ## 4. Nginx配置
 
