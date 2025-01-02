@@ -1344,7 +1344,7 @@ Java中提供的两种锁，**synchronized**和**ReentrantLock**。
    2. 实践
 
       1. JDk官网的一个例子：com.bravedawn.concurrency.example.lock.LockExample4
-      2. 线程安全的计数：com.bravedawn.concurrency.example.lock.LockExample
+      2. 线程安全的计数：com.bravedawn.concurrency.example.lock.LockExample5
 
 3. 两条锁的使用建议
 
