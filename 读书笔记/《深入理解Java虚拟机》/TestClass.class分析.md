@@ -21,6 +21,8 @@ public class TestClass {
 
 ## javap -v TestClass.class文件输出
 
+`javap-v`命令用于**以详细模式（verbose）显示类的字节码和其他相关信息**。
+
 ```
 PS E:\Note\读书笔记\《深入理解Java虚拟机》> javap -v .\TestClass.class
 Classfile /E:/Note/读书笔记/《深入理解Java虚拟机》/TestClass.class
@@ -86,7 +88,7 @@ SourceFile: "TestClass.java"
 
 ### Class文件的版本
 
-1. `00 00 00 34`：十进制数是52，也就是**JDK1.8**。说明这个文件可以被JDK1.6或是以上版本虚拟机执行的Class文件。
+1. `00 00 00 34`：十进制数是52，也就是**JDK1.8**。说明这个文件可以被JDK1.8或是以上版本虚拟机执行的Class文件。
 
 ### 常量池
 
