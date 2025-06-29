@@ -244,11 +244,11 @@
 
 ### 3-4 案例：自定义ClassLoader
 
-我们在cn.bravedawn.jvm.classloader.MyClassLoader中定义了自己的ClassLoader，覆盖了原有的findClass()方法，这里我们通过读取本地文件的方式来获取到class文件的信息从而将class文件装载到虚拟机中。其他场景下我们也可以自定义自己的classloader，比如装载前修改class文件进行方法增强，权限校验，加解密class文件，网络中的class文件。
+我们在`cn.bravedawn.jvm.classloader.MyClassLoader`中定义了自己的`ClassLoader`，覆盖了原有的`findClass()`方法，这里我们通过读取本地文件的方式来获取到class文件的信息从而将class文件装载到虚拟机中。其他场景下我们也可以自定义自己的classloader，比如装载前修改class文件进行方法增强，权限校验，加解密class文件，网络中的class文件。
 
 我在cn.bravedawn.jvm.classloader.MyClassLoaderTest测试类中加载MyClass.class文件，这里有两种情况：
 
-1. 在项目中没有创建`class/cn/bravedawn/jvm/classloader/MyClass.class`的时候，我们运行MyClassLoaderTest测试类时，JVM发现jvm.demo是一个具名模块，且在具名模块中可以找到类加载器AppClassLoader，所以就会使用AppClassLoader去加载MyClass.class文件。此时输出的结果是：
+1. 在项目中没有创建`class/cn/bravedawn/jvm/classloader/MyClass.class`的时候，我们运行MyClassLoaderTest测试类时，根据双亲委派模型，当我们编写的类加载器`MyClassLoader`加载`MyClass`的这个类的时候，首先会委托给父加载器`AppClassLoader`去加载，`AppClassLoader`在target目录下面找到了这个类的class文件，就将这个类进行了加载。此时输出的结果是：
 
     ```
     cls Class loader = jdk.internal.loader.ClassLoaders$AppClassLoader@5a39699c
